@@ -1,0 +1,56 @@
+{
+  "tiers": [
+    {
+      "id": "platinum",
+      "name": "Platinum Sponsors",
+      "description": "Our premium partners",
+      "order": 1,
+      "sponsors": [
+        {
+          "id": "id_ml6wfs4e_a4u6q",
+          "name": "dvvdv",
+          "logo": "",
+          "website": "",
+          "description": "",
+          "order": 1,
+          "status": "active",
+          "createdAt": "2026-02-03T17:55:20.222Z"
+        }
+      ]
+    },
+    {
+      "id": "gold",
+      "name": "Gold Sponsors",
+      "description": "Our valued partners",
+      "order": 2,
+      "sponsors": [
+        {
+          "id": "id_ml6wcnus_axmbe",
+          "name": "mohan",
+          "logo": "",
+          "website": "",
+          "description": "",
+          "order": 1,
+          "status": "active",
+          "createdAt": "2026-02-03T17:52:54.724Z"
+        }
+      ]
+    },
+    {
+      "id": "silver",
+      "name": "Silver Sponsors",
+      "description": "Our supporting partners",
+      "order": 3,
+      "sponsors": []
+    },
+    {
+      "id": "bronze",
+      "name": "Bronze Sponsors",
+      "description": "Our associate partners",
+      "order": 4,
+      "sponsors": []
+    }
+  ],
+  "updatedAt": "2026-02-03T17:55:20.224Z",
+  "updatedBy": "user_001"
+}

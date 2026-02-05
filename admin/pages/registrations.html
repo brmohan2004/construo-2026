@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrations | CONSTRUO Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/admin.css">
+    <style>
+        .form-card {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            background: var(--card-bg);
+            transition: all 0.3s ease;
+        }
+
+        .form-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-card.active {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .form-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .form-card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .form-card-description {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .form-card-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .form-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .form-stats {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 0.875rem;
+        }
+
+        .form-stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.toggle-slider {
+            background-color: var(--primary);
+        }
+
+        input:checked+.toggle-slider:before {
+            transform: translateX(20px);
+        }
+
+        .submissions-view {
+            display: none;
+        }
+
+        .submissions-view.active {
+            display: block;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .back-button:hover {
+            background: var(--bg-tertiary);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="../dashboard.html" class="sidebar-logo">
+                    <div class="sidebar-logo-icon">🏗️</div>
+                    <div class="sidebar-logo-text">
+                        <span>CONSTRUO</span>
+                        <span>Admin Panel</span>
+                    </div>
+                </a>
+                <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="12" x2="21" y2="12" />
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <line x1="3" y1="18" x2="21" y2="18" />
+                    </svg>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Overview</div>
+                    <ul class="nav-menu">
+                        <li class="nav-item">
+                            <a href="../dashboard.html" class="nav-link">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="7" height="9" />
+                                    <rect x="14" y="3" width="7" height="5" />
+                                    <rect x="14" y="12" width="7" height="9" />
+                                    <rect x="3" y="16" width="7" height="5" />
+                                </svg>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Website Sections</div>
+                    <ul class="nav-menu">
+                        <li class="nav-item"><a href="hero.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <polygon points="12 2 2 7 12 12 22 7 12 2" />
+                                    <polyline points="2 17 12 22 22 17" />
+                                    <polyline points="2 12 12 17 22 12" />
+                                </svg><span>Hero Section</span></a></li>
+                        <li class="nav-item"><a href="about.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <line x1="12" y1="16" x2="12" y2="12" />
+                                    <line x1="12" y1="8" x2="12.01" y2="8" />
+                                </svg><span>About</span></a></li>
+                        <li class="nav-item"><a href="events.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                                    <line x1="16" y1="2" x2="16" y2="6" />
+                                    <line x1="8" y1="2" x2="8" y2="6" />
+                                    <line x1="3" y1="10" x2="21" y2="10" />
+                                </svg><span>Events</span></a></li>
+                        <li class="nav-item"><a href="timeline.html" class="nav-link"><svg viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <polyline points="12 6 12 12 16 14" />
+                                </svg><span>Timeline</span></a></li>
+                        <li class="nav-item"><a href="speakers.html" class="nav-link"><svg viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                    <circle cx="9" cy="7" r="4" />
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                                </svg><span>Speakers</span></a></li>
+                        <li class="nav-item"><a href="sponsors.html" class="nav-link"><svg viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+                                </svg><span>Sponsors</span></a></li>
+                        <li class="nav-item"><a href="organizers.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                    <circle cx="9" cy="7" r="4" />
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                                </svg><span>Organizers</span></a></li>
+                        <li class="nav-item"><a href="venue.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                    <circle cx="12" cy="10" r="3" />
+                                </svg><span>Venue</span></a></li>
+                        <li class="nav-item"><a href="footer.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                    <line x1="3" y1="15" x2="21" y2="15" />
+                                </svg><span>Footer</span></a></li>
+                    </ul>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Management</div>
+                    <ul class="nav-menu">
+                        <li class="nav-item">
+                            <a href="registrations.html" class="nav-link active">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                    <polyline points="14 2 14 8 20 8" />
+                                    <line x1="16" y1="13" x2="8" y2="13" />
+                                    <line x1="16" y1="17" x2="8" y2="17" />
+                                </svg>
+                                <span>Registrations</span>
+                            </a>
+                        </li>
+                        <li class="nav-item"><a href="users.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                    <circle cx="12" cy="7" r="4" />
+                                </svg><span>Users</span></a></li>
+                        <li class="nav-item"><a href="media.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                    <circle cx="8.5" cy="8.5" r="1.5" />
+                                    <polyline points="21 15 16 10 5 21" />
+                                </svg><span>Media</span></a></li>
+                        <li class="nav-item"><a href="settings.html" class="nav-link"><svg viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="3" />
+                                    <path
+                                        d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                                </svg><span>Settings</span></a></li>
+                    </ul>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="sidebar-user" id="sidebarUser">
+                    <div class="user-avatar" id="userAvatar">SA</div>
+                    <div class="user-info">
+                        <div class="user-name" id="userName">Super Admin</div>
+                        <div class="user-role" id="userRole">Super Admin</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <!-- Header -->
+            <header class="admin-header">
+                <div class="header-left">
+                    <button class="sidebar-toggle mobile-toggle" id="mobileSidebarToggle">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12" />
+                            <line x1="3" y1="6" x2="21" y2="6" />
+                            <line x1="3" y1="18" x2="21" y2="18" />
+                        </svg>
+                    </button>
+                    <div>
+                        <h1 class="header-title">Registration Forms</h1>
+                        <div class="header-breadcrumb">
+                            <a href="../dashboard.html">Dashboard</a>
+                            <span>/</span>
+                            <span>Registrations</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button class="btn btn-primary" id="createFormBtn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19" />
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                        </svg>
+                        Create Form
+                    </button>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="admin-content">
+                <!-- Forms List View -->
+                <div class="forms-view" id="formsView">
+                    <!-- Stats Cards -->
+                    <div class="stats-grid mb-4">
+                        <div class="stat-card stat-card-lg">
+                            <div class="stat-icon stat-icon-primary">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                    <polyline points="14 2 14 8 20 8" />
+                                </svg>
+                            </div>
+                            <div class="stat-content">
+                                <span class="stat-value" id="totalForms">0</span>
+                                <span class="stat-label">Total Forms</span>
+                            </div>
+                        </div>
+                        <div class="stat-card stat-card-lg">
+                            <div class="stat-icon stat-icon-success">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                    <circle cx="9" cy="7" r="4" />
+                                </svg>
+                            </div>
+                            <div class="stat-content">
+                                <span class="stat-value" id="totalSubmissions">0</span>
+                                <span class="stat-label">Total Submissions</span>
+                            </div>
+                        </div>
+                        <div class="stat-card stat-card-lg">
+                            <div class="stat-icon stat-icon-warning">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <polyline points="12 6 12 12 16 14" />
+                                </svg>
+                            </div>
+                            <div class="stat-content">
+                                <span class="stat-value" id="pendingSubmissions">0</span>
+                                <span class="stat-label">Pending</span>
+                            </div>
+                        </div>
+                        <div class="stat-card stat-card-lg">
+                            <div class="stat-icon stat-icon-info">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                    <polyline points="22 4 12 14.01 9 11.01" />
+                                </svg>
+                            </div>
+                            <div class="stat-content">
+                                <span class="stat-value" id="confirmedSubmissions">0</span>
+                                <span class="stat-label">Confirmed</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Forms List -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Registration Forms</h3>
+                            <p class="text-muted">Only one form can be active at a time. The active form will be shown
+                                on the website.</p>
+                        </div>
+                        <div class="card-body">
+                            <div id="formsContainer">
+                                <!-- Forms will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submissions View -->
+                <div class="submissions-view" id="submissionsView">
+                    <div class="mb-4">
+                        <button class="back-button" onclick="RegistrationManager.showFormsView()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                style="width: 20px; height: 20px;">
+                                <polyline points="15 18 9 12 15 6" />
+                            </svg>
+                            Back to Forms
+                        </button>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <div>
+                                <h3 class="card-title" id="currentFormTitle">Form Submissions</h3>
+                                <p class="text-muted" id="currentFormDescription"></p>
+                            </div>
+                            <button class="btn btn-secondary" onclick="RegistrationManager.exportSubmissions()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                    <polyline points="7 10 12 15 17 10" />
+                                    <line x1="12" y1="15" x2="12" y2="3" />
+                                </svg>
+                                Export CSV
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="stats-grid mb-4">
+                        <div class="stat-card">
+                            <div class="stat-content">
+                                <span class="stat-value" id="submissionTotal">0</span>
+                                <span class="stat-label">Total</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-content">
+                                <span class="stat-value" id="submissionPending">0</span>
+                                <span class="stat-label">Pending</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-content">
+                                <span class="stat-value" id="submissionConfirmed">0</span>
+                                <span class="stat-label">Confirmed</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-content">
+                                <span class="stat-value" id="submissionCancelled">0</span>
+                                <span class="stat-label">Cancelled</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Search and Filter -->
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="filter-bar">
+                                <div class="search-box">
+                                    <!-- Icon removed as requested -->
+                                    <input type="text" class="form-input" id="searchSubmissions"
+                                        placeholder="Search by name, email, or registration number...">
+                                </div>
+                                <select class="form-select" id="filterStatus">
+                                    <option value="">All Status</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="confirmed">Confirmed</option>
+                                    <option value="cancelled">Cancelled</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submissions Table -->
+                    <div class="card">
+                        <div class="table-container">
+                            <table class="admin-table" id="submissionsTable">
+                                <thead id="submissionsTableHead">
+                                    <!-- Table headers will be generated dynamically -->
+                                </thead>
+                                <tbody id="submissionsTableBody">
+                                    <!-- Submissions will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Update Status Modal -->
+    <div class="modal" id="statusModal" style="display: none;">
+        <div class="modal-overlay" onclick="RegistrationManager.closeStatusModal()"></div>
+        <div class="modal-content modal-sm">
+            <div class="modal-header">
+                <h2 class="modal-title">Update Submission Status</h2>
+                <button class="modal-close" onclick="RegistrationManager.closeStatusModal()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Select Status</label>
+                    <select class="form-select" id="newStatus">
+                        <option value="pending">Pending</option>
+                        <option value="confirmed">Confirmed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="RegistrationManager.closeStatusModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="RegistrationManager.updateSubmissionStatus()">Update</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Utility functions
+        const Utils = {
+            showToast(message, type = 'info') {
+                if (typeof Admin !== 'undefined' && Admin.showToast) {
+                    Admin.showToast(type, type.charAt(0).toUpperCase() + type.slice(1), message);
+                } else {
+                    console.log(`[${type.toUpperCase()}] ${message}`);
+                }
+            }
+        };
+
+        // Registration Manager
+        const RegistrationManager = {
+            currentFormId: null,
+            currentSubmissionId: null,
+            editingFormId: null,
+            fields: [],
+            selectedFieldIndex: null,
+
+            fieldTypes: {
+                text: { label: 'Short answer', icon: 'short-text' },
+                textarea: { label: 'Paragraph', icon: 'paragraph' },
+                email: { label: 'Email', icon: 'email' },
+                tel: { label: 'Phone', icon: 'phone' },
+                number: { label: 'Number', icon: 'number' },
+                select: { label: 'Dropdown', icon: 'dropdown' },
+                radio: { label: 'Multiple choice', icon: 'radio' },
+                checkbox: { label: 'Checkboxes', icon: 'checkbox' }
+            },
+
+            async init() {
+                await this.loadStats();
+                await this.loadForms();
+                this.setupEventListeners();
+            },
+
+            setupEventListeners() {
+                // Create Form button
+                const createFormBtn = document.getElementById('createFormBtn');
+                if (createFormBtn) {
+                    createFormBtn.addEventListener('click', () => this.showCreateFormModal());
+                }
+
+                const searchSubmissions = document.getElementById('searchSubmissions');
+                const filterStatus = document.getElementById('filterStatus');
+
+                if (searchSubmissions) {
+                    searchSubmissions.addEventListener('input', () => this.filterSubmissions());
+                }
+                if (filterStatus) {
+                    filterStatus.addEventListener('change', () => this.filterSubmissions());
+                }
+
+                // Sync title inputs
+                const titleHeader = document.getElementById('formBuilderTitleHeader');
+                const titleMain = document.getElementById('formBuilderTitle');
+                if (titleHeader) {
+                    titleHeader.addEventListener('input', () => {
+                        titleMain.value = titleHeader.value;
+                    });
+                }
+
+                // Submissions Table Actions Delegation
+                const submissionsTableBody = document.getElementById('submissionsTableBody');
+                if (submissionsTableBody) {
+                    submissionsTableBody.addEventListener('click', (e) => {
+                        const btn = e.target.closest('button[data-action]');
+                        if (!btn) return;
+
+                        const action = btn.dataset.action;
+                        const id = btn.dataset.submissionId;
+
+                        if (action === 'edit-submission') {
+                            this.showStatusModal(id);
+                        } else if (action === 'delete-submission') {
+                            this.deleteSubmission(id);
+                        }
+                    });
+                }
+            },
+
+            async loadStats() {
+                try {
+                    const token = localStorage.getItem('adminToken');
+                    if (!token) {
+                        console.error('No auth token found');
+                        Auth.handleLogout();
+                        return;
+                    }
+
+                    const response = await fetch('/api/registrations/stats', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+
+                    if (!response.ok) {
+                        if (response.status === 401) {
+                            console.error('Authentication failed');
+                            Auth.handleLogout();
+                            return;
+                        }
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const stats = await response.json();
+
+                    document.getElementById('totalForms').textContent = stats.totalForms;
+                    document.getElementById('totalSubmissions').textContent = stats.totalSubmissions;
+                    document.getElementById('pendingSubmissions').textContent = stats.pendingSubmissions;
+                    document.getElementById('confirmedSubmissions').textContent = stats.confirmedSubmissions;
+                } catch (error) {
+                    console.error('Error loading stats:', error);
+                }
+            },
+
+            async loadForms() {
+                try {
+                    const token = localStorage.getItem('adminToken');
+                    if (!token) {
+                        console.error('No auth token found');
+                        Auth.handleLogout();
+                        return;
+                    }
+
+                    const response = await fetch('/api/registrations/forms', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+
+                    if (!response.ok) {
+                        if (response.status === 401) {
+                            console.error('Authentication failed');
+                            Auth.handleLogout();
+                            return;
+                        }
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+
+                    const container = document.getElementById('formsContainer');
+
+                    if (!data.forms || data.forms.length === 0) {
+                        container.innerHTML = '<p class="text-muted">No forms created yet. Click "Create Form" to get started.</p>';
+                        return;
+                    }
+
+                    container.innerHTML = data.forms.map(form => `
+                        <div class="form-card ${form.isActive ? 'active' : ''}" data-form-id="${form.id}">
+                            <div class="form-card-header">
+                                <div>
+                                    <div class="form-card-title">
+                                        ${form.title}
+                                        ${form.isActive ? '<span class="badge badge-success" style="margin-left: 0.5rem;">ACTIVE</span>' : ''}
+                                    </div>
+                                    <div class="form-card-description">${form.description || 'No description'}</div>
+                                </div>
+                                <div class="form-card-actions">
+                                    <label class="toggle-switch" title="${form.isActive ? 'Deactivate' : 'Activate'} form">
+                                        <input type="checkbox" ${form.isActive ? 'checked' : ''} 
+                                               data-action="toggle-form" data-form-id="${form.id}">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                    <button class="btn btn-icon btn-ghost" data-action="edit-form" data-form-id="${form.id}" title="Edit">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                        </svg>
+                                    </button>
+                                    <button class="btn btn-icon btn-ghost" data-action="duplicate-form" data-form-id="${form.id}" title="Duplicate">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                                        </svg>
+                                    </button>
+                                    <button class="btn btn-icon btn-ghost" data-action="delete-form" data-form-id="${form.id}" title="Delete">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="3 6 5 6 21 6"/>
+                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="form-card-footer">
+                                <div class="form-stats">
+                                    <div class="form-stat-item">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px;">
+                                            <path d="M9 11H3v10h6V11zM15 3h-6v18h6V3zM21 8h-6v13h6V8z"/>
+                                        </svg>
+                                        ${form.fields.length} fields
+                                    </div>
+                                    <div class="form-stat-item">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px;">
+                                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                            <circle cx="9" cy="7" r="4"/>
+                                        </svg>
+                                        ${form.submissionsCount} submissions
+                                    </div>
+                                    <div class="form-stat-item">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px;">
+                                            <circle cx="12" cy="12" r="10"/>
+                                            <polyline points="12 6 12 12 16 14"/>
+                                        </svg>
+                                        ${new Date(form.updatedAt).toLocaleDateString()}
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary btn-sm" data-action="view-submissions" data-form-id="${form.id}">
+                                    View Submissions
+                                </button>
+                            </div>
+                        </div>
+                    `).join('');
+
+                    // Add event delegation for form actions
+                    container.addEventListener('click', (e) => {
+                        const action = e.target.closest('[data-action]');
+                        if (!action) return;
+
+                        const formId = action.dataset.formId;
+                        const actionType = action.dataset.action;
+
+                        switch (actionType) {
+                            case 'edit-form':
+                                this.editForm(formId);
+                                break;
+                            case 'duplicate-form':
+                                this.duplicateForm(formId);
+                                break;
+                            case 'delete-form':
+                                this.deleteForm(formId);
+                                break;
+                            case 'view-submissions':
+                                this.viewSubmissions(formId);
+                                break;
+                        }
+                    });
+
+                    container.addEventListener('change', (e) => {
+                        if (e.target.dataset.action === 'toggle-form') {
+                            this.toggleFormStatus(e.target.dataset.formId);
+                        }
+                    });
+                } catch (error) {
+                    console.error('Error loading forms:', error);
+                    Utils.showToast('Failed to load forms', 'error');
+                }
+            },
+
+            async viewSubmissions(formId) {
+                // Navigate to the separate submissions page
+                window.location.href = `registration-submissions.html?formId=${formId}`;
+            },
+
+            async viewSubmissionsOld(formId) {
+                this.currentFormId = formId;
+                try {
+                    const token = localStorage.getItem('adminToken');
+                    const response = await fetch(`/api/registrations/forms/${formId}/submissions`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    const data = await response.json();
+
+                    document.getElementById('currentFormTitle').textContent = data.form.title;
+                    document.getElementById('currentFormDescription').textContent = data.form.description || '';
+
+                    document.getElementById('submissionTotal').textContent = data.stats.total;
+                    document.getElementById('submissionPending').textContent = data.stats.pending;
+                    document.getElementById('submissionConfirmed').textContent = data.stats.confirmed;
+                    document.getElementById('submissionCancelled').textContent = data.stats.cancelled;
+
+                    this.renderSubmissionsTable(data.form, data.submissions);
+
+                    document.getElementById('formsView').classList.remove('active');
+                    document.getElementById('submissionsView').classList.add('active');
+                } catch (error) {
+                    console.error('Error loading submissions:', error);
+                    Utils.showToast('Failed to load submissions', 'error');
+                }
+            },
+
+            renderSubmissionsTable(form, submissions) {
+                const thead = document.getElementById('submissionsTableHead');
+                const tbody = document.getElementById('submissionsTableBody');
+
+                // Generate table headers
+                const headers = ['Reg. Number', ...form.fields.map(f => f.label), 'Status', 'Date', 'Actions'];
+                thead.innerHTML = `<tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr>`;
+
+                // Generate table rows
+                if (submissions.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="' + headers.length + '" style="text-align: center;">No submissions yet</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = submissions.map(sub => {
+                    const cells = [sub.registrationNumber];
+                    form.fields.forEach(field => {
+                        const value = sub.data[field.id];
+                        cells.push(Array.isArray(value) ? value.join(', ') : value || '-');
+                    });
+                    cells.push(`<span class="badge badge-${sub.status === 'confirmed' ? 'success' : sub.status === 'pending' ? 'warning' : 'danger'}">${sub.status}</span>`);
+                    cells.push(new Date(sub.createdAt).toLocaleString());
+                    cells.push(`
+                        <div style="display: flex; gap: 0.5rem;" class="submission-actions">
+                            <button class="btn btn-icon btn-ghost btn-sm" data-action="edit-submission" data-submission-id="${sub.id}" title="Update Status">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                </svg>
+                            </button>
+                            <button class="btn btn-icon btn-ghost btn-sm" data-action="delete-submission" data-submission-id="${sub.id}" title="Delete">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="3 6 5 6 21 6"/>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2-2v2"/>
+                                </svg>
+                            </button>
+                        </div>
+                    `);
+
+                    return `<tr>${cells.map(c => `<td>${c}</td>`).join('')}</tr>`;
+                }).join('');
+            },
+
+            filterSubmissions() {
+                // Reload submissions with filters
+                if (this.currentFormId) {
+                    this.viewSubmissions(this.currentFormId);
+                }
+            },
+
+            showFormsView() {
+                document.getElementById('submissionsView').classList.remove('active');
+                document.getElementById('formsView').classList.add('active');
+                this.loadForms();
+                this.loadStats();
+            },
+
+            // ==================== Form Builder Methods ====================
+
+            showCreateFormModal() {
+                // Redirect to form builder page
+                window.location.href = 'form-builder.html';
+            },
+
+            async editForm(formId) {
+                // Redirect to form builder with form ID
+                window.location.href = `form-builder.html?id=${formId}`;
+            },
+
+            async duplicateForm(formId) {
+                try {
+                    const token = localStorage.getItem('adminToken');
+                    const response = await fetch(`/api/registrations/forms/${formId}/duplicate`, {
+                        method: 'POST',
+                        headers: { 
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        Utils.showToast('Form duplicated successfully', 'success');
+                        this.loadForms();
+                    } else {
+                        Utils.showToast(data.error || 'Failed to duplicate form', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error duplicating form:', error);
+                    Utils.showToast('Failed to duplicate form', 'error');
+                }
+            },
+
+            async toggleFormStatus(formId) {
+                try {
+                    const token = localStorage.getItem('adminToken');
+                    const response = await fetch(`/api/registrations/forms/${formId}/toggle`, {
+                        method: 'PUT',
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        Utils.showToast(data.message, 'success');
+                        this.loadForms();
+                    } else {
+                        Utils.showToast(data.error || 'Failed to toggle form status', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error toggling form:', error);
+                    Utils.showToast('Failed to toggle form status', 'error');
+                }
+            },
+
+            async deleteForm(formId) {
+                if (!confirm('Are you sure you want to delete this form? This cannot be undone.')) {
+                    return;
+                }
+
+                try {
+                    const token = localStorage.getItem('adminToken');
+                    const response = await fetch(`/api/registrations/forms/${formId}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        Utils.showToast('Form deleted successfully', 'success');
+                        this.loadForms();
+                        this.loadStats();
+                    } else if (data.error && data.error.includes('existing submissions')) {
+                        if (confirm('This form has existing submissions. Do you want to delete all submissions and the form?')) {
+                            await this.forceDeleteForm(formId);
+                        }
+                    } else {
+                        Utils.showToast(data.error || 'Failed to delete form', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error deleting form:', error);
+                    Utils.showToast('Failed to delete form', 'error');
+                }
+            },
+
+            async forceDeleteForm(formId) {
+                try {
+                    const token = localStorage.getItem('adminToken');
+                    Utils.showToast('Deleting submissions...', 'info');
+
+                    // 1. Fetch submissions
+                    const subResponse = await fetch(`/api/registrations/forms/${formId}/submissions`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+
+                    if (!subResponse.ok) throw new Error('Failed to fetch submissions');
+
+                    const subData = await subResponse.json();
+                    const submissions = subData.submissions || [];
+
+                    // 2. Delete all submissions
+                    if (submissions.length > 0) {
+                        const deletePromises = submissions.map(sub =>
+                            fetch(`/api/registrations/submissions/${sub.id}`, {
+                                method: 'DELETE',
+                                headers: { 'Authorization': `Bearer ${token}` }
+                            })
+                        );
+                        await Promise.all(deletePromises);
+                    }
+
+                    // 3. Delete the form
+                    const response = await fetch(`/api/registrations/forms/${formId}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+
+                    if (response.ok) {
+                        Utils.showToast('Form and all submissions deleted', 'success');
+                        this.loadForms();
+                        this.loadStats();
+                    } else {
+                        const data = await response.json();
+                        Utils.showToast(data.error || 'Failed to delete form', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error force deleting form:', error);
+                    Utils.showToast('Failed to force delete form', 'error');
+                }
+            },
+
+            showStatusModal(submissionId) {
+                this.currentSubmissionId = submissionId;
+                const modal = document.getElementById('statusModal');
+                modal.style.display = 'flex';
+                modal.classList.add('active');
+            },
+
+            closeStatusModal() {
+                const modal = document.getElementById('statusModal');
+                modal.style.display = 'none';
+                modal.classList.remove('active');
+            },
+
+            async updateSubmissionStatus() {
+                const status = document.getElementById('newStatus').value;
+
+                try {
+                    const token = localStorage.getItem('adminToken');
+                    const response = await fetch(`/api/registrations/submissions/${this.currentSubmissionId}/status`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ status })
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        Utils.showToast('Status updated successfully', 'success');
+                        this.closeStatusModal();
+                        this.viewSubmissions(this.currentFormId);
+                    } else {
+                        Utils.showToast(data.error || 'Failed to update status', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error updating status:', error);
+                    Utils.showToast('Failed to update status', 'error');
+                }
+            },
+
+            async deleteSubmission(submissionId) {
+                if (!confirm('Are you sure you want to delete this submission?')) {
+                    return;
+                }
+
+                try {
+                    const token = localStorage.getItem('adminToken');
+                    const response = await fetch(`/api/registrations/submissions/${submissionId}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        Utils.showToast('Submission deleted successfully', 'success');
+                        this.viewSubmissions(this.currentFormId);
+                    } else {
+                        Utils.showToast(data.error || 'Failed to delete submission', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error deleting submission:', error);
+                    Utils.showToast('Failed to delete submission', 'error');
+                }
+            },
+
+            async exportSubmissions() {
+                if (!this.currentFormId) return;
+
+                try {
+                    const token = localStorage.getItem('adminToken');
+                    window.location.href = `/api/registrations/export/${this.currentFormId}?token=${token}`;
+                } catch (error) {
+                    console.error('Error exporting submissions:', error);
+                    Utils.showToast('Failed to export submissions', 'error');
+                }
+            }
+        };
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            RegistrationManager.init();
+        });
+    </script>
+    <script type="module" src="../js/supabase-config.js"></script>
+    <script type="module" src="../js/auth.js"></script>
+    <script type="module" src="../js/admin.js"></script>
+</body>
+
+</html>

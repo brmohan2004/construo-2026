@@ -1,0 +1,1486 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Builder | CONSTRUO Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/admin.css">
+    <style>
+        /* Form Builder Specific Styles */
+        body {
+            background: var(--admin-bg);
+            overflow-x: hidden;
+        }
+
+        .form-builder-layout {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .form-builder-header {
+            background: var(--admin-card-bg);
+            border-bottom: 1px solid var(--admin-border);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-builder-header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .form-builder-back {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--admin-text);
+            transition: background 0.2s;
+        }
+
+        .form-builder-back:hover {
+            background: var(--admin-bg);
+        }
+
+        .form-builder-title-input {
+            font-size: 1.25rem;
+            font-weight: 600;
+            border: none;
+            background: transparent;
+            color: var(--admin-text);
+            padding: 0.5rem;
+            border-radius: 4px;
+            width: 300px;
+        }
+
+        .form-builder-title-input:focus {
+            outline: none;
+            background: var(--admin-bg);
+        }
+
+        .form-builder-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        /* Main Container */
+        .form-builder-main {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Form Canvas */
+        .form-canvas {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Form Header Card */
+        .form-header-card {
+            background: var(--admin-card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--admin-border);
+            border-top: 4px solid var(--admin-primary);
+            padding: 2rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-header-title {
+            font-size: 2rem;
+            font-weight: 600;
+            border: none;
+            background: transparent;
+            color: var(--admin-text);
+            width: 100%;
+            margin-bottom: 1rem;
+            padding: 0.5rem 0;
+            border-bottom: 2px solid transparent;
+        }
+
+        .form-header-title:focus {
+            outline: none;
+            border-bottom-color: var(--admin-primary);
+        }
+
+        .form-header-description {
+            font-size: 1rem;
+            border: none;
+            background: transparent;
+            color: var(--admin-text-muted);
+            width: 100%;
+            resize: none;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid transparent;
+            min-height: 60px;
+            font-family: inherit;
+        }
+
+        .form-header-description:focus {
+            outline: none;
+            border-bottom-color: var(--admin-primary);
+        }
+
+        /* Field Cards */
+        .form-field-card {
+            background: var(--admin-card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--admin-border);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+            transition: all 0.2s;
+            cursor: pointer;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-field-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .form-field-card.selected {
+            border-color: var(--admin-primary);
+            border-left: 4px solid var(--admin-primary);
+            padding-left: calc(1.5rem - 3px);
+        }
+
+        .form-field-card.dragging {
+            opacity: 0.5;
+        }
+
+        .form-field-header {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            align-items: center;
+        }
+
+        .form-field-label-input {
+            flex: 1;
+            font-size: 1rem;
+            border: none;
+            background: transparent;
+            color: var(--admin-text);
+            padding: 0.5rem 0;
+            border-bottom: 1px solid transparent;
+            font-weight: 500;
+        }
+
+        .form-field-label-input:focus {
+            outline: none;
+            border-bottom-color: var(--admin-primary);
+        }
+
+        .form-field-type-select {
+            min-width: 180px;
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--admin-border);
+            border-radius: 6px;
+            background: var(--admin-bg);
+            color: var(--admin-text);
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+
+        .form-field-type-select:focus {
+            outline: none;
+            border-color: var(--admin-primary);
+        }
+
+        /* Field Options */
+        .form-field-options {
+            margin-top: 1rem;
+            padding-left: 1rem;
+        }
+
+        .form-field-option {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .form-field-option-icon {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--admin-border);
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .form-field-option-icon.checkbox {
+            border-radius: 4px;
+        }
+
+        .form-field-option-input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            color: var(--admin-text);
+            padding: 0.5rem 0;
+            border-bottom: 1px solid transparent;
+            font-size: 0.95rem;
+        }
+
+        .form-field-option-input:focus {
+            outline: none;
+            border-bottom-color: var(--admin-primary);
+        }
+
+        .form-field-option-remove {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--admin-text-muted);
+            padding: 0.25rem;
+            border-radius: 50%;
+            display: flex;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .form-field-option:hover .form-field-option-remove {
+            opacity: 1;
+        }
+
+        .form-field-option-remove:hover {
+            color: var(--admin-danger);
+            background: var(--admin-danger-light);
+        }
+
+        .form-field-add-option {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--admin-text-muted);
+            cursor: pointer;
+            padding: 0.5rem 0;
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .form-field-add-option:hover {
+            color: var(--admin-primary);
+        }
+
+        /* Field Preview */
+        .form-preview-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-bottom: 1px solid var(--admin-border);
+            background: transparent;
+            color: var(--admin-text-muted);
+            font-size: 0.95rem;
+            pointer-events: none;
+        }
+
+        .form-preview-input:focus {
+            outline: none;
+            border-bottom-color: var(--admin-primary);
+        }
+
+        /* Field Footer */
+        .form-field-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--admin-border);
+        }
+
+        .form-field-required {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--admin-text-muted);
+        }
+
+        .form-field-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .form-field-action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            color: var(--admin-text-muted);
+            display: flex;
+            transition: all 0.2s;
+        }
+
+        .form-field-action-btn:hover {
+            background: var(--admin-bg);
+            color: var(--admin-text);
+        }
+
+        .form-field-action-btn.delete:hover {
+            color: var(--admin-danger);
+            background: var(--admin-danger-light);
+        }
+
+        /* Add Field Card */
+        .add-field-card {
+            background: var(--admin-card-bg);
+            border-radius: 12px;
+            border: 2px dashed var(--admin-border);
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 2rem;
+        }
+
+        .add-field-card:hover {
+            border-color: var(--admin-primary);
+            background: var(--admin-primary-light);
+        }
+
+        .add-field-card svg {
+            color: var(--admin-text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .add-field-card:hover svg {
+            color: var(--admin-primary);
+        }
+
+        .add-field-card p {
+            color: var(--admin-text-muted);
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        /* Sidebar Toolbar */
+        .field-toolbar {
+            width: 280px;
+            background: var(--admin-card-bg);
+            border-left: 1px solid var(--admin-border);
+            overflow-y: auto;
+            padding: 1.5rem;
+        }
+
+        .field-toolbar h3 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--admin-text);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .field-type-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .field-type-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem;
+            background: var(--admin-bg);
+            border: 1px solid var(--admin-border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--admin-text);
+            font-size: 0.875rem;
+            text-align: left;
+        }
+
+        .field-type-btn:hover {
+            background: var(--admin-primary-light);
+            border-color: var(--admin-primary);
+            color: var(--admin-primary);
+        }
+
+        .field-type-btn svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--admin-border);
+            transition: .3s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+
+        input:checked+.toggle-slider {
+            background-color: var(--admin-primary);
+        }
+
+        input:checked+.toggle-slider:before {
+            transform: translateX(20px);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .field-toolbar {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .form-builder-header {
+                padding: 1rem;
+            }
+
+            .form-builder-title-input {
+                width: 200px;
+                font-size: 1rem;
+            }
+
+            .form-canvas {
+                padding: 1rem;
+            }
+
+            .form-header-card {
+                padding: 1.5rem;
+            }
+
+            .form-header-title {
+                font-size: 1.5rem;
+            }
+
+            .form-field-card {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="form-builder-layout">
+        <!-- Header -->
+        <header class="form-builder-header">
+            <div class="form-builder-header-left">
+                <button class="form-builder-back" id="btnBack" title="Back to Registrations">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                        <polyline points="15 18 9 12 15 6" />
+                    </svg>
+                </button>
+                <input type="text" class="form-builder-title-input" id="formBuilderTitleHeader"
+                    placeholder="Untitled form" value="Untitled form">
+            </div>
+            <div class="form-builder-actions">
+                <button class="btn btn-secondary" id="btnPreview">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                        <circle cx="12" cy="12" r="3" />
+                    </svg>
+                    Preview
+                </button>
+                <button class="btn btn-primary" id="btnSaveForm">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                        <polyline points="17 21 17 13 7 13 7 21" />
+                        <polyline points="7 3 7 8 15 8" />
+                    </svg>
+                    Save Form
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="form-builder-main">
+            <!-- Form Canvas -->
+            <div class="form-canvas">
+                <div class="form-container">
+                    <!-- Form Header Card -->
+                    <div class="form-header-card">
+                        <input type="text" class="form-header-title" id="formBuilderTitle" placeholder="Untitled form"
+                            value="Untitled form"
+                            oninput="document.getElementById('formBuilderTitleHeader').value = this.value">
+                        <textarea class="form-header-description" id="formBuilderDescription"
+                            placeholder="Form description"></textarea>
+                    </div>
+
+                    <!-- Fields Container -->
+                    <div id="formFieldsContainer">
+                        <!-- Dynamic fields will be rendered here -->
+                    </div>
+
+                    <!-- Add Field Card -->
+                    <div class="add-field-card" id="btnAddField">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="32"
+                            height="32">
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="12" y1="8" x2="12" y2="16" />
+                            <line x1="8" y1="12" x2="16" y2="12" />
+                        </svg>
+                        <p>Click to add a new field</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Field Type Toolbar -->
+            <aside class="field-toolbar">
+                <h3>Add Field</h3>
+                <div class="field-type-list">
+                    <button class="field-type-btn" data-field-type="text">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12" />
+                            <line x1="3" y1="6" x2="15" y2="6" />
+                        </svg>
+                        <span>Short Answer</span>
+                    </button>
+                    <button class="field-type-btn" data-field-type="textarea">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="6" x2="21" y2="6" />
+                            <line x1="3" y1="12" x2="21" y2="12" />
+                            <line x1="3" y1="18" x2="15" y2="18" />
+                        </svg>
+                        <span>Paragraph</span>
+                    </button>
+                    <button class="field-type-btn" data-field-type="email">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                            <polyline points="22,6 12,13 2,6" />
+                        </svg>
+                        <span>Email</span>
+                    </button>
+                    <button class="field-type-btn" data-field-type="tel">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path
+                                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                        </svg>
+                        <span>Phone</span>
+                    </button>
+                    <button class="field-type-btn" data-field-type="number">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="4" y1="9" x2="20" y2="9" />
+                            <line x1="4" y1="15" x2="20" y2="15" />
+                            <line x1="10" y1="3" x2="8" y2="21" />
+                            <line x1="16" y1="3" x2="14" y2="21" />
+                        </svg>
+                        <span>Number</span>
+                    </button>
+                    <button class="field-type-btn" data-field-type="select">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10" />
+                            <polyline points="8 10 12 14 16 10" />
+                        </svg>
+                        <span>Dropdown</span>
+                    </button>
+                    <button class="field-type-btn" data-field-type="radio">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="6" r="3" />
+                            <circle cx="12" cy="18" r="3" />
+                            <circle cx="12" cy="12" r="3" fill="currentColor" />
+                        </svg>
+                        <span>Multiple Choice</span>
+                    </button>
+                    <button class="field-type-btn" data-field-type="checkbox">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7" rx="1" />
+                            <rect x="14" y="3" width="7" height="7" rx="1" />
+                            <rect x="3" y="14" width="7" height="7" rx="1" />
+                            <path d="M15 16l2 2 4-4" />
+                        </svg>
+                        <span>Checkboxes</span>
+                    </button>
+                </div>
+            </aside>
+        </main>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        // Utility functions
+        const Utils = {
+            showToast(message, type = 'info') {
+                if (typeof Admin !== 'undefined' && Admin.showToast) {
+                    Admin.showToast(type, type.charAt(0).toUpperCase() + type.slice(1), message);
+                } else {
+                    console.log(`[${type.toUpperCase()}] ${message}`);
+                }
+            }
+        };
+
+        // Form Builder Manager
+        window.FormBuilder = {
+            editingFormId: null,
+            fields: [],
+            selectedFieldIndex: null,
+            hasUnsavedChanges: false,
+            autoSaveTimer: null,
+
+            fieldTypes: {
+                text: { label: 'Short Answer', icon: 'short-text' },
+                textarea: { label: 'Paragraph', icon: 'paragraph' },
+                email: { label: 'Email', icon: 'email' },
+                tel: { label: 'Phone', icon: 'phone' },
+                number: { label: 'Number', icon: 'number' },
+                select: { label: 'Dropdown', icon: 'dropdown' },
+                radio: { label: 'Multiple Choice', icon: 'radio' },
+                checkbox: { label: 'Checkboxes', icon: 'checkbox' }
+            },
+
+            async init() {
+                // Check for form ID in URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const formId = urlParams.get('id');
+
+                if (formId) {
+                    await this.loadForm(formId);
+                } else {
+                    // Try to load draft first
+                    this.loadDraft();
+
+                    // If no draft or draft was rejected, add default fields
+                    if (this.fields.length === 0) {
+                        this.addField('text', 'Full Name', true);
+                        this.addField('email', 'Email Address', true);
+                        this.addField('tel', 'Phone Number', true);
+                    }
+                }
+
+                this.renderFields();
+                this.setupEventListeners();
+            },
+
+            setupEventListeners() {
+                // Back button
+                const btnBack = document.getElementById('btnBack');
+                if (btnBack) {
+                    btnBack.addEventListener('click', () => this.goBack());
+                }
+
+                // Preview button
+                const btnPreview = document.getElementById('btnPreview');
+                if (btnPreview) {
+                    btnPreview.addEventListener('click', () => this.previewForm());
+                }
+
+                // Save button
+                const btnSaveForm = document.getElementById('btnSaveForm');
+                if (btnSaveForm) {
+                    btnSaveForm.addEventListener('click', () => this.saveForm());
+                }
+
+                // Add field card
+                const btnAddField = document.getElementById('btnAddField');
+                if (btnAddField) {
+                    btnAddField.addEventListener('click', () => this.showFieldTypeMenu());
+                }
+
+                // Sidebar field type buttons
+                const fieldTypeButtons = document.querySelectorAll('.field-type-btn');
+                fieldTypeButtons.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const fieldType = btn.dataset.fieldType;
+                        if (fieldType) {
+                            this.addField(fieldType);
+                        }
+                    });
+                });
+
+                // Sync title inputs
+                const titleHeader = document.getElementById('formBuilderTitleHeader');
+                const titleMain = document.getElementById('formBuilderTitle');
+                const description = document.getElementById('formBuilderDescription');
+
+                if (titleHeader && titleMain) {
+                    titleHeader.addEventListener('input', () => {
+                        titleMain.value = titleHeader.value;
+                        this.markAsChanged();
+                    });
+
+                    titleMain.addEventListener('input', () => {
+                        this.markAsChanged();
+                    });
+                }
+
+                if (description) {
+                    description.addEventListener('input', () => {
+                        this.markAsChanged();
+                    });
+                }
+
+                // Keyboard shortcuts
+                document.addEventListener('keydown', (e) => {
+                    // Ctrl/Cmd + S to save
+                    if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                        e.preventDefault();
+                        this.saveForm();
+                    }
+
+                    // Escape to deselect field
+                    if (e.key === 'Escape') {
+                        this.selectedFieldIndex = null;
+                        this.renderFields();
+                    }
+
+                    // Delete key to delete selected field
+                    if (e.key === 'Delete' && this.selectedFieldIndex !== null) {
+                        const activeElement = document.activeElement;
+                        // Only delete if not typing in an input
+                        if (!activeElement || !['INPUT', 'TEXTAREA'].includes(activeElement.tagName)) {
+                            e.preventDefault();
+                            this.deleteField(this.selectedFieldIndex);
+                        }
+                    }
+                });
+
+                // Warn before leaving if unsaved changes
+                window.addEventListener('beforeunload', (e) => {
+                    if (this.hasUnsavedChanges) {
+                        e.preventDefault();
+                        e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+                        return e.returnValue;
+                    }
+                });
+            },
+
+            markAsChanged() {
+                this.hasUnsavedChanges = true;
+                // Auto-save after 2 seconds of inactivity
+                if (this.autoSaveTimer) {
+                    clearTimeout(this.autoSaveTimer);
+                }
+                this.autoSaveTimer = setTimeout(() => {
+                    this.saveDraft();
+                }, 2000);
+            },
+
+            async saveDraft() {
+                // Save to localStorage as draft
+                const draft = {
+                    title: document.getElementById('formBuilderTitle').value,
+                    description: document.getElementById('formBuilderDescription').value,
+                    fields: this.fields,
+                    timestamp: new Date().toISOString()
+                };
+
+                try {
+                    localStorage.setItem('form_builder_draft', JSON.stringify(draft));
+                    console.log('Draft saved automatically');
+                } catch (error) {
+                    console.error('Failed to save draft:', error);
+                }
+            },
+
+            loadDraft() {
+                try {
+                    const draft = localStorage.getItem('form_builder_draft');
+                    if (draft && !this.editingFormId) {
+                        const data = JSON.parse(draft);
+                        const timeDiff = new Date() - new Date(data.timestamp);
+
+                        // If draft is less than 24 hours old
+                        if (timeDiff < 24 * 60 * 60 * 1000) {
+                            if (confirm('Found an unsaved draft. Do you want to restore it?')) {
+                                document.getElementById('formBuilderTitle').value = data.title;
+                                document.getElementById('formBuilderTitleHeader').value = data.title;
+                                document.getElementById('formBuilderDescription').value = data.description || '';
+                                this.fields = data.fields || [];
+                                this.renderFields();
+                                Utils.showToast('Draft restored', 'success');
+                            }
+                        } else {
+                            // Remove old draft
+                            localStorage.removeItem('form_builder_draft');
+                        }
+                    }
+                } catch (error) {
+                    console.error('Failed to load draft:', error);
+                }
+            },
+
+            clearDraft() {
+                localStorage.removeItem('form_builder_draft');
+            },
+
+            async loadForm(formId) {
+                try {
+                    const token = localStorage.getItem('adminToken');
+                    const response = await fetch(`/api/registrations/forms/${formId}`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+
+                    if (!response.ok) throw new Error('Failed to load form');
+
+                    const form = await response.json();
+                    this.editingFormId = formId;
+                    this.fields = form.fields || [];
+                    this.selectedFieldIndex = this.fields.length > 0 ? 0 : null;
+
+                    document.getElementById('formBuilderTitle').value = form.title;
+                    document.getElementById('formBuilderTitleHeader').value = form.title;
+                    document.getElementById('formBuilderDescription').value = form.description || '';
+
+                    Utils.showToast('Form loaded successfully', 'success');
+                } catch (error) {
+                    console.error('Error loading form:', error);
+                    Utils.showToast('Failed to load form', 'error');
+                }
+            },
+
+            addField(type = 'text', label = '', required = false) {
+                try {
+                    console.log('Adding field:', type);
+                    if (!this.fieldTypes) {
+                        throw new Error('Field types configuration is missing');
+                    }
+
+                    const fieldType = this.fieldTypes[type] || this.fieldTypes.text;
+                    const newField = {
+                        id: `field_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+                        label: label || fieldType.label,
+                        type: type,
+                        required: required,
+                        placeholder: '',
+                        options: (type === 'select' || type === 'radio' || type === 'checkbox') ? ['Option 1'] : []
+                    };
+
+                    this.fields.push(newField);
+                    this.selectedFieldIndex = this.fields.length - 1;
+                    this.renderFields();
+                    this.markAsChanged();
+
+                    // Scroll to the new field
+                    setTimeout(() => {
+                        const fieldCards = document.querySelectorAll('.form-field-card');
+                        if (fieldCards[this.selectedFieldIndex]) {
+                            fieldCards[this.selectedFieldIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }, 100);
+                } catch (error) {
+                    console.error('Error adding field:', error);
+                    Utils.showToast('Failed to add field: ' + error.message, 'error');
+                }
+            },
+
+            renderFields() {
+                try {
+                    const container = document.getElementById('formFieldsContainer');
+                    if (!container) return;
+
+                    if (this.fields.length === 0) {
+                        container.innerHTML = '';
+                        return;
+                    }
+
+                    if (!this.fieldTypes) {
+                        console.error('fieldTypes undefined in renderFields');
+                        return;
+                    }
+
+                    container.innerHTML = this.fields.map((field, index) => {
+                        const isSelected = index === this.selectedFieldIndex;
+                        const hasOptions = ['select', 'radio', 'checkbox'].includes(field.type);
+
+                        return `
+                        <div class="form-field-card ${isSelected ? 'selected' : ''}" 
+                             data-field-index="${index}"
+                             draggable="true">
+                            
+                            <div class="form-field-header">
+                                <input type="text" 
+                                       class="form-field-label-input" 
+                                       value="${field.label.replace(/"/g, '&quot;')}" 
+                                       placeholder="Question"
+                                       data-field-index="${index}">
+                                <select class="form-field-type-select" 
+                                        data-field-index="${index}">
+                                    ${Object.entries(this.fieldTypes).map(([key, val]) =>
+                            `<option value="${key}" ${field.type === key ? 'selected' : ''}>${val.label}</option>`
+                        ).join('')}
+                                </select>
+                            </div>
+                            
+                            ${hasOptions ? this.renderFieldOptions(field, index) : this.renderFieldPreview(field)}
+                            
+                            <div class="form-field-footer">
+                                <div class="form-field-required">
+                                    <span>Required</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" 
+                                               class="field-required-toggle"
+                                               ${field.required ? 'checked' : ''} 
+                                               data-field-index="${index}">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="form-field-actions">
+                                    <button class="form-field-action-btn btn-move-up" 
+                                            data-field-index="${index}"
+                                            title="Move Up"
+                                            ${index === 0 ? 'disabled style="opacity:0.3"' : ''}>
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                            <polyline points="18 15 12 9 6 15"/>
+                                        </svg>
+                                    </button>
+                                    <button class="form-field-action-btn btn-move-down" 
+                                            data-field-index="${index}"
+                                            title="Move Down"
+                                            ${index === this.fields.length - 1 ? 'disabled style="opacity:0.3"' : ''}>
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                            <polyline points="6 9 12 15 18 9"/>
+                                        </svg>
+                                    </button>
+                                    <button class="form-field-action-btn btn-duplicate" 
+                                            data-field-index="${index}"
+                                            title="Duplicate">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                                        </svg>
+                                    </button>
+                                    <button class="form-field-action-btn btn-delete delete" 
+                                            data-field-index="${index}"
+                                            title="Delete">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                            <polyline points="3 6 5 6 21 6"/>
+                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    }).join('');
+
+                    // Setup event delegation after rendering
+                    this.setupFieldEventListeners();
+                } catch (error) {
+                    console.error('Error rendering fields:', error);
+                    Utils.showToast('Error rendering fields', 'error');
+                }
+            },
+
+            setupFieldEventListeners() {
+                const container = document.getElementById('formFieldsContainer');
+                if (!container) return;
+
+                // Remove old listeners
+                const oldContainer = container.cloneNode(false);
+                while (container.firstChild) {
+                    oldContainer.appendChild(container.firstChild);
+                }
+                container.parentNode.replaceChild(oldContainer, container);
+                const newContainer = document.getElementById('formFieldsContainer');
+
+                // Field card clicks
+                newContainer.addEventListener('click', (e) => {
+                    const card = e.target.closest('.form-field-card');
+                    if (card && !e.target.closest('button, input, select, textarea')) {
+                        const index = parseInt(card.dataset.fieldIndex);
+                        this.selectField(index);
+                    }
+
+                    // Action buttons
+                    const moveUp = e.target.closest('.btn-move-up');
+                    if (moveUp && !moveUp.disabled) {
+                        e.stopPropagation();
+                        const index = parseInt(moveUp.dataset.fieldIndex);
+                        this.moveFieldUp(index);
+                        return;
+                    }
+
+                    const moveDown = e.target.closest('.btn-move-down');
+                    if (moveDown && !moveDown.disabled) {
+                        e.stopPropagation();
+                        const index = parseInt(moveDown.dataset.fieldIndex);
+                        this.moveFieldDown(index);
+                        return;
+                    }
+
+                    const duplicate = e.target.closest('.btn-duplicate');
+                    if (duplicate) {
+                        e.stopPropagation();
+                        const index = parseInt(duplicate.dataset.fieldIndex);
+                        this.duplicateField(index);
+                        return;
+                    }
+
+                    const deleteBtn = e.target.closest('.btn-delete');
+                    if (deleteBtn) {
+                        e.stopPropagation();
+                        const index = parseInt(deleteBtn.dataset.fieldIndex);
+                        this.deleteField(index);
+                        return;
+                    }
+
+                    // Add option button
+                    const addOption = e.target.closest('.form-field-add-option');
+                    if (addOption) {
+                        e.stopPropagation();
+                        const fieldIndex = parseInt(addOption.dataset.fieldIndex);
+                        this.addFieldOption(fieldIndex);
+                        return;
+                    }
+
+                    // Remove option button
+                    const removeOption = e.target.closest('.form-field-option-remove');
+                    if (removeOption) {
+                        e.stopPropagation();
+                        const fieldIndex = parseInt(removeOption.dataset.fieldIndex);
+                        const optIndex = parseInt(removeOption.dataset.optionIndex);
+                        this.removeFieldOption(fieldIndex, optIndex);
+                        return;
+                    }
+                });
+
+                // Label input changes
+                newContainer.addEventListener('input', (e) => {
+                    if (e.target.classList.contains('form-field-label-input')) {
+                        const index = parseInt(e.target.dataset.fieldIndex);
+                        this.updateFieldLabel(index, e.target.value);
+                    }
+
+                    if (e.target.classList.contains('form-field-option-input')) {
+                        const fieldIndex = parseInt(e.target.dataset.fieldIndex);
+                        const optIndex = parseInt(e.target.dataset.optionIndex);
+                        this.updateFieldOption(fieldIndex, optIndex, e.target.value);
+                    }
+                });
+
+                // Type select changes
+                newContainer.addEventListener('change', (e) => {
+                    if (e.target.classList.contains('form-field-type-select')) {
+                        const index = parseInt(e.target.dataset.fieldIndex);
+                        this.updateFieldType(index, e.target.value);
+                    }
+
+                    if (e.target.classList.contains('field-required-toggle')) {
+                        const index = parseInt(e.target.dataset.fieldIndex);
+                        this.toggleFieldRequired(index, e.target.checked);
+                    }
+                });
+
+                // Drag and drop
+                newContainer.addEventListener('dragstart', (e) => {
+                    const card = e.target.closest('.form-field-card');
+                    if (card) {
+                        const index = card.dataset.fieldIndex;
+                        this.handleDragStart(e, parseInt(index));
+                    }
+                });
+
+                newContainer.addEventListener('dragover', (e) => {
+                    this.handleDragOver(e);
+                });
+
+                newContainer.addEventListener('drop', (e) => {
+                    const card = e.target.closest('.form-field-card');
+                    if (card) {
+                        const index = card.dataset.fieldIndex;
+                        this.handleDrop(e, parseInt(index));
+                    }
+                });
+            },
+
+            renderFieldOptions(field, fieldIndex) {
+                const isCheckbox = field.type === 'checkbox';
+
+                return `
+                    <div class="form-field-options">
+                        ${(field.options || []).map((option, optIndex) => `
+                            <div class="form-field-option">
+                                <div class="form-field-option-icon ${isCheckbox ? 'checkbox' : ''}"></div>
+                                <input type="text" 
+                                       class="form-field-option-input" 
+                                       value="${option.replace(/"/g, '&quot;')}"
+                                       placeholder="Option ${optIndex + 1}"
+                                       data-field-index="${fieldIndex}"
+                                       data-option-index="${optIndex}">
+                                <button class="form-field-option-remove" 
+                                        data-field-index="${fieldIndex}"
+                                        data-option-index="${optIndex}"
+                                        ${field.options.length <= 1 ? 'disabled style="opacity:0"' : ''}>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                        <line x1="18" y1="6" x2="6" y2="18"/>
+                                        <line x1="6" y1="6" x2="18" y2="18"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        `).join('')}
+                        <div class="form-field-add-option" data-field-index="${fieldIndex}">
+                            <div class="form-field-option-icon ${isCheckbox ? 'checkbox' : ''}"></div>
+                            <span>Add option</span>
+                        </div>
+                    </div>
+                `;
+            },
+
+            renderFieldPreview(field) {
+                const placeholders = {
+                    text: 'Short answer text',
+                    textarea: 'Long answer text',
+                    email: 'email@example.com',
+                    tel: '+91 XXXXXXXXXX',
+                    number: '0'
+                };
+
+                if (field.type === 'textarea') {
+                    return `<textarea class="form-preview-input" placeholder="${placeholders[field.type] || ''}" disabled style="resize: none; height: 80px;"></textarea>`;
+                }
+
+                return `<input type="${field.type}" class="form-preview-input" placeholder="${placeholders[field.type] || ''}" disabled>`;
+            },
+
+            selectField(index) {
+                this.selectedFieldIndex = index;
+                this.markAsChanged();
+            },
+
+            updateFieldLabel(index, label) {
+                this.fields[index].label = label;
+                this.markAsChanged();
+            },
+
+            updateFieldType(index, type) {
+                const oldField = this.fields[index];
+                this.fields[index].type = type;
+
+                // Add options if switching to select/radio/checkbox
+                if (['select', 'radio', 'checkbox'].includes(type) && (!oldField.options || oldField.options.length === 0)) {
+                    this.fields[index].options = ['Option 1'];
+                }
+
+                this.markAsChanged();
+                this.renderFields();
+            },
+
+            toggleFieldRequired(index, required) {
+                this.fields[index].required = required;
+                this.markAsChanged();
+            },
+
+            updateFieldOption(fieldIndex, optionIndex, value) {
+                this.fields[fieldIndex].options[optionIndex] = value;
+                this.markAsChanged();
+            },
+
+            addFieldOption(fieldIndex) {
+                const options = this.fields[fieldIndex].options || [];
+                options.push(`Option ${options.length + 1}`);
+                this.fields[fieldIndex].options = options;
+                this.markAsChanged();
+                this.renderFields();
+            },
+
+            removeFieldOption(fieldIndex, optionIndex) {
+                if (this.fields[fieldIndex].options.length > 1) {
+                    this.fields[fieldIndex].options.splice(optionIndex, 1);
+                    this.markAsChanged();
+                    this.renderFields();
+                }
+            },
+
+            duplicateField(index) {
+                const field = { ...this.fields[index] };
+                field.id = `field_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+                field.label = field.label + ' (Copy)';
+                if (field.options) {
+                    field.options = [...field.options];
+                }
+                this.fields.splice(index + 1, 0, field);
+                this.selectedFieldIndex = index + 1;
+                this.markAsChanged();
+                this.renderFields();
+            },
+
+            deleteField(index) {
+                if (this.fields.length <= 1) {
+                    Utils.showToast('Form must have at least one field', 'error');
+                    return;
+                }
+
+                if (confirm('Are you sure you want to delete this field?')) {
+                    this.fields.splice(index, 1);
+                    if (this.selectedFieldIndex >= this.fields.length) {
+                        this.selectedFieldIndex = this.fields.length - 1;
+                    }
+                    this.markAsChanged();
+                    this.renderFields();
+                }
+            },
+
+            moveFieldUp(index) {
+                if (index > 0) {
+                    const field = this.fields.splice(index, 1)[0];
+                    this.fields.splice(index - 1, 0, field);
+                    this.selectedFieldIndex = index - 1;
+                    this.markAsChanged();
+                    this.renderFields();
+                }
+            },
+
+            moveFieldDown(index) {
+                if (index < this.fields.length - 1) {
+                    const field = this.fields.splice(index, 1)[0];
+                    this.fields.splice(index + 1, 0, field);
+                    this.selectedFieldIndex = index + 1;
+                    this.markAsChanged();
+                    this.renderFields();
+                }
+
+                document.querySelectorAll('.form-field-card').forEach(el => el.classList.remove('dragging'));
+            },
+
+            handleDragStart(event, index) {
+                event.dataTransfer.setData('text/plain', index);
+                event.target.classList.add('dragging');
+            },
+
+            handleDragOver(event) {
+                event.preventDefault();
+                event.dataTransfer.dropEffect = 'move';
+            },
+
+            handleDrop(event, dropIndex) {
+                event.preventDefault();
+                const dragIndex = parseInt(event.dataTransfer.getData('text/plain'));
+
+                if (dragIndex !== dropIndex) {
+                    const field = this.fields.splice(dragIndex, 1)[0];
+                    this.fields.splice(dropIndex, 0, field);
+                    this.selectedFieldIndex = dropIndex;
+                    this.renderFields();
+                    this.markAsChanged();
+                }
+
+                document.querySelectorAll('.form-field-card').forEach(el => el.classList.remove('dragging'));
+            },
+
+            validateForm() {
+                const title = document.getElementById('formBuilderTitle').value.trim();
+                const errors = [];
+
+                if (!title) {
+                    errors.push('Form title is required');
+                }
+
+                if (this.fields.length === 0) {
+                    errors.push('Form must have at least one field');
+                }
+
+                // Validate each field
+                this.fields.forEach((field, index) => {
+                    if (!field.label || field.label.trim() === '') {
+                        errors.push(`Field ${index + 1} needs a label`);
+                    }
+                });
+
+                return errors;
+            },
+
+            showFieldTypeMenu() {
+                console.log('showFieldTypeMenu called');
+
+                // For quick access, just add a text field by default
+                // User can change type after adding
+                this.addField('text', 'Question', false);
+
+                // Focus on the label input of the new field
+                setTimeout(() => {
+                    const inputs = document.querySelectorAll('.form-field-label-input');
+                    if (inputs.length > 0) {
+                        const lastInput = inputs[inputs.length - 1];
+                        lastInput.focus();
+                        lastInput.select();
+                    }
+                }, 150);
+            },
+
+            previewForm() {
+                this.saveDraft();
+                Utils.showToast('Preview feature coming soon', 'info');
+                // window.open('form-preview.html', '_blank');
+            },
+
+            exportForm() {
+                const formData = {
+                    title: document.getElementById('formBuilderTitle').value,
+                    description: document.getElementById('formBuilderDescription').value,
+                    fields: this.fields,
+                    exportedAt: new Date().toISOString()
+                };
+
+                const blob = new Blob([JSON.stringify(formData, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${formData.title.toLowerCase().replace(/\s+/g, '-')}-form.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                Utils.showToast('Form exported successfully', 'success');
+            },
+
+            importForm() {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.json';
+                input.onchange = (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        try {
+                            const data = JSON.parse(event.target.result);
+
+                            if (confirm('This will replace your current form. Continue?')) {
+                                document.getElementById('formBuilderTitle').value = data.title || 'Untitled form';
+                                document.getElementById('formBuilderTitleHeader').value = data.title || 'Untitled form';
+                                document.getElementById('formBuilderDescription').value = data.description || '';
+                                this.fields = data.fields || [];
+                                this.markAsChanged();
+                                this.renderFields();
+                                Utils.showToast('Form imported successfully', 'success');
+                            }
+                        } catch (error) {
+                            console.error('Import error:', error);
+                            Utils.showToast('Failed to import form. Invalid file format.', 'error');
+                        }
+                    };
+                    reader.readAsText(file);
+                };
+                input.click();
+            },
+
+            async saveForm() {
+                const errors = this.validateForm();
+                if (errors.length > 0) {
+                    Utils.showToast(errors[0], 'error');
+                    // Focus on first error field if it's a field label issue
+                    const labelError = errors.find(e => e.includes('needs a label'));
+                    if (labelError) {
+                        const fieldNum = parseInt(labelError.match(/\d+/)[0]) - 1;
+                        this.selectField(fieldNum);
+                    }
+                    return;
+                }
+
+                const title = document.getElementById('formBuilderTitle').value.trim();
+                const description = document.getElementById('formBuilderDescription').value.trim();
+
+                try {
+                    const token = localStorage.getItem('adminToken');
+                    const url = this.editingFormId
+                        ? `/api/registrations/forms/${this.editingFormId}`
+                        : '/api/registrations/forms';
+                    const method = this.editingFormId ? 'PUT' : 'POST';
+
+                    const response = await fetch(url, {
+                        method,
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ title, description, fields: this.fields })
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        Utils.showToast(this.editingFormId ? 'Form updated successfully' : 'Form created successfully', 'success');
+                        this.hasUnsavedChanges = false;
+                        this.clearDraft();
+                        setTimeout(() => {
+                            window.location.href = 'registrations.html';
+                        }, 1000);
+                    } else {
+                        Utils.showToast(data.error || 'Failed to save form', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error saving form:', error);
+                    Utils.showToast('Failed to save form', 'error');
+                }
+            },
+
+            goBack() {
+                if (this.fields.length > 0 || document.getElementById('formBuilderTitle').value !== 'Untitled form') {
+                    if (confirm('Are you sure you want to go back? Unsaved changes will be lost.')) {
+                        window.location.href = 'registrations.html';
+                    }
+                } else {
+                    window.location.href = 'registrations.html';
+                }
+            }
+        };
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            FormBuilder.init();
+        });
+    </script>
+    <script type="module" src="../js/supabase-config.js"></script>
+    <script type="module" src="../js/auth.js"></script>
+    <script type="module" src="../js/admin.js"></script>
+</body>
+
+</html>

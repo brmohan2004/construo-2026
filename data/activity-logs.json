@@ -1,0 +1,2134 @@
+{
+  "logs": [
+    {
+      "id": "log_1770151917501",
+      "action": "delete",
+      "section": "submissions",
+      "description": "Deleted submission: CONS20260002",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T20:51:57.501Z"
+    },
+    {
+      "id": "log_1770151904714",
+      "action": "update",
+      "section": "forms",
+      "description": "Deactivated registration form: Untitled form",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T20:51:44.714Z"
+    },
+    {
+      "id": "log_1770151904714",
+      "action": "update",
+      "section": "forms",
+      "description": "Activated registration form: Untitled form",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T20:51:44.714Z"
+    },
+    {
+      "id": "log_1770151904692",
+      "action": "update",
+      "section": "forms",
+      "description": "Activated registration form: Untitled form",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T20:51:44.692Z"
+    },
+    {
+      "id": "log_1770151901480",
+      "action": "update",
+      "section": "forms",
+      "description": "Deactivated registration form: Untitled form",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T20:51:41.480Z"
+    },
+    {
+      "id": "log_1770151901480",
+      "action": "update",
+      "section": "forms",
+      "description": "Deactivated registration form: Untitled form",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T20:51:41.480Z"
+    },
+    {
+      "id": "log_1770151898581",
+      "action": "update",
+      "section": "forms",
+      "description": "Deactivated registration form: Untitled form",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T20:51:38.581Z"
+    },
+    {
+      "id": "log_1770151235384",
+      "action": "update",
+      "section": "forms",
+      "description": "Activated registration form: Untitled form",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T20:40:35.384Z"
+    },
+    {
+      "id": "log_1770151226889",
+      "action": "update",
+      "section": "forms",
+      "description": "Updated registration form: Untitled form",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T20:40:26.889Z"
+    },
+    {
+      "id": "log_1770151217294",
+      "action": "create",
+      "section": "forms",
+      "description": "Created registration form: Untitled form",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T20:40:17.294Z"
+    },
+    {
+      "id": "log_1770150870314",
+      "action": "delete",
+      "section": "forms",
+      "description": "Deleted registration form: CONSTRUO 2026 Registration",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T20:34:30.314Z"
+    },
+    {
+      "id": "log_1770150859635",
+      "action": "create",
+      "section": "forms",
+      "description": "Created registration form: CONSTRUO 2026 Registration",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T20:34:19.635Z"
+    },
+    {
+      "id": "log_1770150846357",
+      "action": "delete",
+      "section": "forms",
+      "description": "Deleted registration form: CONSTRUO 2026 Registration",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T20:34:06.357Z"
+    },
+    {
+      "id": "log_1770150843730",
+      "action": "delete",
+      "section": "submissions",
+      "description": "Deleted submission: CONS20260007",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T20:34:03.730Z"
+    },
+    {
+      "id": "log_1770150841773",
+      "action": "delete",
+      "section": "submissions",
+      "description": "Deleted submission: CONS20260008",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T20:34:01.774Z"
+    },
+    {
+      "id": "log_1770150838659",
+      "action": "delete",
+      "section": "submissions",
+      "description": "Deleted submission: CONS20260009",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T20:33:58.659Z"
+    },
+    {
+      "id": "log_1770150381669",
+      "action": "update",
+      "section": "forms",
+      "description": "Deactivated registration form: CONSTRUO 2026 Registration",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T20:26:21.669Z"
+    },
+    {
+      "id": "log_1770150381669",
+      "action": "update",
+      "section": "forms",
+      "description": "Deactivated registration form: CONSTRUO 2026 Registration",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T20:26:21.669Z"
+    },
+    {
+      "id": "log_1770150381669",
+      "action": "update",
+      "section": "forms",
+      "description": "Deactivated registration form: CONSTRUO 2026 Registration",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T20:26:21.669Z"
+    },
+    {
+      "id": "log_1770150381668",
+      "action": "update",
+      "section": "forms",
+      "description": "Deactivated registration form: CONSTRUO 2026 Registration",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T20:26:21.668Z"
+    },
+    {
+      "id": "log_1770150378962",
+      "action": "update",
+      "section": "forms",
+      "description": "Activated registration form: CONSTRUO 2026 Registration",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T20:26:18.962Z"
+    },
+    {
+      "id": "log_1770150370513",
+      "action": "delete",
+      "section": "forms",
+      "description": "Deleted registration form: CONSTRUO 2026 Registration",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T20:26:10.513Z"
+    },
+    {
+      "id": "log_1770150343779",
+      "action": "create",
+      "section": "forms",
+      "description": "Created registration form: CONSTRUO 2026 Registration",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T20:25:43.779Z"
+    },
+    {
+      "id": "log_1770149676872",
+      "action": "update",
+      "section": "forms",
+      "description": "Activated registration form: CONSTRUO 2026 Registration",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T20:14:36.872Z"
+    },
+    {
+      "id": "log_1770149207891",
+      "action": "update",
+      "section": "forms",
+      "description": "Updated registration form: CONSTRUO 2026 Registration",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T20:06:47.891Z"
+    },
+    {
+      "id": "log_1770149103378",
+      "action": "update",
+      "section": "forms",
+      "description": "Updated registration form: CONSTRUO 2026 Registration",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T20:05:03.378Z"
+    },
+    {
+      "id": "log_1770149092170",
+      "action": "update",
+      "section": "forms",
+      "description": "Updated registration form: CONSTRUO 2026 Registration",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T20:04:52.170Z"
+    },
+    {
+      "id": "log_1770147029747",
+      "action": "update",
+      "section": "forms",
+      "description": "Deactivated registration form: CONSTRUO 2026 Registration",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T19:30:29.747Z"
+    },
+    {
+      "id": "log_1770147027777",
+      "action": "update",
+      "section": "forms",
+      "description": "Activated registration form: CONSTRUO 2026 Registration",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T19:30:27.777Z"
+    },
+    {
+      "id": "log_1770147026535",
+      "action": "update",
+      "section": "forms",
+      "description": "Deactivated registration form: CONSTRUO 2026 Registration",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T19:30:26.535Z"
+    },
+    {
+      "id": "log_1770147019732",
+      "action": "login",
+      "section": "auth",
+      "description": "User admin logged in",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T19:30:19.732Z"
+    },
+    {
+      "id": "log_1770146877467",
+      "action": "login",
+      "section": "auth",
+      "description": "User admin logged in",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T19:27:57.467Z"
+    },
+    {
+      "id": "log_1770146851195",
+      "action": "login",
+      "section": "auth",
+      "description": "User admin logged in",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T19:27:31.195Z"
+    },
+    {
+      "id": "log_1770146722511",
+      "action": "login",
+      "section": "auth",
+      "description": "User admin logged in",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T19:25:22.511Z"
+    },
+    {
+      "id": "log_1770146698894",
+      "action": "login",
+      "section": "auth",
+      "description": "User admin logged in",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T19:24:58.894Z"
+    },
+    {
+      "id": "log_1770146691836",
+      "action": "login",
+      "section": "auth",
+      "description": "User admin logged in",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T19:24:51.836Z"
+    },
+    {
+      "id": "log_1770146331809",
+      "action": "login",
+      "section": "auth",
+      "description": "User admin logged in",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T19:18:51.809Z"
+    },
+    {
+      "id": "log_1770145628946",
+      "action": "login",
+      "section": "auth",
+      "description": "User admin logged in",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T19:07:08.946Z"
+    },
+    {
+      "id": "log_1770143481241",
+      "action": "delete",
+      "section": "timeline",
+      "description": "Deleted day: Day 2",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T18:31:21.241Z"
+    },
+    {
+      "id": "log_1770143478622",
+      "action": "update",
+      "section": "timeline",
+      "description": "Updated event timeline",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T18:31:18.622Z"
+    },
+    {
+      "id": "log_1770143166592",
+      "action": "create",
+      "section": "timeline",
+      "description": "Added session: mmoha ",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T18:26:06.592Z"
+    },
+    {
+      "id": "log_1770143082256",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T18:24:42.256Z"
+    },
+    {
+      "id": "log_1770142975656",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T18:22:55.656Z"
+    },
+    {
+      "id": "log_1770142803517",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T18:20:03.517Z"
+    },
+    {
+      "id": "log_1770142484325",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T18:14:44.325Z"
+    },
+    {
+      "id": "log_1770142467917",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T18:14:27.917Z"
+    },
+    {
+      "id": "log_1770142350757",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T18:12:30.757Z"
+    },
+    {
+      "id": "log_1770142252530",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T18:10:52.530Z"
+    },
+    {
+      "id": "log_1770142228981",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T18:10:28.981Z"
+    },
+    {
+      "id": "log_1770142192593",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T18:09:52.593Z"
+    },
+    {
+      "id": "log_1770142076749",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T18:07:56.749Z"
+    },
+    {
+      "id": "log_1770141986826",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T18:06:26.826Z"
+    },
+    {
+      "id": "log_1770141874630",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T18:04:34.630Z"
+    },
+    {
+      "id": "log_1770141857010",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T18:04:17.010Z"
+    },
+    {
+      "id": "log_1770141320229",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:55:20.229Z"
+    },
+    {
+      "id": "log_1770141174732",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:54.732Z"
+    },
+    {
+      "id": "log_1770141139316",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:19.316Z"
+    },
+    {
+      "id": "log_1770141139000",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:19.000Z"
+    },
+    {
+      "id": "log_1770141138660",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:18.660Z"
+    },
+    {
+      "id": "log_1770141138354",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:18.354Z"
+    },
+    {
+      "id": "log_1770141138150",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:18.150Z"
+    },
+    {
+      "id": "log_1770141137950",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:17.950Z"
+    },
+    {
+      "id": "log_1770141137756",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:17.756Z"
+    },
+    {
+      "id": "log_1770141137539",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:17.539Z"
+    },
+    {
+      "id": "log_1770141137224",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:17.224Z"
+    },
+    {
+      "id": "log_1770141136897",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:16.897Z"
+    },
+    {
+      "id": "log_1770141135358",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:15.358Z"
+    },
+    {
+      "id": "log_1770141135103",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:15.103Z"
+    },
+    {
+      "id": "log_1770141134898",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:14.898Z"
+    },
+    {
+      "id": "log_1770141134506",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:14.506Z"
+    },
+    {
+      "id": "log_1770141134279",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:14.279Z"
+    },
+    {
+      "id": "log_1770141134074",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:14.074Z"
+    },
+    {
+      "id": "log_1770141133866",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:13.866Z"
+    },
+    {
+      "id": "log_1770141133600",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:13.600Z"
+    },
+    {
+      "id": "log_1770141133240",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:13.240Z"
+    },
+    {
+      "id": "log_1770141132898",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:12.898Z"
+    },
+    {
+      "id": "log_1770141132536",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:12.536Z"
+    },
+    {
+      "id": "log_1770141132172",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:12.172Z"
+    },
+    {
+      "id": "log_1770141131918",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:11.918Z"
+    },
+    {
+      "id": "log_1770141131679",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:11.680Z"
+    },
+    {
+      "id": "log_1770141131466",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:11.466Z"
+    },
+    {
+      "id": "log_1770141131240",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:11.240Z"
+    },
+    {
+      "id": "log_1770141131029",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:11.029Z"
+    },
+    {
+      "id": "log_1770141130826",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:10.826Z"
+    },
+    {
+      "id": "log_1770141130623",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:10.623Z"
+    },
+    {
+      "id": "log_1770141130421",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:10.421Z"
+    },
+    {
+      "id": "log_1770141130212",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:10.212Z"
+    },
+    {
+      "id": "log_1770141130070",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:10.070Z"
+    },
+    {
+      "id": "log_1770141128069",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:08.069Z"
+    },
+    {
+      "id": "log_1770141125851",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:05.851Z"
+    },
+    {
+      "id": "log_1770141125238",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:05.238Z"
+    },
+    {
+      "id": "log_1770141124906",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:04.906Z"
+    },
+    {
+      "id": "log_1770141124591",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:04.591Z"
+    },
+    {
+      "id": "log_1770141124316",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:04.316Z"
+    },
+    {
+      "id": "log_1770141123989",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:03.989Z"
+    },
+    {
+      "id": "log_1770141123622",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:03.622Z"
+    },
+    {
+      "id": "log_1770141123318",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:03.318Z"
+    },
+    {
+      "id": "log_1770141123072",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:03.072Z"
+    },
+    {
+      "id": "log_1770141122844",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:02.844Z"
+    },
+    {
+      "id": "log_1770141122640",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:02.640Z"
+    },
+    {
+      "id": "log_1770141122452",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:02.452Z"
+    },
+    {
+      "id": "log_1770141122253",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:02.253Z"
+    },
+    {
+      "id": "log_1770141122067",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:02.067Z"
+    },
+    {
+      "id": "log_1770141121870",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:01.870Z"
+    },
+    {
+      "id": "log_1770141121679",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:01.679Z"
+    },
+    {
+      "id": "log_1770141121499",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:01.499Z"
+    },
+    {
+      "id": "log_1770141121309",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:01.309Z"
+    },
+    {
+      "id": "log_1770141121122",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:01.122Z"
+    },
+    {
+      "id": "log_1770141120928",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:00.928Z"
+    },
+    {
+      "id": "log_1770141120706",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:00.706Z"
+    },
+    {
+      "id": "log_1770141120504",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:00.504Z"
+    },
+    {
+      "id": "log_1770141120269",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:00.269Z"
+    },
+    {
+      "id": "log_1770141120098",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:52:00.098Z"
+    },
+    {
+      "id": "log_1770141117599",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:51:57.599Z"
+    },
+    {
+      "id": "log_1770141117327",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:51:57.327Z"
+    },
+    {
+      "id": "log_1770141117020",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:51:57.020Z"
+    },
+    {
+      "id": "log_1770141116809",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:51:56.809Z"
+    },
+    {
+      "id": "log_1770141116572",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:51:56.572Z"
+    },
+    {
+      "id": "log_1770141116348",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:51:56.348Z"
+    },
+    {
+      "id": "log_1770141116150",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:51:56.150Z"
+    },
+    {
+      "id": "log_1770141115973",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:51:55.973Z"
+    },
+    {
+      "id": "log_1770141115781",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:51:55.781Z"
+    },
+    {
+      "id": "log_1770141115572",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:51:55.572Z"
+    },
+    {
+      "id": "log_1770141115326",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:51:55.326Z"
+    },
+    {
+      "id": "log_1770141115134",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:51:55.134Z"
+    },
+    {
+      "id": "log_1770141112246",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:51:52.246Z"
+    },
+    {
+      "id": "log_1770141112044",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:51:52.044Z"
+    },
+    {
+      "id": "log_1770141111855",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:51:51.855Z"
+    },
+    {
+      "id": "log_1770141111672",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:51:51.672Z"
+    },
+    {
+      "id": "log_1770141111462",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:51:51.462Z"
+    },
+    {
+      "id": "log_1770141108144",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:51:48.144Z"
+    },
+    {
+      "id": "log_1770141098692",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:51:38.692Z"
+    },
+    {
+      "id": "log_1770141094119",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:51:34.119Z"
+    },
+    {
+      "id": "log_1770141092028",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:51:32.028Z"
+    },
+    {
+      "id": "log_1770141090357",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:51:30.357Z"
+    },
+    {
+      "id": "log_1770141088268",
+      "action": "update",
+      "section": "sponsors",
+      "description": "Updated sponsors list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:51:28.268Z"
+    },
+    {
+      "id": "log_1770138125145",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:02:05.145Z"
+    },
+    {
+      "id": "log_1770138106548",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:01:46.548Z"
+    },
+    {
+      "id": "log_1770138074226",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T17:01:14.226Z"
+    },
+    {
+      "id": "log_1770137760788",
+      "action": "update",
+      "section": "speakers",
+      "description": "Updated speakers list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T16:56:00.788Z"
+    },
+    {
+      "id": "log_1770137746387",
+      "action": "update",
+      "section": "speakers",
+      "description": "Updated speakers list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T16:55:46.387Z"
+    },
+    {
+      "id": "log_1770137744860",
+      "action": "update",
+      "section": "speakers",
+      "description": "Updated speakers list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T16:55:44.860Z"
+    },
+    {
+      "id": "log_1770137743244",
+      "action": "update",
+      "section": "speakers",
+      "description": "Updated speakers list",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T16:55:43.244Z"
+    },
+    {
+      "id": "log_1770137417916",
+      "action": "delete",
+      "section": "timeline",
+      "description": "Deleted day: Day 2",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T16:50:17.916Z"
+    },
+    {
+      "id": "log_1770136091112",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T16:28:11.112Z"
+    },
+    {
+      "id": "log_1770135999601",
+      "action": "update",
+      "section": "timeline",
+      "description": "Updated event timeline",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T16:26:39.601Z"
+    },
+    {
+      "id": "log_1770135996724",
+      "action": "create",
+      "section": "timeline",
+      "description": "Added session: bfbfcx bxfc",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T16:26:36.724Z"
+    },
+    {
+      "id": "log_1770135980135",
+      "action": "create",
+      "section": "timeline",
+      "description": "Added day: Day 2",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T16:26:20.135Z"
+    },
+    {
+      "id": "log_1770135973940",
+      "action": "update",
+      "section": "timeline",
+      "description": "Updated event timeline",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T16:26:13.940Z"
+    },
+    {
+      "id": "log_1770135971003",
+      "action": "update",
+      "section": "timeline",
+      "description": "Updated day: Day 1",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T16:26:11.003Z"
+    },
+    {
+      "id": "log_1770135942492",
+      "action": "update",
+      "section": "timeline",
+      "description": "Updated event timeline",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T16:25:42.492Z"
+    },
+    {
+      "id": "log_1770135937951",
+      "action": "create",
+      "section": "timeline",
+      "description": "Added session: mohan",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T16:25:37.951Z"
+    },
+    {
+      "id": "log_1770135916301",
+      "action": "create",
+      "section": "timeline",
+      "description": "Added day: Day 1",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T16:25:16.301Z"
+    },
+    {
+      "id": "log_1770131260656",
+      "action": "update",
+      "section": "timeline",
+      "description": "Updated event timeline",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T15:07:40.656Z"
+    },
+    {
+      "id": "log_1770127631513",
+      "action": "update",
+      "section": "timeline",
+      "description": "Updated event timeline",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T14:07:11.513Z"
+    },
+    {
+      "id": "log_1770127091605",
+      "action": "update",
+      "section": "timeline",
+      "description": "Updated event timeline",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T13:58:11.605Z"
+    },
+    {
+      "id": "log_1770126676531",
+      "action": "update",
+      "section": "timeline",
+      "description": "Updated event timeline",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T13:51:16.531Z"
+    },
+    {
+      "id": "log_1770126622629",
+      "action": "bulk-update",
+      "section": "events",
+      "description": "Replaced events dataset",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T13:50:22.630Z"
+    },
+    {
+      "id": "log_1770125510658",
+      "action": "update",
+      "section": "timeline",
+      "description": "Updated event timeline",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T13:31:50.658Z"
+    },
+    {
+      "id": "log_1770125503347",
+      "action": "update",
+      "section": "timeline",
+      "description": "Updated event timeline",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T13:31:43.347Z"
+    },
+    {
+      "id": "log_1770125497541",
+      "action": "update",
+      "section": "timeline",
+      "description": "Updated event timeline",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T13:31:37.541Z"
+    },
+    {
+      "id": "log_1770123188373",
+      "action": "update",
+      "section": "timeline",
+      "description": "Updated event timeline",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T12:53:08.373Z"
+    },
+    {
+      "id": "log_1770122828446",
+      "action": "bulk-update",
+      "section": "events",
+      "description": "Replaced events dataset",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T12:47:08.446Z"
+    },
+    {
+      "id": "log_1770122790872",
+      "action": "bulk-update",
+      "section": "events",
+      "description": "Replaced events dataset",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T12:46:30.872Z"
+    },
+    {
+      "id": "log_1770122786955",
+      "action": "bulk-update",
+      "section": "events",
+      "description": "Replaced events dataset",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T12:46:26.955Z"
+    },
+    {
+      "id": "log_1770122780221",
+      "action": "bulk-update",
+      "section": "events",
+      "description": "Replaced events dataset",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T12:46:20.221Z"
+    },
+    {
+      "id": "log_1770122771996",
+      "action": "bulk-update",
+      "section": "events",
+      "description": "Replaced events dataset",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T12:46:11.996Z"
+    },
+    {
+      "id": "log_1770122673360",
+      "action": "bulk-update",
+      "section": "events",
+      "description": "Replaced events dataset",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T12:44:33.360Z"
+    },
+    {
+      "id": "log_1770122672621",
+      "action": "bulk-update",
+      "section": "events",
+      "description": "Replaced events dataset",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T12:44:32.621Z"
+    },
+    {
+      "id": "log_1770122668328",
+      "action": "bulk-update",
+      "section": "events",
+      "description": "Replaced events dataset",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T12:44:28.328Z"
+    },
+    {
+      "id": "log_1770122076936",
+      "action": "bulk-update",
+      "section": "events",
+      "description": "Replaced events dataset",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T12:34:36.936Z"
+    },
+    {
+      "id": "log_1770122074550",
+      "action": "bulk-update",
+      "section": "events",
+      "description": "Replaced events dataset",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T12:34:34.550Z"
+    },
+    {
+      "id": "log_1770122056309",
+      "action": "bulk-update",
+      "section": "events",
+      "description": "Replaced events dataset",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T12:34:16.309Z"
+    },
+    {
+      "id": "log_1770122051850",
+      "action": "bulk-update",
+      "section": "events",
+      "description": "Replaced events dataset",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T12:34:11.850Z"
+    },
+    {
+      "id": "log_1770122039913",
+      "action": "bulk-update",
+      "section": "events",
+      "description": "Replaced events dataset",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T12:33:59.913Z"
+    },
+    {
+      "id": "log_1770122038784",
+      "action": "bulk-update",
+      "section": "events",
+      "description": "Replaced events dataset",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T12:33:58.784Z"
+    },
+    {
+      "id": "log_1770121901962",
+      "action": "bulk-update",
+      "section": "events",
+      "description": "Replaced events dataset",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T12:31:41.962Z"
+    },
+    {
+      "id": "log_1770121664148",
+      "action": "bulk-update",
+      "section": "events",
+      "description": "Replaced events dataset",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T12:27:44.148Z"
+    },
+    {
+      "id": "log_1770121649154",
+      "action": "bulk-update",
+      "section": "events",
+      "description": "Replaced events dataset",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T12:27:29.154Z"
+    },
+    {
+      "id": "log_1770121433363",
+      "action": "bulk-update",
+      "section": "events",
+      "description": "Replaced events dataset",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T12:23:53.363Z"
+    },
+    {
+      "id": "log_1770121402653",
+      "action": "bulk-update",
+      "section": "events",
+      "description": "Replaced events dataset",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T12:23:22.653Z"
+    },
+    {
+      "id": "log_1770121232836",
+      "action": "bulk-update",
+      "section": "events",
+      "description": "Replaced events dataset",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T12:20:32.836Z"
+    },
+    {
+      "id": "log_1770121231304",
+      "action": "bulk-update",
+      "section": "events",
+      "description": "Replaced events dataset",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T12:20:31.304Z"
+    },
+    {
+      "id": "log_1770121229694",
+      "action": "bulk-update",
+      "section": "events",
+      "description": "Replaced events dataset",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T12:20:29.694Z"
+    },
+    {
+      "id": "log_1770121228439",
+      "action": "bulk-update",
+      "section": "events",
+      "description": "Replaced events dataset",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T12:20:28.440Z"
+    },
+    {
+      "id": "log_1770121226767",
+      "action": "bulk-update",
+      "section": "events",
+      "description": "Replaced events dataset",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T12:20:26.767Z"
+    },
+    {
+      "id": "log_1770121206496",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T12:20:06.496Z"
+    },
+    {
+      "id": "log_1770121202713",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T12:20:02.713Z"
+    },
+    {
+      "id": "log_1770121194457",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T12:19:54.457Z"
+    },
+    {
+      "id": "log_1770100266330",
+      "action": "upload",
+      "section": "media",
+      "description": "Uploaded file: Screenshot 2025-09-20 205152.png",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T06:31:06.330Z"
+    },
+    {
+      "id": "log_1770099838925",
+      "action": "upload",
+      "section": "media",
+      "description": "Uploaded file: Screenshot 2025-09-20 205152.png",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T06:23:58.925Z"
+    },
+    {
+      "id": "log_1770098970850",
+      "action": "upload",
+      "section": "media",
+      "description": "Uploaded file: Screenshot 2025-09-20 205152.png",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T06:09:30.850Z"
+    },
+    {
+      "id": "log_1770098953963",
+      "action": "login",
+      "section": "auth",
+      "description": "User admin logged in",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T06:09:13.963Z"
+    },
+    {
+      "id": "log_1770098695533",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T06:04:55.533Z"
+    },
+    {
+      "id": "log_1770098676691",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T06:04:36.691Z"
+    },
+    {
+      "id": "log_1770098489794",
+      "action": "upload",
+      "section": "media",
+      "description": "Uploaded file: Screenshot 2025-09-20 205152.png",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T06:01:29.794Z"
+    },
+    {
+      "id": "log_1770098418751",
+      "action": "update",
+      "section": "timeline",
+      "description": "Updated event timeline",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T06:00:18.751Z"
+    },
+    {
+      "id": "log_1770097921653",
+      "action": "login",
+      "section": "auth",
+      "description": "User admin logged in",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T05:52:01.653Z"
+    },
+    {
+      "id": "log_1770097357473",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T05:42:37.473Z"
+    },
+    {
+      "id": "log_1770097237308",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T05:40:37.308Z"
+    },
+    {
+      "id": "log_1770097232777",
+      "action": "upload",
+      "section": "media",
+      "description": "Uploaded file: Screenshot 2025-08-21 204813.png",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T05:40:32.777Z"
+    },
+    {
+      "id": "log_1770097221296",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T05:40:21.296Z"
+    },
+    {
+      "id": "log_1770097215264",
+      "action": "upload",
+      "section": "media",
+      "description": "Uploaded file: Screenshot 2025-08-21 215858.png",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T05:40:15.264Z"
+    },
+    {
+      "id": "log_1770097206021",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T05:40:06.021Z"
+    },
+    {
+      "id": "log_1770097182601",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T05:39:42.601Z"
+    },
+    {
+      "id": "log_1770097102854",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T05:38:22.854Z"
+    },
+    {
+      "id": "log_1770097086684",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T05:38:06.684Z"
+    },
+    {
+      "id": "log_1770096949289",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T05:35:49.289Z"
+    },
+    {
+      "id": "log_1770096945217",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T05:35:45.217Z"
+    },
+    {
+      "id": "log_1770096732082",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T05:32:12.082Z"
+    },
+    {
+      "id": "log_1770096707332",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T05:31:47.332Z"
+    },
+    {
+      "id": "log_1770096701537",
+      "action": "upload",
+      "section": "media",
+      "description": "Uploaded file: agents working screen-1.png",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T05:31:41.537Z"
+    },
+    {
+      "id": "log_1770096696062",
+      "action": "upload",
+      "section": "media",
+      "description": "Uploaded file: agents working screen.png",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T05:31:36.062Z"
+    },
+    {
+      "id": "log_1770096590273",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T05:29:50.273Z"
+    },
+    {
+      "id": "log_1770096581237",
+      "action": "login",
+      "section": "auth",
+      "description": "User admin logged in",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T05:29:41.237Z"
+    },
+    {
+      "id": "log_1770096463565",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T05:27:43.565Z"
+    },
+    {
+      "id": "log_1770096432128",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T05:27:12.128Z"
+    },
+    {
+      "id": "log_1770096426414",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T05:27:06.414Z"
+    },
+    {
+      "id": "log_1770096172141",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T05:22:52.141Z"
+    },
+    {
+      "id": "log_1770095978899",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T05:19:38.899Z"
+    },
+    {
+      "id": "log_1770095967427",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T05:19:27.427Z"
+    },
+    {
+      "id": "log_1770095907248",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T05:18:27.248Z"
+    },
+    {
+      "id": "log_1770095896132",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T05:18:16.132Z"
+    },
+    {
+      "id": "log_1770095889608",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T05:18:09.608Z"
+    },
+    {
+      "id": "log_1770095878065",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T05:17:58.065Z"
+    },
+    {
+      "id": "log_1770095874906",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T05:17:54.906Z"
+    },
+    {
+      "id": "log_1770095863530",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T05:17:43.530Z"
+    },
+    {
+      "id": "log_1770095854269",
+      "action": "login",
+      "section": "auth",
+      "description": "User admin logged in",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T05:17:34.269Z"
+    },
+    {
+      "id": "log_1770094843017",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T05:00:43.017Z"
+    },
+    {
+      "id": "log_1770094843005",
+      "action": "update",
+      "section": "settings",
+      "description": "Updated site-config.json",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T05:00:43.005Z"
+    },
+    {
+      "id": "log_1770094842985",
+      "action": "login",
+      "section": "auth",
+      "description": "User admin logged in",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T05:00:42.985Z"
+    },
+    {
+      "id": "log_1770094648652",
+      "action": "login",
+      "section": "auth",
+      "description": "User admin logged in",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T04:57:28.652Z"
+    },
+    {
+      "id": "log_1770094589519",
+      "action": "login",
+      "section": "auth",
+      "description": "User admin logged in",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T04:56:29.519Z"
+    },
+    {
+      "id": "log_1770094553925",
+      "action": "login",
+      "section": "auth",
+      "description": "User admin logged in",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T04:55:53.925Z"
+    },
+    {
+      "id": "log_1770094507319",
+      "action": "login",
+      "section": "auth",
+      "description": "User admin logged in",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T04:55:07.319Z"
+    },
+    {
+      "id": "log_1770094141831",
+      "action": "update",
+      "section": "timeline",
+      "description": "Updated event timeline",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T04:49:01.831Z"
+    },
+    {
+      "id": "log_1770094141801",
+      "action": "update",
+      "section": "timeline",
+      "description": "Updated event timeline",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T04:49:01.801Z"
+    },
+    {
+      "id": "log_1770094141787",
+      "action": "create",
+      "section": "sponsors",
+      "description": "Added sponsor: Test Sponsor",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T04:49:01.787Z"
+    },
+    {
+      "id": "log_1770094141777",
+      "action": "delete",
+      "section": "speakers",
+      "description": "Deleted speaker: Updated Name",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T04:49:01.777Z"
+    },
+    {
+      "id": "log_1770094141771",
+      "action": "update",
+      "section": "speakers",
+      "description": "Updated speaker: Updated Name",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T04:49:01.771Z"
+    },
+    {
+      "id": "log_1770094141759",
+      "action": "create",
+      "section": "speakers",
+      "description": "Added speaker: Test Speaker",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T04:49:01.759Z"
+    },
+    {
+      "id": "log_1770094141748",
+      "action": "delete",
+      "section": "events",
+      "description": "Deleted event: Updated Name",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T04:49:01.748Z"
+    },
+    {
+      "id": "log_1770094141741",
+      "action": "update",
+      "section": "events",
+      "description": "Updated event: Updated Name",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T04:49:01.741Z"
+    },
+    {
+      "id": "log_1770094141730",
+      "action": "create",
+      "section": "events",
+      "description": "Created event: Test Event",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T04:49:01.730Z"
+    },
+    {
+      "id": "log_1770094141716",
+      "action": "update",
+      "section": "footer",
+      "description": "Updated footer information",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T04:49:01.716Z"
+    },
+    {
+      "id": "log_1770094141706",
+      "action": "update",
+      "section": "footer",
+      "description": "Updated footer information",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T04:49:01.706Z"
+    },
+    {
+      "id": "log_1770094141694",
+      "action": "update",
+      "section": "venue",
+      "description": "Updated venue information",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T04:49:01.694Z"
+    },
+    {
+      "id": "log_1770094141684",
+      "action": "update",
+      "section": "venue",
+      "description": "Updated venue information",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T04:49:01.684Z"
+    },
+    {
+      "id": "log_1770094141672",
+      "action": "update",
+      "section": "about",
+      "description": "Updated about section",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T04:49:01.672Z"
+    },
+    {
+      "id": "log_1770094141661",
+      "action": "update",
+      "section": "about",
+      "description": "Updated about section",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T04:49:01.661Z"
+    },
+    {
+      "id": "log_1770094141649",
+      "action": "update",
+      "section": "hero",
+      "description": "Updated hero section",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T04:49:01.649Z"
+    },
+    {
+      "id": "log_1770094141637",
+      "action": "update",
+      "section": "hero",
+      "description": "Updated hero section",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T04:49:01.637Z"
+    },
+    {
+      "id": "log_1770094141624",
+      "action": "login",
+      "section": "auth",
+      "description": "User admin logged in",
+      "userId": "user_001",
+      "timestamp": "2026-02-03T04:49:01.624Z"
+    },
+    {
+      "id": "log_1770061895097",
+      "action": "login",
+      "section": "auth",
+      "description": "User admin logged in",
+      "userId": "user_001",
+      "timestamp": "2026-02-02T19:51:35.097Z"
+    },
+    {
+      "id": "log_1770061818275",
+      "action": "login",
+      "section": "auth",
+      "description": "User admin logged in",
+      "userId": "user_001",
+      "timestamp": "2026-02-02T19:50:18.275Z"
+    },
+    {
+      "id": "log_1770061794559",
+      "action": "login",
+      "section": "auth",
+      "description": "User admin logged in",
+      "userId": "user_001",
+      "timestamp": "2026-02-02T19:49:54.559Z"
+    },
+    {
+      "id": "log_001",
+      "timestamp": "2026-02-03T10:00:00Z",
+      "userId": "user_001",
+      "userName": "Super Admin",
+      "action": "login",
+      "category": "auth",
+      "details": "User logged in successfully",
+      "ipAddress": "192.168.1.1",
+      "userAgent": "Mozilla/5.0..."
+    },
+    {
+      "id": "log_002",
+      "timestamp": "2026-02-03T09:30:00Z",
+      "userId": "user_001",
+      "userName": "Super Admin",
+      "action": "update",
+      "category": "hero",
+      "details": "Updated registration fee from ₹400 to ₹500",
+      "ipAddress": "192.168.1.1",
+      "changes": {
+        "field": "registrationFee.amount",
+        "oldValue": 400,
+        "newValue": 500
+      }
+    },
+    {
+      "id": "log_003",
+      "timestamp": "2026-02-02T14:00:00Z",
+      "userId": "user_002",
+      "userName": "Event Coordinator",
+      "action": "create",
+      "category": "events",
+      "details": "Created new event: Photography Contest",
+      "ipAddress": "192.168.1.2",
+      "targetId": "evt_005"
+    },
+    {
+      "id": "log_004",
+      "timestamp": "2026-02-02T11:00:00Z",
+      "userId": "user_002",
+      "userName": "Event Coordinator",
+      "action": "update",
+      "category": "registrations",
+      "details": "Confirmed registration CONS2026004",
+      "ipAddress": "192.168.1.2",
+      "targetId": "reg_004",
+      "changes": {
+        "field": "status",
+        "oldValue": "pending",
+        "newValue": "confirmed"
+      }
+    },
+    {
+      "id": "log_005",
+      "timestamp": "2026-02-01T15:00:00Z",
+      "userId": "user_001",
+      "userName": "Super Admin",
+      "action": "create",
+      "category": "speakers",
+      "details": "Added new speaker: Dr. Rajesh Kumar",
+      "ipAddress": "192.168.1.1",
+      "targetId": "speaker_001"
+    }
+  ],
+  "config": {
+    "retentionDays": 90,
+    "maxLogs": 10000,
+    "enabledCategories": [
+      "auth",
+      "hero",
+      "about",
+      "events",
+      "timeline",
+      "speakers",
+      "sponsors",
+      "venue",
+      "registrations",
+      "users",
+      "settings",
+      "media"
+    ]
+  }
+}

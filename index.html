@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CONSTRUO 2026 | Civil Engineering Symposium</title>
+    <meta name="description"
+        content="Building Tomorrow's Engineers - An immersive Civil Engineering Symposium experience">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <!-- GSAP + ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+</head>
+
+<body>
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="loader-content">
+            <div class="loader-logo">CONSTRUO</div>
+            <div class="loader-bar">
+                <div class="loader-progress"></div>
+            </div>
+            <div class="loader-text">Constructing....<span class="dots">...</span></div>
+        </div>
+    </div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="#hero" class="nav-logo" aria-label="CONSTRUO - Home">
+                <span class="logo-text">CONSTRUO</span>
+                <span class="logo-year badge">2026</span>
+            </a>
+
+            <div class="nav-links" role="navigation" aria-label="Primary navigation">
+                <a href="#about" class="nav-link">About</a>
+                <a href="#timeline" class="nav-link">Timeline</a>
+                <a href="#organizers" class="nav-link">Organizers</a>
+                <a href="#speakers" class="nav-link">Speakers</a>
+                <a href="#events" class="nav-link">Events</a>
+                <a href="#venue" class="nav-link">Venue</a>
+            </div>
+
+            <div class="nav-actions">
+                <a href="#register" class="nav-cta">Register</a>
+                <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Scroll Progress -->
+    <div class="scroll-progress">
+        <svg viewBox="0 0 100 100">
+            <circle class="progress-bg" cx="50" cy="50" r="45" />
+            <circle class="progress-bar" cx="50" cy="50" r="45" />
+        </svg>
+        <span class="progress-text">0%</span>
+    </div>
+
+    <!-- Main Canvas for 3D -->
+    <canvas id="webgl-canvas"></canvas>
+
+    <!-- Main Content -->
+    <main id="smooth-wrapper">
+        <div id="smooth-content">
+
+            <!-- Section 1: Hero - Content loaded dynamically from MongoDB -->
+            <section id="hero" class="section section-hero">
+                <div class="hero-inner">
+                    <div class="hero-content">
+                        <div class="hero-badge"></div>
+                        <h1 class="hero-title">
+                            <span class="title-line"></span>
+                            <span class="title-line outline"></span>
+                        </h1>
+                        <p class="hero-tagline"></p>
+                        <div class="hero-date">
+                            <span class="date-day"></span>
+                            <span class="date-month"></span>
+                            <span class="date-year"></span>
+                        </div>
+                        <div class="hero-fee">
+                            <div class="fee-item">
+                                <span class="fee-label">Registration Fee</span>
+                                <span class="fee-amount"></span>
+                                <span class="fee-note"></span>
+                            </div>
+                        </div>
+                        <div class="hero-cta">
+                            <a href="#register" class="btn btn-primary"></a>
+                            <a href="#about" class="btn btn-secondary"></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="scroll-indicator">
+                    <span>Scroll to Explore</span>
+                    <div class="scroll-arrow">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M12 5v14M5 12l7 7 7-7" />
+                        </svg>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 2: About - Content loaded dynamically from MongoDB -->
+            <section id="about" class="section section-about">
+                <div class="section-container">
+                    <div class="section-header">
+                        <span class="section-number">01</span>
+                        <h2 class="section-title" id="about-title"></h2>
+                        <div class="blueprint-line"></div>
+                    </div>
+                    <div class="about-grid">
+                        <div class="about-content">
+                            <p class="about-lead" id="about-lead"></p>
+                            <p class="about-text" id="about-text"></p>
+                            <div class="about-stats" id="about-stats">
+                                <!-- Stats loaded dynamically from MongoDB -->
+                            </div>
+                        </div>
+                        <div class="about-visual">
+                            <div class="event-poster-container">
+                                <button class="poster-trigger" aria-label="View full poster">
+                                    <img src="" alt="Event Poster" class="event-poster" id="about-poster">
+                                </button>
+                                <a href="#" target="_blank" class="brochure-link btn btn-secondary" id="about-brochure">
+                                    <span class="btn-text">Download Brochure</span>
+                                    <span class="btn-icon">📄</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 3: Timeline -->
+            <section id="timeline" class="section section-timeline">
+                <div class="section-container">
+                    <div class="section-header">
+                        <span class="section-number">02</span>
+                        <h2 class="section-title">Event Timeline</h2>
+                        <div class="blueprint-line"></div>
+                    </div>
+                    <div class="timeline-wrapper">
+                        <div class="timeline-track">
+                            <div class="timeline-crane" id="timeline-crane">
+                                <div class="crane-tower"></div>
+                                <div class="crane-arm"></div>
+                                <div class="crane-cable"></div>
+                                <div class="crane-hook"></div>
+                            </div>
+                        </div>
+                        <div class="timeline-days">
+                            <!-- Timeline content loaded dynamically from API -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 4: Speakers -->
+            <section id="speakers" class="section section-speakers">
+                <div class="section-container">
+                    <div class="section-header">
+                        <span class="section-number">03</span>
+                        <h2 class="section-title">Distinguished Speakers</h2>
+                        <div class="blueprint-line"></div>
+                    </div>
+                    <div class="speakers-grid">
+                        <!-- Speakers loaded dynamically from API -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 5: Events -->
+            <section id="events" class="section section-events">
+                <div class="section-container">
+                    <div class="section-header">
+                        <span class="section-number">04</span>
+                        <h2 class="section-title">Events & Competitions</h2>
+                        <div class="blueprint-line"></div>
+                    </div>
+
+                    <!-- Technical Events (populated dynamically from admin) -->
+                    <div class="event-category">
+                        <h3 class="category-title">Technical Events</h3>
+                        <div class="events-grid" id="technical-events"></div>
+                    </div>
+
+                    <!-- Workshops & Non-Technical sections removed — only Technical Events shown -->
+
+                    <!-- Total Prize Pool Banner -->
+                    <div class="prize-banner">
+                        <div class="prize-banner-content">
+                            <span class="prize-label">Total Prize Pool</span>
+                            <span class="prize-amount">₹50,000+</span>
+                            <span class="prize-sub">Certificates for all participants</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 6: Venue - Content loaded dynamically from MongoDB -->
+            <section id="venue" class="section section-venue">
+                <div class="section-container">
+                    <div class="section-header">
+                        <span class="section-number">05</span>
+                        <h2 class="section-title">Venue</h2>
+                        <div class="blueprint-line"></div>
+                    </div>
+                    <div class="venue-wrapper">
+                        <div class="venue-map" id="venue-map">
+                            <!-- Map iframe loaded dynamically from MongoDB -->
+                        </div>
+                        <div class="venue-info">
+                            <div class="venue-card">
+                                <h3 class="venue-name"></h3>
+                                <p class="venue-address"></p>
+                                <div class="venue-features">
+                                    <!-- Features loaded dynamically from MongoDB -->
+                                </div>
+                                <a href="#" class="btn btn-secondary venue-directions-btn">Get Directions</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 7: Registration -->
+            <!-- Section 6: Organizers -->
+            <section id="organizers" class="section section-organizers">
+                <div class="section-container">
+                    <div class="section-header">
+                        <span class="section-number">06</span>
+                        <h2 class="section-title">Event Organizers</h2>
+                        <div class="blueprint-line"></div>
+                    </div>
+                    <div class="organizers-carousels">
+                        <!-- Faculty Committee Row -->
+                        <div class="organizer-row" data-category="faculty">
+                            <h3 class="row-title">Faculty Committee</h3>
+                            <div class="carousel-wrapper">
+                                <div class="carousel-track" data-direction="left">
+                                    <!-- Faculty members loaded dynamically -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Student Committee Row -->
+                        <div class="organizer-row" data-category="student">
+                            <h3 class="row-title">Student Committee</h3>
+                            <div class="carousel-wrapper">
+                                <div class="carousel-track" data-direction="right">
+                                    <!-- Student members loaded dynamically -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Organizing Committee Row -->
+                        <div class="organizer-row" data-category="organizing">
+                            <h3 class="row-title">Organizing Committee</h3>
+                            <div class="carousel-wrapper">
+                                <div class="carousel-track" data-direction="left">
+                                    <!-- Organizing members loaded dynamically -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Legacy grid for fallback -->
+                    <div class="organizers-grid" style="display: none;">
+                        <!-- Organizers loaded dynamically from API -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 8: Sponsors - Content loaded dynamically from MongoDB -->
+            <section id="sponsors" class="section section-sponsors">
+                <div class="section-container">
+                    <div class="section-header">
+                        <span class="section-number">07</span>
+                        <h2 class="section-title">Our Sponsors</h2>
+                        <div class="blueprint-line"></div>
+                    </div>
+                    <div class="sponsors-highway">
+                        <div class="highway-track"></div>
+                        <!-- Sponsor tiers loaded dynamically from MongoDB -->
+                    </div>
+                    <div class="sponsor-cta">
+                        <p>Interested in sponsoring?</p>
+                        <a href="#" class="btn btn-secondary sponsor-contact-btn">Become a Sponsor</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 9: Footer - Content loaded dynamically from MongoDB -->
+            <footer id="footer" class="section section-footer">
+                <div class="footer-skyline" id="footer-3d"></div>
+                <div class="footer-content">
+                    <div class="footer-main">
+                        <div class="footer-brand">
+                            <div class="footer-logo">
+                                <span class="logo-text"></span>
+                                <span class="logo-year"></span>
+                            </div>
+                            <p class="footer-tagline"></p>
+                            <div class="footer-social">
+                                <!-- Social links loaded dynamically from MongoDB -->
+                            </div>
+                        </div>
+                        <div class="footer-links">
+                            <!-- Footer links loaded dynamically from MongoDB -->
+                        </div>
+                    </div>
+                    <div class="footer-bottom">
+                        <p class="footer-copyright"></p>
+                        <p class="footer-credits"></p>
+                    </div>
+                </div>
+            </footer>
+
+        </div>
+    </main>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu">
+        <div class="mobile-menu-content">
+            <a href="#about" class="mobile-link">About</a>
+            <a href="#timeline" class="mobile-link">Timeline</a>
+            <a href="#organizers" class="mobile-link">Organizers</a>
+            <a href="#speakers" class="mobile-link">Speakers</a>
+            <a href="#events" class="mobile-link">Events</a>
+            <a href="#venue" class="mobile-link">Venue</a>
+            <a href="#register" class="mobile-link cta">Register Now</a>
+        </div>
+    </div>
+
+    <!-- Registration Modal - Form loaded dynamically from MongoDB -->
+    <div id="modal-register" class="modal" aria-hidden="true">
+        <div class="modal-backdrop" data-modal-close></div>
+        <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modal-register-title">
+            <button class="modal-close" aria-label="Close modal" data-modal-close>&times;</button>
+            <div class="modal-body">
+                <h2 id="modal-register-title"></h2>
+                <p class="modal-sub"></p>
+                <form id="modal-registration-form" class="modal-registration-form">
+                    <!-- Form fields loaded dynamically from MongoDB -->
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Poster Modal - Content loaded dynamically from MongoDB -->
+    <div id="modal-poster" class="modal" aria-hidden="true">
+        <div class="modal-backdrop" data-modal-close></div>
+        <div class="modal-dialog modal-poster-dialog" role="dialog" aria-modal="true"
+            aria-labelledby="modal-poster-title">
+            <button class="modal-close" aria-label="Close poster modal" data-modal-close>&times;</button>
+            <div class="modal-body">
+                <h2 id="modal-poster-title"></h2>
+                <div class="poster-modal-content">
+                    <img src="" alt="Event Poster" class="poster-modal-image">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dynamic Event Content will be injected here -->
+
+    <!-- Generic Event Modal (for live-syncing) -->
+    <div id="modal-generic-event" class="modal event-modal" aria-hidden="true">
+        <div class="modal-backdrop" data-modal-close></div>
+        <div class="modal-dialog" role="dialog" aria-modal="true">
+            <button class="modal-close" aria-label="Close modal" data-modal-close>&times;</button>
+            <div class="modal-body" id="generic-modal-body">
+                <!-- Content injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="js/supabase-config.js"></script>
+    <script type="module" src="js/main-supabase.js"></script>
+    <script src="js/three-scene.js"></script>
+    <script src="js/animations.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

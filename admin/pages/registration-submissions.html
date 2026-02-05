@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Submissions | CONSTRUO Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/admin.css">
+    <style>
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            display: block;
+            margin-top: 0.5rem;
+        }
+
+        .filters-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .filters-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr auto;
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .table-container {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: auto;
+            height: calc(100vh - 300px);
+            padding-bottom: 30px;
+        }
+
+        .font-size-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--bg-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+
+        .font-size-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-right: 0.5rem;
+        }
+
+        .font-size-btn {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .font-size-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .font-size-btn:active {
+            transform: scale(0.95);
+        }
+
+        .font-size-display {
+            min-width: 50px;
+            text-align: center;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        .admin-table thead {
+            background: var(--bg-secondary);
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .admin-table th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .admin-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .admin-table tbody tr:hover {
+            background: var(--bg-secondary);
+        }
+
+        .admin-table tbody tr:last-child td {
+            padding-bottom: 2rem;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-badge.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-badge.confirmed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-badge.cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .payment-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .payment-badge.completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .payment-badge.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .payment-badge.failed {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-icon {
+            padding: 0.5rem;
+            background: transparent;
+            border: 1px solid var(--admin-border);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            min-height: 36px;
+        }
+
+        .btn-icon:hover {
+            background: var(--admin-card-hover);
+        }
+
+        /* Delete button styling (always visible and accessible) */
+        .btn-icon[data-action="delete"] {
+            border-color: var(--admin-danger);
+        }
+
+        .btn-icon[data-action="delete"] svg {
+            stroke: var(--admin-danger);
+        }
+
+        .btn-icon[data-action="delete"]:hover {
+            background: var(--admin-danger);
+        }
+
+        .btn-icon[data-action="delete"]:hover svg {
+            stroke: #ffffff;
+        }
+
+        /* Confirm button styling */
+        .btn-icon[data-action="confirm"] svg {
+            stroke: var(--admin-success);
+        }
+
+        /* View button styling */
+        .btn-icon[data-action="view"] svg {
+            stroke: var(--admin-info);
+        }
+
+        .btn-icon svg {
+            width: 18px;
+            height: 18px;
+            stroke: var(--admin-text);
+            stroke-width: 2;
+        }
+
+        .modal {
+            display: none;
+            position: absolute; /* make modal participate in page flow so page scroll handles overflow */
+            top: 40px;
+            left: 0;
+            right: 0;
+            background: transparent; /* no dark overlay */
+            z-index: 1000;
+            padding: 24px;
+        }
+
+        .modal.active {
+            display: block;
+        }
+
+        .modal-content {
+            background: var(--admin-card);
+            border-radius: 12px;
+            max-width: 900px;
+            width: calc(100% - 48px);
+            margin: 0 auto;
+            max-height: none; /* allow content to expand; page scroll will handle overflow */
+            overflow: visible; /* remove inner scrollbar */
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            padding: 0;
+        }
+
+        .modal-header {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--admin-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+        }
+
+        .modal-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--admin-text);
+            letter-spacing: 0.2px;
+        }
+
+        .modal-subtitle {
+            font-size: 0.85rem;
+            color: var(--admin-text-secondary);
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        .modal-body {
+            padding: 1.25rem;
+        }
+
+        /* Grid layout for modal content */
+        .modal-grid {
+            display: grid;
+            grid-template-columns: 1fr 360px;
+            gap: 1rem;
+            align-items: start;
+        }
+
+        .left-panel, .right-panel {
+            display: block;
+        }
+
+        /* Section cards */
+        .section-card {
+            background: transparent; /* remove block background */
+            border: none; /* remove border for flat look */
+            border-radius: 6px;
+            padding: 0.75rem 0;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--admin-text);
+            margin-bottom: 0.75rem;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem 1.25rem;
+        }
+
+        .detail-item {
+            padding: 0.5rem 0;
+        }
+
+        .detail-label {
+            font-size: 0.725rem;
+            color: var(--admin-text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.25rem;
+        }
+
+        .detail-value {
+            font-size: 0.95rem;
+            color: var(--admin-text);
+            font-weight: 700;
+        }
+
+        /* Modal action area (right panel) */
+        .modal-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            position: sticky;
+            top: 1.25rem;
+        }
+
+        .modal-actions .btn {
+            width: 100%;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 900px) {
+            .modal-grid { grid-template-columns: 1fr; }
+            .modal-content { max-width: 720px; }
+        }
+
+        @media (max-width: 520px) {
+            .modal-content { max-width: 100%; height: 100vh; border-radius: 0; }
+            .modal-body { padding: 1rem; }
+            .modal-header { padding: 0.75rem 1rem; }
+        }
+
+        .detail-section {
+            margin-bottom: 1rem;
+        }
+
+        .detail-section-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--admin-text);
+            margin-bottom: 0.75rem;
+        }
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .detail-item {
+            padding: 0.75rem;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+        }
+
+        .detail-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.25rem;
+        }
+
+        .detail-value {
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state svg {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 1rem;
+            stroke: var(--text-tertiary);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="admin-layout">
+        <!-- Main Content (No Sidebar) -->
+        <main class="admin-main" style="margin-left: 0; width: 100%;">
+            <div class="admin-container">
+                <!-- Back Button -->
+                <div style="margin-bottom: 1.5rem;">
+                    <button class="btn btn-secondary" onclick="goBack()" style="display: inline-flex; align-items: center; gap: 0.5rem;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px;">
+                            <polyline points="15 18 9 12 15 6" />
+                        </svg>
+                        <span>Back to Registrations</span>
+                    </button>
+                </div>
+                
+                <!-- Page Header -->
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Registration Submissions</h1>
+                        <p class="page-description">View and manage all submitted registration details</p>
+                    </div>
+                    <div style="display: flex; gap: 1rem; align-items: center;">
+                        <div class="font-size-controls">
+                            <span class="font-size-label">Font Size:</span>
+                            <button class="font-size-btn" onclick="decreaseFontSize()" title="Decrease font size">
+                                <span>A-</span>
+                            </button>
+                            <span class="font-size-display" id="fontSizeDisplay">100%</span>
+                            <button class="font-size-btn" onclick="increaseFontSize()" title="Increase font size">
+                                <span>A+</span>
+                            </button>
+                            <button class="font-size-btn" onclick="resetFontSize()" title="Reset font size">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px;">
+                                    <polyline points="1 4 1 10 7 10" />
+                                    <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
+                                </svg>
+                            </button>
+                        </div>
+                        <button class="btn btn-secondary" onclick="exportToCSV()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                <polyline points="7 10 12 15 17 10" />
+                                <line x1="12" y1="15" x2="12" y2="3" />
+                            </svg>
+                            <span>Export CSV</span>
+                        </button>
+                        <button class="btn btn-primary" onclick="refreshData()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="23 4 23 10 17 10" />
+                                <polyline points="1 20 1 14 7 14" />
+                                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+                            </svg>
+                            <span>Refresh</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-value" id="totalSubmissions">0</span>
+                        <span class="stat-label">Total Submissions</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="pendingCount">0</span>
+                        <span class="stat-label">Pending</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="confirmedCount">0</span>
+                        <span class="stat-label">Confirmed</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="cancelledCount">0</span>
+                        <span class="stat-label">Cancelled</span>
+                    </div>
+                </div>
+
+                <!-- Filters Section -->
+                <div class="filters-section">
+                    <div class="filters-row" style="grid-template-columns: 1fr 1fr auto;">
+                        <div class="form-group">
+                            <label class="form-label">Search</label>
+                            <input type="text" class="form-input" id="searchInput" 
+                                placeholder="Search by name, email, reg number...">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Status</label>
+                            <select class="form-input" id="statusFilter">
+                                <option value="">All Status</option>
+                                <option value="pending">Pending</option>
+                                <option value="confirmed">Confirmed</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-secondary" onclick="clearFilters()" style="margin-top: auto;">
+                            Clear Filters
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <div class="card">
+                    <div class="table-container">
+                        <table class="admin-table" id="submissionsTable">
+                            <thead>
+                                <tr>
+                                    <th>Reg. Number</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>College</th>
+                                    <th>Status</th>
+                                    <th>Submitted</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody">
+                                <!-- Will be populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="empty-state" id="emptyState" style="display: none;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" />
+                            <rect x="9" y="3" width="6" height="4" rx="1" />
+                        </svg>
+                        <h3>No Submissions Found</h3>
+                        <p>There are no registration submissions to display yet.</p>
+                    </div>
+                </div>
+        </main>
+    </div>
+
+    <!-- View Details Modal -->
+    <div class="modal" id="detailsModal" role="dialog" aria-modal="true" aria-labelledby="detailsTitle">
+        <div class="modal-content" role="document">
+            <div class="modal-header">
+                <div>
+                    <h2 class="modal-title" id="detailsTitle">Registration Details</h2>
+                    <div class="modal-subtitle" id="detailsSubtitle">&nbsp;</div>
+                </div>
+                <button class="btn-icon" data-action="close" aria-label="Close details">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <div class="modal-grid">
+                    <div class="left-panel">
+                        <!-- sections will be injected here -->
+                    </div>
+                    <aside class="right-panel">
+                        <div class="modal-actions">
+                            <button class="btn btn-secondary" data-action="print">Print</button>
+                            <button class="btn btn-secondary" data-action="export">Export</button>
+                            <button class="btn btn-danger" data-action="delete">Delete</button>
+                            <button class="btn btn-secondary" data-action="close">Close</button>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Go back to registrations page - defined first to be available immediately
+        function goBack() {
+            console.log('Going back to registrations page...');
+            window.location.href = 'registrations.html';
+        }
+
+        let allRegistrations = [];
+        let filteredRegistrations = [];
+        let currentFormId = null;
+        let currentFormFields = []; // Store form fields for dynamic columns
+        let lastActiveElement = null; // store last focused element before opening modal
+        let currentFontSize = 100; // Default font size percentage
+        let isAutoFontSize = true; // Auto font size based on columns
+
+        // Auto-calculate font size based on number of columns
+        function calculateAutoFontSize(columnCount) {
+            // Base font size calculation: fewer columns = larger font, more columns = smaller font
+            if (columnCount <= 5) {
+                return 100; // Normal size for 5 or fewer columns
+            } else if (columnCount <= 8) {
+                return 90; // Slightly smaller for 6-8 columns
+            } else if (columnCount <= 10) {
+                return 80; // Smaller for 9-10 columns
+            } else if (columnCount <= 12) {
+                return 75; // Even smaller for 11-12 columns
+            } else {
+                return 70; // Minimum size for 13+ columns
+            }
+        }
+
+        // Font size control functions
+        function increaseFontSize() {
+            isAutoFontSize = false; // Disable auto mode when manual adjustment is made
+            if (currentFontSize < 150) {
+                currentFontSize += 10;
+                applyFontSize(false);
+            }
+        }
+
+        function decreaseFontSize() {
+            isAutoFontSize = false; // Disable auto mode when manual adjustment is made
+            if (currentFontSize > 70) {
+                currentFontSize -= 10;
+                applyFontSize(false);
+            }
+        }
+
+        function resetFontSize() {
+            isAutoFontSize = true; // Re-enable auto mode
+            const columnCount = document.querySelectorAll('#submissionsTable thead th').length;
+            currentFontSize = calculateAutoFontSize(columnCount);
+            applyFontSize(true);
+        }
+
+        function applyFontSize(isAuto = false) {
+            const table = document.getElementById('submissionsTable');
+            table.style.fontSize = `${currentFontSize}%`;
+            const displayText = isAutoFontSize ? `${currentFontSize}% (Auto)` : `${currentFontSize}%`;
+            document.getElementById('fontSizeDisplay').textContent = displayText;
+            
+            // Save to localStorage
+            localStorage.setItem('tableFontSize', currentFontSize);
+            localStorage.setItem('tableAutoFontSize', isAutoFontSize);
+        }
+
+        function loadFontSize() {
+            const savedSize = localStorage.getItem('tableFontSize');
+            const savedAuto = localStorage.getItem('tableAutoFontSize');
+            
+            if (savedAuto !== null) {
+                isAutoFontSize = savedAuto === 'true';
+            }
+            
+            if (savedSize && !isAutoFontSize) {
+                currentFontSize = parseInt(savedSize);
+                applyFontSize(false);
+            }
+        }
+
+        function applyAutoFontSize() {
+            if (isAutoFontSize) {
+                const columnCount = document.querySelectorAll('#submissionsTable thead th').length;
+                currentFontSize = calculateAutoFontSize(columnCount);
+                applyFontSize(true);
+            }
+        }
+
+        // Load registrations on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Get formId from URL if provided
+            const urlParams = new URLSearchParams(window.location.search);
+            currentFormId = urlParams.get('formId');
+            
+            loadFontSize(); // Load saved font size
+            loadRegistrations();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            document.getElementById('searchInput').addEventListener('input', applyFilters);
+            document.getElementById('statusFilter').addEventListener('change', applyFilters);
+            
+            // Event delegation for action buttons in table
+            document.getElementById('submissionsTable').addEventListener('click', handleActionButtonClick);
+            
+            // Global click handler for other data-action buttons (close, delete, print, export, confirm, cancel)
+            document.addEventListener('click', (e) => {
+                const btn = e.target.closest('[data-action]');
+                if (!btn) return;
+                const action = btn.getAttribute('data-action');
+                if (!action) return;
+
+                const regId = btn.getAttribute('data-reg-id');
+                const newStatus = btn.getAttribute('data-new-status');
+
+                if (action === 'close') {
+                    closeModal();
+                } else if (action === 'delete') {
+                    if (regId) {
+                        if (confirm('Are you sure you want to delete this registration? This action cannot be undone.')) {
+                            deleteRegistration(regId);
+                            closeModal();
+                        }
+                    } else {
+                        closeModal();
+                    }
+                } else if (action === 'confirm' || action === 'cancel') {
+                    if (regId && newStatus) {
+                        if (confirm(`Change status to ${newStatus}?`)) {
+                            updateStatus(regId, newStatus);
+                            // update UI immediately
+                            const statusBadge = document.querySelector('#detailsModal .status-badge');
+                            if (statusBadge) {
+                                statusBadge.className = `status-badge ${newStatus}`;
+                                statusBadge.textContent = newStatus;
+                            }
+                            // update instances in table by reloading
+                            loadRegistrations();
+                            closeModal();
+                        }
+                    }
+                } else if (action === 'print') {
+                    window.print();
+                } else if (action === 'export') {
+                    // Simple export of current modal contents
+                    const html = document.querySelector('#detailsModal .modal-body').innerText;
+                    const blob = new Blob([html], { type: 'text/plain' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `registration_${Date.now()}.txt`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                }
+            });
+            
+            // Close modal with Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeModal();
+                }
+            });
+        }
+
+        function handleActionButtonClick(event) {
+            const button = event.target.closest('.btn-icon');
+            if (!button) return;
+            
+            const action = button.getAttribute('data-action');
+            if (!action) return;
+            
+            event.preventDefault();
+            
+            if (action === 'view') {
+                const regData = button.getAttribute('data-reg-data');
+                if (regData) {
+                    const registration = JSON.parse(regData);
+                    viewDetails(registration);
+                }
+            } else if (action === 'confirm') {
+                const regId = button.getAttribute('data-reg-id');
+                if (regId) {
+                    updateStatus(regId, 'confirmed');
+                }
+            } else if (action === 'delete') {
+                const regId = button.getAttribute('data-reg-id');
+                if (regId) {
+                    deleteRegistration(regId);
+                }
+            }
+        }
+
+        async function loadRegistrations() {
+            try {
+                const token = localStorage.getItem('adminToken') || localStorage.getItem('token');
+                
+                if (!token) {
+                    console.error('No authentication token found');
+                    showNotification('Please login to view registrations', 'error');
+                    setTimeout(() => {
+                        window.location.href = '../index.html';
+                    }, 2000);
+                    return;
+                }
+                
+                // If formId is provided, fetch submissions for that specific form
+                const url = currentFormId 
+                    ? `/api/registrations/forms/${currentFormId}/submissions`
+                    : '/api/registrations';
+                
+                console.log('Fetching from:', url);
+                console.log('Using token:', token ? 'Token exists' : 'No token');
+                
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                }).catch(err => {
+                    console.error('Network error:', err);
+                    throw new Error(`Network error: Cannot connect to server. Please ensure the API server is running on port 3000.`);
+                });
+
+                console.log('Response status:', response.status);
+
+                if (!response.ok) {
+                    let errorText = '';
+                    try {
+                        errorText = await response.text();
+                    } catch (e) {
+                        errorText = 'Unable to read error response';
+                    }
+                    console.error('API Error:', response.status, errorText);
+                    
+                    if (response.status === 401) {
+                        showNotification('Session expired. Please login again.', 'error');
+                        setTimeout(() => {
+                            window.location.href = '../index.html';
+                        }, 2000);
+                        return;
+                    }
+                    
+                    throw new Error(`API returned ${response.status}: ${errorText || response.statusText}`);
+                }
+
+                const data = await response.json();
+                console.log('Received data:', data);
+                
+                // Handle response from both endpoints
+                if (currentFormId) {
+                    // Form-specific submissions endpoint
+                    allRegistrations = data.submissions || [];
+                    currentFormFields = data.form?.fields || []; // Store form fields
+                    updateStats(data.stats || { total: 0, pending: 0, confirmed: 0, cancelled: 0 });
+                    // Update page title with form name
+                    if (data.form) {
+                        document.querySelector('.page-title').textContent = data.form.title || 'Registration Submissions';
+                        document.querySelector('.page-description').textContent = data.form.description || 'View and manage all submitted registration details';
+                    }
+                } else {
+                    // All registrations endpoint
+                    allRegistrations = data.registrations || [];
+                    currentFormFields = []; // No specific form, use default columns
+                    updateStats(data.stats || { total: 0, pending: 0, confirmed: 0, cancelled: 0 });
+                }
+                
+                filteredRegistrations = [...allRegistrations];
+                renderTableHeaders(); // Render dynamic headers
+                renderTable();
+            } catch (error) {
+                console.error('Error loading registrations:', error);
+                showNotification(`Failed to load registrations: ${error.message}`, 'error');
+                // Show empty state
+                document.getElementById('emptyState').style.display = 'block';
+                document.getElementById('tableBody').innerHTML = '';
+            }
+        }
+
+        function updateStats(stats) {
+            document.getElementById('totalSubmissions').textContent = stats.total || 0;
+            document.getElementById('pendingCount').textContent = stats.pending || 0;
+            document.getElementById('confirmedCount').textContent = stats.confirmed || 0;
+            document.getElementById('cancelledCount').textContent = stats.cancelled || 0;
+        }
+
+        function applyFilters() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const statusFilter = document.getElementById('statusFilter').value;
+
+            filteredRegistrations = allRegistrations.filter(reg => {
+                const matchesSearch = !searchTerm || 
+                    reg.registrationNumber.toLowerCase().includes(searchTerm) ||
+                    reg.participant.name?.toLowerCase().includes(searchTerm) ||
+                    reg.participant.email?.toLowerCase().includes(searchTerm) ||
+                    reg.participant.phone?.toLowerCase().includes(searchTerm) ||
+                    reg.participant.college?.toLowerCase().includes(searchTerm);
+
+                const matchesStatus = !statusFilter || reg.status === statusFilter;
+
+                return matchesSearch && matchesStatus;
+            });
+
+            renderTable();
+        }
+
+        function clearFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('statusFilter').value = '';
+            applyFilters();
+        }
+
+        function renderTableHeaders() {
+            const thead = document.querySelector('#submissionsTable thead tr');
+            
+            if (currentFormFields.length > 0) {
+                // Dynamic headers based on form fields
+                let headers = '<th>Reg. Number</th>';
+                
+                // Add headers for each form field
+                currentFormFields.forEach(field => {
+                    headers += `<th>${field.label}</th>`;
+                });
+                
+                headers += '<th>Status</th><th>Submitted</th><th>Actions</th>';
+                thead.innerHTML = headers;
+                
+                // Apply automatic font sizing based on column count
+                applyAutoFontSize();
+            } else {
+                // Default headers when no specific form
+                thead.innerHTML = `
+                    <th>Reg. Number</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>College</th>
+                    <th>Status</th>
+                    <th>Submitted</th>
+                    <th>Actions</th>
+                `;
+            }
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('tableBody');
+            const emptyState = document.getElementById('emptyState');
+
+            if (filteredRegistrations.length === 0) {
+                tbody.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+
+            if (currentFormFields.length > 0) {
+                // Dynamic rendering based on form fields
+                tbody.innerHTML = filteredRegistrations.map(reg => {
+                    let row = `<tr><td><strong>${reg.registrationNumber}</strong></td>`;
+                    
+                    // Add data for each form field
+                    currentFormFields.forEach(field => {
+                        const value = reg.data?.[field.id] || 'N/A';
+                        row += `<td>${value}</td>`;
+                    });
+                    
+                    row += `
+                        <td>
+                            <span class="status-badge ${reg.status}">
+                                ${reg.status}
+                            </span>
+                        </td>
+                        <td>${formatDate(reg.createdAt)}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-icon" data-action="view" data-reg-data='${JSON.stringify(reg).replace(/'/g, "&#39;")}' title="View Details">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10" />
+                                        <line x1="12" y1="16" x2="12" y2="12" />
+                                        <line x1="12" y1="8" x2="12.01" y2="8" />
+                                    </svg>
+                                </button>
+                                <button class="btn-icon" data-action="confirm" data-reg-id="${reg.id}" title="Confirm">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12" />
+                                    </svg>
+                                </button>
+                                <button class="btn-icon" data-action="delete" data-reg-id="${reg.id}" title="Delete">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="3 6 5 6 21 6" />
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>`;
+                    
+                    return row;
+                }).join('');
+            } else {
+                // Default rendering with standard columns
+                tbody.innerHTML = filteredRegistrations.map(reg => `
+                    <tr>
+                        <td><strong>${reg.registrationNumber}</strong></td>
+                        <td>${reg.participant.name || 'N/A'}</td>
+                        <td>${reg.participant.email || 'N/A'}</td>
+                        <td>${reg.participant.phone || 'N/A'}</td>
+                        <td>${reg.participant.college || 'N/A'}</td>
+                        <td>
+                            <span class="status-badge ${reg.status}">
+                                ${reg.status}
+                            </span>
+                        </td>
+                        <td>${formatDate(reg.createdAt)}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-icon" data-action="view" data-reg-data='${JSON.stringify(reg).replace(/'/g, "&#39;")}' title="View Details">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10" />
+                                        <line x1="12" y1="16" x2="12" y2="12" />
+                                        <line x1="12" y1="8" x2="12.01" y2="8" />
+                                    </svg>
+                                </button>
+                                <button class="btn-icon" data-action="confirm" data-reg-id="${reg.id}" title="Confirm">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12" />
+                                    </svg>
+                                </button>
+                                <button class="btn-icon" data-action="delete" data-reg-id="${reg.id}" title="Delete">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="3 6 5 6 21 6" />
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function viewDetails(registration) {
+            const modalBody = document.getElementById('modalBody');
+            const detailsModal = document.getElementById('detailsModal');
+
+            // Save the current focus to restore later
+            lastActiveElement = document.activeElement;
+
+            // Update header title and subtitle with status badge
+            document.getElementById('detailsTitle').textContent = `Registration Details`;
+            document.getElementById('detailsSubtitle').innerHTML = `${registration.registrationNumber} &nbsp; <span class="status-badge ${registration.status}">${registration.status}</span>`;
+
+            // Build left panel (basic + participant + dynamic form responses)
+            let leftHtml = '';
+
+            leftHtml += `
+                <div class="section-card">
+                    <div class="section-title">Basic Information</div>
+                    <div class="detail-grid">
+                        <div class="detail-item"><div class="detail-label">Registration Number</div><div class="detail-value">${registration.registrationNumber}</div></div>
+                        <div class="detail-item"><div class="detail-label">Submitted At</div><div class="detail-value">${formatDate(registration.createdAt)}</div></div>
+                        <div class="detail-item"><div class="detail-label">Updated At</div><div class="detail-value">${formatDate(registration.updatedAt)}</div></div>
+                        <div class="detail-item"><div class="detail-label">Status</div><div class="detail-value"><span class="status-badge ${registration.status}">${registration.status}</span></div></div>
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <div class="section-title">Participant Details</div>
+                    <div class="detail-grid">
+                        <div class="detail-item"><div class="detail-label">Name</div><div class="detail-value">${registration.participant.name || 'N/A'}</div></div>
+                        <div class="detail-item"><div class="detail-label">Email</div><div class="detail-value">${registration.participant.email || 'N/A'}</div></div>
+                        <div class="detail-item"><div class="detail-label">Phone</div><div class="detail-value">${registration.participant.phone || 'N/A'}</div></div>
+                        <div class="detail-item"><div class="detail-label">College</div><div class="detail-value">${registration.participant.college || 'N/A'}</div></div>
+                        <div class="detail-item"><div class="detail-label">Year</div><div class="detail-value">${registration.participant.year || 'N/A'}</div></div>
+                        <div class="detail-item"><div class="detail-label">Department</div><div class="detail-value">${registration.participant.department || 'N/A'}</div></div>
+                    </div>
+                </div>
+            `;
+
+            // Dynamic form responses: prefer currentFormFields mapping, fallback to keys in registration.data
+            if (registration.data && Object.keys(registration.data).length) {
+                let responsesHtml = `<div class="section-card"><div class="section-title">Form Responses</div><div class="detail-grid">`;
+
+                if (currentFormFields && currentFormFields.length) {
+                    currentFormFields.forEach(f => {
+                        const value = registration.data[f.id] || '';
+                        responsesHtml += `<div class="detail-item"><div class="detail-label">${f.label}</div><div class="detail-value">${value || 'N/A'}</div></div>`;
+                    });
+                } else {
+                    Object.entries(registration.data).forEach(([k, v]) => {
+                        // Pretty label from key
+                        const label = k.replace(/[_-]+/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+                        const value = (typeof v === 'string' || typeof v === 'number') ? v : JSON.stringify(v);
+                        responsesHtml += `<div class="detail-item"><div class="detail-label">${label}</div><div class="detail-value">${value || 'N/A'}</div></div>`;
+                    });
+                }
+
+                responsesHtml += `</div></div>`;
+                leftHtml += responsesHtml;
+            }
+
+            // Build right panel (Events / Team) and action buttons
+            let rightHtml = '';
+
+            if (registration.events && registration.events.length) {
+                rightHtml += `
+                    <div class="section-card">
+                        <div class="section-title">Events</div>
+                        <div class="detail-value">${registration.events.join(', ')}</div>
+                    </div>
+                `;
+            }
+
+            if (registration.teamMembers && registration.teamMembers.length) {
+                rightHtml += `
+                    <div class="section-card">
+                        <div class="section-title">Team Members</div>
+                        ${registration.teamMembers.map((m, idx) => `<div class="detail-item"><div class="detail-label">Member ${idx+1}</div><div class="detail-value">${m.name} — ${m.email}</div></div>`).join('')}
+                    </div>
+                `;
+            }
+
+            // Actions area: dynamic confirm/cancel button depending on current status
+            let actionsHtml = '';
+            if (registration.status !== 'confirmed') {
+                actionsHtml += `<button class="btn btn-primary" data-action="confirm" data-reg-id="${registration.id || registration._id}" data-new-status="confirmed">Confirm</button>`;
+            } else {
+                actionsHtml += `<button class="btn btn-secondary" data-action="cancel" data-reg-id="${registration.id || registration._id}" data-new-status="cancelled">Cancel</button>`;
+            }
+
+            actionsHtml += `<button class="btn btn-danger" data-action="delete" data-reg-id="${registration.id || registration._id}">Delete</button>`;
+
+            rightHtml += `<div class="section-card"><div class="section-title">Actions</div><div style="display:flex;flex-direction:column;gap:0.5rem;">${actionsHtml}<button class="btn btn-secondary" data-action="export">Export</button><button class="btn" data-action="print">Print</button></div></div>`;
+
+            // Render into left and right panels
+            modalBody.innerHTML = `<div class="modal-grid"><div class="left-panel">${leftHtml}</div><aside class="right-panel">${rightHtml}</aside></div>`;
+
+            // Ensure action buttons have reg id (already set) and show modal
+            const delBtn = document.querySelector('#detailsModal [data-action="delete"]');
+            if (delBtn) delBtn.setAttribute('data-reg-id', registration.id || registration._id || '');
+
+            detailsModal.classList.add('active');
+            const closeBtn = detailsModal.querySelector('[data-action="close"]');
+            if (closeBtn) closeBtn.focus();
+        }
+
+        function closeModal() {
+            const detailsModal = document.getElementById('detailsModal');
+            detailsModal.classList.remove('active');
+            if (lastActiveElement && lastActiveElement.focus) lastActiveElement.focus();
+        }
+
+        async function updateStatus(id, newStatus) {
+            try {
+                const token = localStorage.getItem('adminToken') || localStorage.getItem('token');
+                const response = await fetch(`/api/registrations/${id}/status`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ status: newStatus })
+                });
+
+                if (!response.ok) throw new Error('Failed to update status');
+
+                showNotification('Status updated successfully', 'success');
+                loadRegistrations();
+            } catch (error) {
+                console.error('Error updating status:', error);
+                showNotification('Failed to update status', 'error');
+            }
+        }
+
+        async function deleteRegistration(id) {
+            if (!confirm('Are you sure you want to delete this registration? This action cannot be undone.')) {
+                return;
+            }
+
+            try {
+                const token = localStorage.getItem('adminToken') || localStorage.getItem('token');
+                
+                if (!token) {
+                    showNotification('Please login to delete registrations', 'error');
+                    return;
+                }
+                
+                const response = await fetch(`/api/registrations/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Failed to delete registration');
+                }
+
+                showNotification('Registration deleted successfully', 'success');
+                loadRegistrations(); // Reload the data
+            } catch (error) {
+                console.error('Error deleting registration:', error);
+                showNotification(error.message || 'Failed to delete registration', 'error');
+            }
+        }
+
+        function refreshData() {
+            loadRegistrations();
+        }
+
+        function exportToCSV() {
+            let headers, rows;
+            
+            if (currentFormFields.length > 0) {
+                // Dynamic CSV based on form fields
+                headers = ['Reg. Number'];
+                currentFormFields.forEach(field => headers.push(field.label));
+                headers.push('Status', 'Submitted');
+                
+                rows = filteredRegistrations.map(reg => {
+                    const row = [reg.registrationNumber];
+                    currentFormFields.forEach(field => {
+                        row.push(reg.data?.[field.id] || '');
+                    });
+                    row.push(reg.status, formatDate(reg.createdAt));
+                    return row;
+                });
+            } else {
+                // Default CSV format
+                headers = ['Reg. Number', 'Name', 'Email', 'Phone', 'College', 'Year', 'Department', 'Status', 'Submitted'];
+                rows = filteredRegistrations.map(reg => [
+                    reg.registrationNumber,
+                    reg.participant.name || '',
+                    reg.participant.email || '',
+                    reg.participant.phone || '',
+                    reg.participant.college || '',
+                    reg.participant.year || '',
+                    reg.participant.department || '',
+                    reg.status,
+                    formatDate(reg.createdAt)
+                ]);
+            }
+
+            const csv = [headers, ...rows].map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `registrations_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            const date = new Date(dateString);
+            return date.toLocaleString('en-IN', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function showNotification(message, type = 'info') {
+            // Create a better notification toast
+            const existingToast = document.querySelector('.custom-toast');
+            if (existingToast) {
+                existingToast.remove();
+            }
+
+            const toast = document.createElement('div');
+            toast.className = `custom-toast custom-toast-${type}`;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'error' ? '#dc3545' : type === 'success' ? '#28a745' : '#17a2b8'};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                z-index: 10000;
+                max-width: 400px;
+                animation: slideIn 0.3s ease;
+            `;
+            toast.textContent = message;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 5000);
+        }
+
+        // Close modal on outside click
+        document.getElementById('detailsModal').addEventListener('click', (e) => {
+            if (e.target.id === 'detailsModal') {
+                closeModal();
+            }
+        });
+    </script>
+    <script type="module" src="../js/supabase-config.js"></script>
+    <script type="module" src="../js/auth.js"></script>
+</body>
+
+</html>

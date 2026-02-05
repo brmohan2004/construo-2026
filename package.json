@@ -1,0 +1,25 @@
+{
+  "name": "construo-2026",
+  "version": "2.0.0",
+  "description": "CONSTRUO 2026 - Civil Engineering Symposium Website (Supabase Version)",
+  "scripts": {
+    "dev": "python3 -m http.server 8000 || python -m http.server 8000 || php -S localhost:8000 || npx http-server -p 8000",
+    "serve": "npx http-server -p 8000"
+  },
+  "keywords": [
+    "symposium",
+    "civil-engineering",
+    "event-management",
+    "admin-panel",
+    "supabase",
+    "static-site"
+  ],
+  "author": "CONSTRUO Team",
+  "license": "MIT",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.3"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}

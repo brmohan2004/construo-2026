@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Venue | CONSTRUO Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <aside class="admin-sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="../dashboard.html" class="sidebar-logo">
+                    <div class="sidebar-logo-icon">🏗️</div>
+                    <div class="sidebar-logo-text"><span>CONSTRUO</span><span>Admin Panel</span></div>
+                </a>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Overview</div>
+                    <ul class="nav-menu">
+                        <li class="nav-item"><a href="../dashboard.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/></svg><span>Dashboard</span></a></li>
+                    </ul>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Website Sections</div>
+                    <ul class="nav-menu">
+                        <li class="nav-item"><a href="hero.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/></svg><span>Hero</span></a></li>
+                        <li class="nav-item"><a href="about.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg><span>About</span></a></li>
+                        <li class="nav-item"><a href="events.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/></svg><span>Events</span></a></li>
+                        <li class="nav-item"><a href="timeline.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg><span>Timeline</span></a></li>
+                        <li class="nav-item"><a href="speakers.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/></svg><span>Speakers</span></a></li>
+                        <li class="nav-item"><a href="sponsors.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/></svg><span>Sponsors</span></a></li>
+                        <li class="nav-item"><a href="organizers.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>Organizers</span></a></li>
+                        <li class="nav-item"><a href="venue.html" class="nav-link active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span>Venue</span></a></li>
+                        <li class="nav-item"><a href="footer.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/></svg><span>Footer</span></a></li>
+                    </ul>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Management</div>
+                    <ul class="nav-menu">
+                        <li class="nav-item"><a href="registrations.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg><span>Registrations</span></a></li>
+                        <li class="nav-item"><a href="users.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/></svg><span>Users</span></a></li>
+                        <li class="nav-item"><a href="media.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/></svg><span>Media</span></a></li>
+                        <li class="nav-item"><a href="settings.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/></svg><span>Settings</span></a></li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="admin-main">
+            <header class="admin-header">
+                <div class="header-left">
+                    <button class="sidebar-toggle mobile-toggle" id="mobileSidebarToggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+                    <div>
+                        <h1 class="header-title">Venue</h1>
+                        <div class="header-breadcrumb"><a href="../dashboard.html">Dashboard</a><span>/</span><span>Venue</span></div>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button class="btn btn-primary" id="saveBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/></svg>Save Changes</button>
+                </div>
+            </header>
+
+            <div class="admin-content">
+                <form id="venueForm">
+                    <div class="form-grid">
+                        <!-- Basic Info -->
+                        <div class="card">
+                            <div class="card-header"><h3 class="card-title">Basic Information</h3></div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label class="form-label">Venue Name</label>
+                                    <input type="text" class="form-input" id="venueName" placeholder="College Name">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Full Address</label>
+                                    <textarea class="form-textarea" id="venueAddress" rows="3"></textarea>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">City</label>
+                                        <input type="text" class="form-input" id="venueCity">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">State</label>
+                                        <input type="text" class="form-input" id="venueState">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">PIN Code</label>
+                                        <input type="text" class="form-input" id="venuePincode">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Map & Coordinates -->
+                        <div class="card">
+                            <div class="card-header"><h3 class="card-title">Map Settings</h3></div>
+                            <div class="card-body">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Latitude</label>
+                                        <input type="text" class="form-input" id="venueLat" placeholder="12.9716">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Longitude</label>
+                                        <input type="text" class="form-input" id="venueLng" placeholder="77.5946">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Google Maps Embed URL</label>
+                                    <input type="url" class="form-input" id="venueMapUrl" placeholder="https://www.google.com/maps/embed?...">
+                                    <span class="form-hint">Get the embed URL from Google Maps → Share → Embed</span>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Google Maps Link (Directions)</label>
+                                    <input type="url" class="form-input" id="venueMapLink" placeholder="https://maps.google.com/?q=...">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Contact Info -->
+                        <div class="card">
+                            <div class="card-header"><h3 class="card-title">Contact Information</h3></div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label class="form-label">Contact Email</label>
+                                    <input type="email" class="form-input" id="venueEmail">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Contact Phone</label>
+                                    <input type="tel" class="form-input" id="venuePhone">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Website</label>
+                                    <input type="url" class="form-input" id="venueWebsite">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Transport Info -->
+                        <div class="card">
+                            <div class="card-header"><h3 class="card-title">How to Reach</h3></div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label class="form-label">By Bus</label>
+                                    <textarea class="form-textarea" id="transportBus" rows="2"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">By Train</label>
+                                    <textarea class="form-textarea" id="transportTrain" rows="2"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">By Flight</label>
+                                    <textarea class="form-textarea" id="transportFlight" rows="2"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+    <script>
+        const VenueEditor = {
+            data: null,
+
+            async init() {
+                await this.loadData();
+                this.bindEvents();
+                this.render();
+            },
+
+            async loadData() {
+                try {
+                    if (Admin.config.useAPI) {
+                        // Load directly from venue API endpoint
+                        this.data = await Admin.apiGet('venue');
+                    } else {
+                        // Fallback to site-config.json for demo mode
+                        const config = await Admin.getData('site-config.json');
+                        this.data = config?.venue || {};
+                    }
+                } catch (error) {
+                    console.error('Failed to load venue data:', error);
+                    this.data = {};
+                    Admin.showToast('warning', 'Load Failed', 'Could not load venue data. Starting with empty form.');
+                }
+            },
+
+            bindEvents() {
+                document.getElementById('saveBtn').addEventListener('click', () => this.save());
+            },
+
+            render() {
+                if (!this.data) return;
+                // this.data is now the venue object directly
+                const v = this.data;
+
+                document.getElementById('venueName').value = v.name || '';
+                document.getElementById('venueAddress').value = v.address || '';
+                document.getElementById('venueCity').value = v.city || '';
+                document.getElementById('venueState').value = v.state || '';
+                document.getElementById('venuePincode').value = v.pincode || '';
+                document.getElementById('venueLat').value = v.coordinates?.lat || '';
+                document.getElementById('venueLng').value = v.coordinates?.lng || '';
+                document.getElementById('venueMapUrl').value = v.mapEmbedUrl || '';
+                document.getElementById('venueMapLink').value = v.mapLink || '';
+                document.getElementById('venueEmail').value = v.contact?.email || '';
+                document.getElementById('venuePhone').value = v.contact?.phone || '';
+                document.getElementById('venueWebsite').value = v.contact?.website || '';
+                document.getElementById('transportBus').value = v.howToReach?.bus || '';
+                document.getElementById('transportTrain').value = v.howToReach?.train || '';
+                document.getElementById('transportFlight').value = v.howToReach?.flight || '';
+            },
+
+            async save() {
+                const venueData = {
+                    name: document.getElementById('venueName').value,
+                    address: document.getElementById('venueAddress').value,
+                    city: document.getElementById('venueCity').value,
+                    state: document.getElementById('venueState').value,
+                    pincode: document.getElementById('venuePincode').value,
+                    coordinates: {
+                        lat: document.getElementById('venueLat').value,
+                        lng: document.getElementById('venueLng').value
+                    },
+                    mapEmbedUrl: document.getElementById('venueMapUrl').value,
+                    mapLink: document.getElementById('venueMapLink').value,
+                    contact: {
+                        email: document.getElementById('venueEmail').value,
+                        phone: document.getElementById('venuePhone').value,
+                        website: document.getElementById('venueWebsite').value
+                    },
+                    howToReach: {
+                        bus: document.getElementById('transportBus').value,
+                        train: document.getElementById('transportTrain').value,
+                        flight: document.getElementById('transportFlight').value
+                    }
+                };
+
+                try {
+                    if (Admin.config.useAPI) {
+                        // Save via PUT /api/venue
+                        const response = await Admin.apiPut('venue', venueData);
+                        this.data = response.data || venueData;
+                        Admin.showToast('success', 'Saved', 'Venue information updated');
+                    } else {
+                        // Fallback to local mode
+                        const config = await Admin.getData('site-config.json');
+                        config.venue = venueData;
+                        const success = await Admin.saveData('site-config.json', config);
+                        if (success) {
+                            this.data = venueData;
+                            Admin.logActivity('update', 'venue', 'Updated venue information');
+                        }
+                    }
+                } catch (error) {
+                    console.error('Save venue error:', error);
+                    Admin.showToast('error', 'Error', error.message || 'Failed to save venue');
+                }
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => VenueEditor.init());
+    </script>
+    <style>
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 1.5rem; }
+        @media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } }
+    </style>
+    
+    <script type="module" src="../js/supabase-config.js"></script>
+    <script type="module" src="../js/auth.js"></script>
+    <script type="module" src="../js/admin.js"></script>
+</body>
+</html>

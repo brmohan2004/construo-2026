@@ -1,0 +1,37 @@
+{
+  "days": [
+    {
+      "id": "day_1770135916294",
+      "date": "2026-02-03",
+      "title": "Day 1",
+      "sessions": [
+        {
+          "id": "sess_1770135970998",
+          "start": "15:57",
+          "end": "16:57",
+          "title": "mohan",
+          "description": "bf cxbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "venue": "seminar hall",
+          "type": "ceremony"
+        },
+        {
+          "id": "sess_1770143166548",
+          "start": "23:56",
+          "end": "02:59",
+          "title": "mmoha ",
+          "description": "",
+          "venue": "",
+          "type": "event"
+        }
+      ]
+    },
+    {
+      "id": "day_1770143378791",
+      "date": "2026-02-03",
+      "title": "Day 2",
+      "sessions": []
+    }
+  ],
+  "updatedAt": "2026-02-03T18:31:18.616Z",
+  "updatedBy": "user_001"
+}

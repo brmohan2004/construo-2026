@@ -1,0 +1,107 @@
+{
+  "hero": {
+    "badge": "national level technical symposi",
+    "title": "CONSTUO",
+    "titleOutline": "2026",
+    "tagline": "Building Tomorrow's Engineers",
+    "date": {
+      "days": "28",
+      "month": "February",
+      "year": "2026"
+    },
+    "registrationFee": {
+      "amount": 150,
+      "currency": "INR",
+      "symbol": "₹",
+      "note": "per participant"
+    },
+    "ctaButtons": [
+      {
+        "text": "Explore",
+        "link": "#about",
+        "type": "secondary"
+      }
+    ]
+  },
+  "about": {
+    "title": "mohanbrrrrrr",
+    "subtitle": "hdfbbfd",
+    "description": "cvvcnncvncng",
+    "highlights": [
+      "ncvnvccv ngggggggggg"
+    ],
+    "stats": [
+      {
+        "value": "gnngng",
+        "label": "nggnng",
+        "icon": ""
+      }
+    ],
+    "poster": "https://res.cloudinary.com/dymhvee8z/image/upload/v1770181630/construo-2026/odhmzhm54z2ox2gypgtt.png",
+    "brochure": ""
+  },
+  "venue": {
+    "name": "srm vallimai",
+    "address": "123 Colleg",
+    "city": "",
+    "state": "",
+    "pincode": "",
+    "coordinates": {
+      "lat": "",
+      "lng": ""
+    },
+    "mapEmbedUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3890.268102623864!2d80.03873787485179!3d12.825944187476228!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a52f70d79722631%3A0x49afcd4648f94894!2sSRM%20Valliammai%20Engineering%20College!5e0!3m2!1sen!2sin!4v1770142873263!5m2!1sen!2sin",
+    "mapLink": "https://maps.app.goo.gl/Z13GhNDsZ2hixQAH6",
+    "contact": {
+      "email": "",
+      "phone": "",
+      "website": ""
+    },
+    "howToReach": {
+      "bus": "",
+      "train": "",
+      "flight": ""
+    }
+  },
+  "footer": {
+    "copyright": "© 2026 CONSTRUO. Craf",
+    "credits": "",
+    "social": {
+      "instagram": "https://instagram.com/construo2026",
+      "facebook": "",
+      "twitter": "https://twitter.com/construo2026",
+      "linkedin": "https://linkedin.com/company/construo2026",
+      "youtube": "https://youtube.com/@construo2026"
+    },
+    "quickLinks": [
+      {
+        "text": "About",
+        "url": "#about"
+      },
+      {
+        "text": "Events",
+        "url": "#events"
+      },
+      {
+        "text": "Speakers",
+        "url": "#speakers"
+      },
+      {
+        "text": "Register",
+        "url": "#register"
+      }
+    ],
+    "contact": {
+      "email": "info@construo.com",
+      "phone": "+91 98765 43210",
+      "address": ""
+    }
+  },
+  "meta": {
+    "siteName": "CONSTRUO 2026",
+    "siteDescription": "Civil Engineering Symposium - Building Tomorrow's Engineers",
+    "favicon": "/favicon.ico",
+    "ogImage": "/uploads/og-image.jpg",
+    "lastUpdated": "2026-02-03T10:00:00Z"
+  }
+}

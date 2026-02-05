@@ -1,0 +1,67 @@
+{
+  "forms": [
+    {
+      "id": "form_1770151217286",
+      "title": "Untitled form",
+      "description": "",
+      "fields": [
+        {
+          "id": "field_1770151159082_y69tdo0e6",
+          "label": "Full Name",
+          "type": "text",
+          "required": true,
+          "placeholder": "",
+          "options": []
+        },
+        {
+          "id": "field_1770151159084_jymqf8z8h",
+          "label": "Email Address",
+          "type": "email",
+          "required": true,
+          "placeholder": "",
+          "options": []
+        },
+        {
+          "id": "field_1770151159084_a6kbi564k",
+          "label": "Phone Number",
+          "type": "tel",
+          "required": true,
+          "placeholder": "",
+          "options": []
+        },
+        {
+          "id": "field_1770151169417_imp1xha4i",
+          "label": "year",
+          "type": "radio",
+          "required": false,
+          "placeholder": "",
+          "options": [
+            " 1",
+            " 2",
+            " 3",
+            "4",
+            "post graduate"
+          ]
+        }
+      ],
+      "isActive": true,
+      "createdAt": "2026-02-03T20:40:17.286Z",
+      "updatedAt": "2026-02-03T20:51:44.703Z"
+    }
+  ],
+  "submissions": [
+    {
+      "id": "sub_1770151677555",
+      "formId": "form_1770151217286",
+      "registrationNumber": "CONS20260001",
+      "data": {
+        "field_1770151159082_y69tdo0e6": "MOHAN B R",
+        "field_1770151159084_jymqf8z8h": "mohanbr2004@gmail.com",
+        "field_1770151159084_a6kbi564k": "09962442165",
+        "field_1770151169417_imp1xha4i": "4"
+      },
+      "status": "pending",
+      "createdAt": "2026-02-03T20:47:57.555Z"
+    }
+  ]
+}

@@ -1,0 +1,106 @@
+{
+  "users": [
+    {
+      "id": "user_001",
+      "username": "admin",
+      "email": "admin@construo.com",
+      "password": "$2b$10$xVqYLGLvGHxYfPTLVzKKxeKGZK5Kwv5qU3FvyKXWt8gJMwkxdR5qW",
+      "passwordPlain": "construo2026",
+      "role": "superadmin",
+      "name": "Super Admin",
+      "avatar": "/uploads/avatars/admin.jpg",
+      "phone": "+91 9876543210",
+      "permissions": [
+        "*"
+      ],
+      "lastLogin": "2026-02-03T19:30:19.709Z",
+      "status": "active",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-02-03T10:00:00Z"
+    },
+    {
+      "id": "user_002",
+      "username": "coordinator",
+      "email": "coordinator@construo.com",
+      "password": "$2b$10$xVqYLGLvGHxYfPTLVzKKxeKGZK5Kwv5qU3FvyKXWt8gJMwkxdR5qW",
+      "passwordPlain": "coord2026",
+      "role": "admin",
+      "name": "Event Coordinator",
+      "avatar": "/uploads/avatars/coordinator.jpg",
+      "phone": "+91 9876543211",
+      "permissions": [
+        "read",
+        "write",
+        "delete",
+        "manage_events",
+        "manage_registrations"
+      ],
+      "lastLogin": "2026-02-02T14:00:00Z",
+      "status": "active",
+      "createdAt": "2026-01-10T00:00:00Z",
+      "updatedAt": "2026-02-02T14:00:00Z"
+    },
+    {
+      "id": "user_003",
+      "username": "volunteer",
+      "email": "volunteer@construo.com",
+      "password": "$2b$10$xVqYLGLvGHxYfPTLVzKKxeKGZK5Kwv5qU3FvyKXWt8gJMwkxdR5qW",
+      "passwordPlain": "vol2026",
+      "role": "moderator",
+      "name": "Volunteer Lead",
+      "avatar": null,
+      "phone": "+91 9876543212",
+      "permissions": [
+        "read",
+        "write"
+      ],
+      "lastLogin": "2026-02-01T09:00:00Z",
+      "status": "active",
+      "createdAt": "2026-01-15T00:00:00Z",
+      "updatedAt": "2026-02-01T09:00:00Z"
+    }
+  ],
+  "roles": {
+    "superadmin": {
+      "name": "Super Admin",
+      "description": "Full access to all features",
+      "permissions": [
+        "*"
+      ],
+      "color": "#ef4444"
+    },
+    "admin": {
+      "name": "Admin",
+      "description": "Manage content, users, and registrations",
+      "permissions": [
+        "read",
+        "write",
+        "delete",
+        "manage_users",
+        "manage_events",
+        "manage_registrations",
+        "manage_content"
+      ],
+      "color": "#f97316"
+    },
+    "moderator": {
+      "name": "Moderator",
+      "description": "Edit content and manage registrations",
+      "permissions": [
+        "read",
+        "write",
+        "manage_registrations"
+      ],
+      "color": "#22c55e"
+    },
+    "viewer": {
+      "name": "Viewer",
+      "description": "Read-only access",
+      "permissions": [
+        "read"
+      ],
+      "color": "#3b82f6"
+    }
+  },
+  "sessions": []
+}

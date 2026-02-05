@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events Management | CONSTRUO Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/admin.css">
+</head>
+
+<body>
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="../dashboard.html" class="sidebar-logo">
+                    <div class="sidebar-logo-icon">🏗️</div>
+                    <div class="sidebar-logo-text"><span>CONSTRUO</span><span>Admin Panel</span></div>
+                </a>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Overview</div>
+                    <ul class="nav-menu">
+                        <li class="nav-item"><a href="../dashboard.html" class="nav-link"><svg viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="7" height="9" />
+                                    <rect x="14" y="3" width="7" height="5" />
+                                    <rect x="14" y="12" width="7" height="9" />
+                                    <rect x="3" y="16" width="7" height="5" />
+                                </svg><span>Dashboard</span></a></li>
+                    </ul>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Website Sections</div>
+                    <ul class="nav-menu">
+                        <li class="nav-item"><a href="hero.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <polygon points="12 2 2 7 12 12 22 7 12 2" />
+                                </svg><span>Hero Section</span></a></li>
+                        <li class="nav-item"><a href="about.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <line x1="12" y1="16" x2="12" y2="12" />
+                                    <line x1="12" y1="8" x2="12.01" y2="8" />
+                                </svg><span>About</span></a></li>
+                        <li class="nav-item"><a href="events.html" class="nav-link active"><svg viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                                </svg><span>Events</span></a></li>
+                        <li class="nav-item"><a href="timeline.html" class="nav-link"><svg viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <polyline points="12 6 12 12 16 14" />
+                                </svg><span>Timeline</span></a></li>
+                        <li class="nav-item"><a href="speakers.html" class="nav-link"><svg viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                    <circle cx="9" cy="7" r="4" />
+                                </svg><span>Speakers</span></a></li>
+                        <li class="nav-item"><a href="sponsors.html" class="nav-link"><svg viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                                </svg><span>Sponsors</span></a></li>
+                        <li class="nav-item"><a href="organizers.html" class="nav-link"><svg viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                    <circle cx="9" cy="7" r="4" />
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                                </svg><span>Organizers</span></a></li>
+                        <li class="nav-item"><a href="venue.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                </svg><span>Venue</span></a></li>
+                        <li class="nav-item"><a href="footer.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                </svg><span>Footer</span></a></li>
+                    </ul>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Management</div>
+                    <ul class="nav-menu">
+                        <li class="nav-item"><a href="registrations.html" class="nav-link"><svg viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                </svg><span>Registrations</span></a></li>
+                        <li class="nav-item"><a href="users.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                    <circle cx="12" cy="7" r="4" />
+                                </svg><span>Users</span></a></li>
+                        <li class="nav-item"><a href="media.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                    <circle cx="8.5" cy="8.5" r="1.5" />
+                                </svg><span>Media</span></a></li>
+                        <li class="nav-item"><a href="settings.html" class="nav-link"><svg viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="3" />
+                                </svg><span>Settings</span></a></li>
+                    </ul>
+                </div>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="sidebar-user" id="sidebarUser">
+                    <div class="user-avatar" id="userAvatar">SA</div>
+                    <div class="user-info">
+                        <div class="user-name" id="userName">Super Admin</div>
+                        <div class="user-role" id="userRole">Super Admin</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="admin-main">
+            <header class="admin-header">
+                <div class="header-left">
+                    <button class="sidebar-toggle mobile-toggle" id="mobileSidebarToggle">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12" />
+                            <line x1="3" y1="6" x2="21" y2="6" />
+                            <line x1="3" y1="18" x2="21" y2="18" />
+                        </svg>
+                    </button>
+                    <div>
+                        <h1 class="header-title">Events Management</h1>
+                        <div class="header-breadcrumb"><a
+                                href="../dashboard.html">Dashboard</a><span>/</span><span>Events</span></div>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="header-search">
+                        <input type="text" id="searchInput" placeholder="Search events...">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="7"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                    </div>
+                    <select id="categoryFilter" class="form-select">
+                        <option value="all">All Categories</option>
+                    </select>
+                    <select id="statusFilter" class="form-select">
+                        <option value="all">All Status</option>
+                        <option value="active">Visible</option>
+                        <option value="hidden">Hidden</option>
+                    </select>
+                    <a href="#" id="addEventBtn" class="btn btn-primary">+ Add Event</a>
+                </div>
+            </header>
+
+            <div class="admin-content">
+                <div class="page-header">
+                    <div>
+                        <div class="page-title">Events Management</div>
+                        <div class="page-subtitle">Manage events, categories and visibility</div>
+                    </div>
+                </div>
+
+                <div id="topControls" class="mb-4">
+                    <div class="stats-grid" id="statsGrid">
+                        <div class="stat-card">
+                            <div class="stat-icon primary">📅</div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="totalEvents">0</div>
+                                <div class="stat-label">Total Events</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon success">⚡</div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="technicalCount">0</div>
+                                <div class="stat-label">Technical</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon warning">🙂</div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="nonTechnicalCount">0</div>
+                                <div class="stat-label">Non-Technical</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon info">🔧</div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="workshopCount">0</div>
+                                <div class="stat-label">Workshops</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Prize Pool Configuration -->
+                    <div class="card mt-4" id="prizePoolCard">
+                        <div class="card-header">
+                            <h3 class="card-title">🏆 Prize Pool Banner</h3>
+                            <span class="badge badge-info">Public Website</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-row" style="display: flex; gap: 1rem; align-items: flex-end;">
+                                <div class="form-group" style="flex: 1;">
+                                    <label class="form-label">Prize Amount</label>
+                                    <div class="input-group">
+                                        <span class="input-prefix">₹</span>
+                                        <input type="text" class="form-input" id="prizePoolAmount"
+                                            placeholder="50,000+">
+                                    </div>
+                                </div>
+                                <div class="form-group" style="flex: 2;">
+                                    <label class="form-label">Subtitle</label>
+                                    <input type="text" class="form-input" id="prizePoolSubtitle"
+                                        placeholder="Certificates for all participants">
+                                </div>
+                                <button type="button" class="btn btn-primary" id="savePrizePoolBtn">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="eventsArea">
+                    <div id="eventGrid" class="event-grid"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+    <!-- Add/Edit Event Modal (redesigned) -->
+    <div id="addEventModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="title-block">
+                    <div
+                        style="width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--admin-primary),#7c3aed);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;">
+                        E</div>
+                    <div>
+                        <h3 id="modalTitle">Add / Edit Event</h3>
+                        <div class="subtitle" id="modalHint">Quickly add event details — changes save locally.</div>
+                    </div>
+                </div>
+                <button type="button" class="modal-close" aria-label="Close"
+                    onclick="Admin.closeModal('addEventModal')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form id="eventForm" novalidate>
+                    <input type="hidden" id="eventId">
+                    <div class="form-grid">
+                        <div class="col-left">
+                            <div class="panel">
+                                <div class="form-field">
+                                    <label for="eventName">Name <span class="meta-small">*</span></label>
+                                    <input id="eventName" class="form-input" placeholder="Event title" required
+                                        aria-describedby="nameError">
+                                    <div id="nameError" class="form-error" style="display:none;">Event name is required
+                                    </div>
+                                </div>
+
+                                <div class="form-field">
+                                    <label for="eventDescription">Short Description</label>
+                                    <textarea id="eventDescription" class="form-textarea" rows="3"
+                                        placeholder="One-line summary"></textarea>
+                                </div>
+
+                                <div class="form-field">
+                                    <label for="eventTag">Category / Tag</label>
+                                    <select id="eventTag" class="form-select">
+                                        <option value="">Select tag</option>
+                                    </select>
+                                    <div class="helper">Tags come from site categories. Keep concise.</div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-field">
+                                        <label>Team Size (min / max)</label>
+                                        <div class="d-flex gap-2">
+                                            <input id="teamMin" class="form-input" type="number" min="1"
+                                                placeholder="Min">
+                                            <input id="teamMax" class="form-input" type="number" min="1"
+                                                placeholder="Max">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-row" style="display:flex;gap:0.75rem;">
+                                    <div class="form-field" style="flex:1;">
+                                        <label for="duration">Duration</label>
+                                        <input id="duration" class="form-input" placeholder="e.g. 2 hours">
+                                    </div>
+                                    <div class="form-field" style="width:150px;">
+                                        <label>Visibility</label>
+                                        <select id="eventStatusSelect" class="form-select">
+                                            <option value="active">Visible</option>
+                                            <option value="hidden">Hidden</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="panel">
+                                <div class="form-field">
+                                    <label>Prizes (₹)</label>
+                                    <div class="d-flex gap-2">
+                                        <input id="price1" class="form-input" type="number" min="0" placeholder="1st">
+                                        <input id="price2" class="form-input" type="number" min="0" placeholder="2nd">
+                                        <input id="price3" class="form-input" type="number" min="0" placeholder="3rd">
+                                    </div>
+                                </div>
+
+                                <div class="form-field">
+                                    <label>Participation Certificate</label>
+                                    <div role="radiogroup" aria-label="Participation Certificate" class="d-flex gap-2">
+                                        <label class="radio-label"><input type="radio" name="certificate"
+                                                id="certificateYes" value="yes"> Yes</label>
+                                        <label class="radio-label"><input type="radio" name="certificate"
+                                                id="certificateNo" value="no"> No</label>
+                                    </div>
+                                </div>
+
+                                <div class="form-field">
+                                    <label for="materials">Materials (one per line)</label>
+                                    <textarea id="materials" class="form-textarea" rows="3"></textarea>
+                                </div>
+
+                                <div class="form-field">
+                                    <label for="rules">Rules & Guidelines (one per line)</label>
+                                    <textarea id="rules" class="form-textarea" rows="4"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-right">
+                            <div class="panel">
+                                <label class="meta-small">Logo / Poster Preview</label>
+                                <div class="logo-preview" id="logoPreview">🎫</div>
+
+                                <div style="margin-top:0.75rem">
+                                    <input id="eventLogo" class="form-input" placeholder="Emoji or URL (optional)">
+                                    <div class="file-actions">
+                                        <input id="eventLogoFile" class="form-file-input" type="file" accept="image/*">
+                                        <button id="clearLogoBtn" type="button" class="btn btn-ghost"
+                                            style="display:none;">Clear</button>
+                                        <div class="meta-small" style="margin-left:auto;">Local preview only</div>
+                                    </div>
+                                    <div class="helper">Use emoji, image URL, or upload an image.</div>
+                                </div>
+                            </div>
+
+                            <div class="panel">
+                                <div class="form-field">
+                                    <label class="meta-small">Event metadata</label>
+                                    <div class="meta-small">Venue: <strong id="previewVenue">TBD</strong></div>
+                                    <div class="meta-small">Time: <strong id="previewTime">TBD</strong></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary"
+                    onclick="Admin.closeModal('addEventModal')">Close</button>
+                <button type="button" class="btn btn-primary" id="saveEventBtn">Save Event</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Page specific styles for event cards
+        const style = document.createElement('style');
+        style.textContent = `
+            .event-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+            .event-card { background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent); border: 1px solid var(--admin-border); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; }
+            .event-hero { height: 140px; background: linear-gradient(180deg, rgba(0,0,0,0.12), transparent); display:flex; align-items:center; justify-content:center; font-size:44px; }
+            .event-body { padding: 1rem; display:flex; flex-direction:column; gap:0.5rem; }
+            .event-title { font-weight:700; font-size:1.125rem; }
+            .event-desc { color: var(--admin-text-muted); font-size:0.9rem; }
+            .event-meta { display:flex; gap:1rem; align-items:center; color:var(--admin-text-muted); font-size:0.85rem; margin-top:0.5rem; }
+            .event-footer { padding: 0.75rem 1rem; border-top:1px solid var(--admin-border); display:flex; align-items:center; justify-content:space-between; }
+            .badge { font-weight:600; }
+            .event-badge { position:absolute; top:12px; left:12px; background:rgba(249,115,22,0.12); color:var(--admin-primary); padding:6px 10px; border-radius:10px; font-size:0.75rem; }
+            .event-card .hero-wrap { position:relative; }
+            /* Modal form redesign */
+            .modal-backdrop { backdrop-filter: blur(6px); background: rgba(7,10,15,0.45); }
+            .modal { max-width:1100px; width:calc(100% - 48px); border-radius:12px; overflow:visible; box-shadow:0 20px 40px rgba(2,6,23,0.6); }
+            .modal-header { display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:1.25rem 1.5rem; border-bottom:1px solid var(--admin-border); }
+            .modal-header .title-block { display:flex; gap:0.75rem; align-items:center; }
+            .modal-header h3 { margin:0; font-size:1.125rem; }
+            .modal-header .subtitle { color:var(--admin-text-muted); font-size:0.9rem; }
+            .modal-body { padding:1.25rem 1.5rem; }
+            .modal-footer { padding:1rem 1.5rem; display:flex; justify-content:flex-end; gap:0.5rem; border-top:1px solid var(--admin-border); }
+            .modal .form-grid { display:grid; grid-template-columns: 1fr 360px; gap:1.25rem; align-items:start; }
+            .modal .col-left, .modal .col-right { display:flex; flex-direction:column; gap:0.75rem; }
+            .panel { background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent); border:1px solid var(--admin-border); border-radius:10px; padding:0.9rem; }
+            .form-field { display:flex; flex-direction:column; gap:0.25rem; }
+            .form-field label { font-weight:600; font-size:0.85rem; }
+            .form-input, .form-textarea, .form-select { width:100%; border-radius:8px; padding:0.6rem 0.8rem; border:1px solid var(--admin-border); background:transparent; color:var(--admin-text); }
+            .form-row .d-flex input { flex:1; }
+            .logo-preview { width:100%; height:200px; border-radius:8px; background:linear-gradient(180deg,var(--admin-bg),rgba(255,255,255,0.01)); border:1px dashed var(--admin-border); display:flex; align-items:center; justify-content:center; font-size:48px; overflow:hidden; }
+            .image-upload-wrapper { display:flex; gap:0.75rem; align-items:flex-start; }
+            .meta-small { font-size:0.85rem; color:var(--admin-text-muted); }
+            .file-actions { display:flex; gap:0.5rem; align-items:center; margin-top:0.5rem; }
+            .helper { color:var(--admin-text-dark); font-size:0.85rem; }
+            @media (max-width:980px) { .modal .form-grid { grid-template-columns: 1fr; } .logo-preview { height:160px; } .event-grid { grid-template-columns: 1fr; } }
+            .form-error { color: var(--admin-danger, #d9534f); font-size:0.85rem; margin-top:0.25rem; }
+            #clearLogoBtn { height:36px; }
+        `;
+        document.head.appendChild(style);
+
+        const EventsPage = {
+            data: null,
+
+            async init() {
+                this.bindControls();
+                await this.load();
+                this.render();
+                // ensure grid actions are bound once during initialization
+                this.bindGridActions();
+                // subscribe to live updates from server when API is enabled
+                if (window.Admin && Admin.config && Admin.config.useAPI) {
+                    this.subscribeUpdates();
+                }
+            },
+
+            subscribeUpdates() {
+                if (this._sse) return;
+                try {
+                    const url = (Admin.config && Admin.config.apiPath ? Admin.config.apiPath : '/api/') + 'events/stream';
+                    const es = new EventSource(url);
+                    this._sse = es;
+
+                    es.onmessage = async (msg) => {
+                        try {
+                            const payload = JSON.parse(msg.data);
+                            // ignore initial connect ping
+                            if (payload && payload.status === 'connected') return;
+                            // reload data and re-render on any event
+                            await this.load();
+                            this.render();
+                        } catch (e) {
+                            console.error('SSE message handling error', e);
+                        }
+                    };
+
+                    es.onerror = (err) => {
+                        console.warn('EventSource error, will reconnect', err);
+                        es.close();
+                        this._sse = null;
+                        // attempt reconnect after a delay
+                        setTimeout(() => this.subscribeUpdates(), 3000);
+                    };
+                } catch (e) {
+                    console.warn('Failed to open EventSource for events stream', e);
+                }
+            },
+
+            bindControls() {
+                document.getElementById('searchInput').addEventListener('input', Admin.debounce((e) => {
+                    this.render(e.target.value);
+                }, 250));
+
+                document.getElementById('categoryFilter').addEventListener('change', (e) => this.render());
+                document.getElementById('statusFilter').addEventListener('change', (e) => this.render());
+            },
+
+            async load() {
+                this.data = await Admin.getData('events.json');
+                if (!this.data) this.data = { categories: [], events: [] };
+                this.populateFilters();
+            },
+
+            populateFilters() {
+                const select = document.getElementById('categoryFilter');
+                // Ensure canonical categories exist and show in dropdowns
+                const canonical = [
+                    { id: 'technical', name: 'Technical' },
+                    { id: 'non-technical', name: 'Non-Technical' },
+                    { id: 'workshop', name: 'Workshop' }
+                ];
+
+                // Merge data categories with canonical ones (data can override display name)
+                const merged = {};
+                canonical.forEach(c => merged[c.id] = c.name);
+                (this.data.categories || []).forEach(cat => { merged[cat.id] = cat.name || merged[cat.id] || cat.id; });
+
+                // Clear previous dynamic options (keep the "All Categories" placeholder at index 0)
+                if (select) {
+                    // remove any options except the first
+                    Array.from(select.querySelectorAll('option')).forEach((o, i) => { if (i === 0) return; o.remove(); });
+                    Object.keys(merged).forEach(id => {
+                        const opt = document.createElement('option');
+                        opt.value = id;
+                        opt.textContent = merged[id];
+                        select.appendChild(opt);
+                    });
+                }
+
+                // also populate tag select in modal to keep tags in sync
+                const tagSelect = document.getElementById('eventTag');
+                if (tagSelect) {
+                    // remove existing (except placeholder)
+                    Array.from(tagSelect.querySelectorAll('option')).forEach(o => { if (!o.value) return; o.remove(); });
+                    Object.keys(merged).forEach(id => {
+                        const t = document.createElement('option');
+                        t.value = id;
+                        t.textContent = merged[id];
+                        tagSelect.appendChild(t);
+                    });
+                }
+            },
+
+            render(search = '') {
+                const grid = document.getElementById('eventGrid');
+                grid.innerHTML = '';
+
+                const category = document.getElementById('categoryFilter').value || 'all';
+                const status = document.getElementById('statusFilter').value || 'all';
+
+                const events = (this.data.events || []).filter(ev => {
+                    if (category !== 'all' && ev.category !== category) return false;
+                    if (status !== 'all') {
+                        if (status === 'active' && ev.status !== 'active') return false;
+                        if (status === 'hidden' && ev.status === 'active') return false;
+                    }
+                    if (search) {
+                        return (ev.name + ' ' + (ev.shortDescription || '')).toLowerCase().includes(search.toLowerCase());
+                    }
+                    return true;
+                });
+
+                // Update stats
+                document.getElementById('totalEvents').textContent = (this.data.events || []).length;
+                document.getElementById('technicalCount').textContent = (this.data.events || []).filter(e => e.category === 'technical').length;
+                document.getElementById('nonTechnicalCount').textContent = (this.data.events || []).filter(e => e.category === 'non-technical').length;
+                document.getElementById('workshopCount').textContent = (this.data.events || []).filter(e => e.category === 'workshop').length;
+
+                try {
+                    if (events.length === 0) {
+                        grid.innerHTML = '<div class="card card-body">No events found</div>';
+                        return;
+                    }
+
+                    events.forEach(ev => {
+                        const card = document.createElement('article');
+                        card.className = 'event-card card';
+
+                        const heroWrap = document.createElement('div');
+                        heroWrap.className = 'hero-wrap';
+                        const hero = document.createElement('div');
+                        hero.className = 'event-hero';
+                        hero.textContent = ev.logo || '🎫';
+                        heroWrap.appendChild(hero);
+
+                        if (ev.category) {
+                            const cat = (this.data.categories || []).find(c => c.id === ev.category);
+                            if (cat) {
+                                const badge = document.createElement('div');
+                                badge.className = 'event-badge';
+                                badge.textContent = cat.name;
+                                heroWrap.appendChild(badge);
+                            }
+                        }
+
+                        const body = document.createElement('div');
+                        body.className = 'event-body';
+                        body.innerHTML = `
+                            <div class="event-title">${ev.name}</div>
+                            <div class="event-desc">${ev.shortDescription || ''}</div>
+                            <div class="event-meta">
+                                <div>Date: ${Array.isArray(ev.timeline) && ev.timeline.length ? ev.timeline[0].date : ev.time || 'TBD'}</div>
+                                <div>Venue: ${ev.venue || 'TBD'}</div>
+                            </div>
+                        `;
+
+                        const footer = document.createElement('div');
+                        footer.className = 'event-footer';
+                        const left = document.createElement('div');
+                        left.innerHTML = `<div class="badge ${ev.status === 'active' ? 'badge-success' : 'badge-warning'}">${ev.status === 'active' ? 'VISIBLE' : 'HIDDEN'}</div>`;
+                        const actions = document.createElement('div');
+                        actions.innerHTML = `
+                            <button class="btn btn-ghost btn-sm" data-action="toggle" data-id="${ev.id}">${ev.status === 'active' ? 'Hide' : 'Show'}</button>
+                            <button class="btn btn-ghost btn-sm" data-action="edit" data-id="${ev.id}">Edit</button>
+                            <button class="btn btn-ghost btn-sm" data-action="duplicate" data-id="${ev.id}">Duplicate</button>
+                            <button class="btn btn-danger btn-sm" data-action="delete" data-id="${ev.id}">Delete</button>
+                        `;
+
+                        footer.appendChild(left);
+                        footer.appendChild(actions);
+
+                        card.appendChild(heroWrap);
+                        card.appendChild(body);
+                        card.appendChild(footer);
+
+                        grid.appendChild(card);
+                    });
+                } catch (err) {
+                    console.error('Error rendering events:', err);
+                    Admin.showToast('error', 'Render Error', 'Unable to render event cards — check console');
+                }
+            },
+
+            // Handle action buttons via event delegation
+            bindGridActions() {
+                // prevent multiple bindings
+                if (this._gridBound) return;
+                this._gridBound = true;
+                const grid = document.getElementById('eventGrid');
+                if (!grid) return;
+                grid.addEventListener('click', async (e) => {
+                    const btn = e.target.closest('[data-action]');
+                    if (!btn) return;
+                    const action = btn.dataset.action;
+                    const id = btn.dataset.id;
+
+                    if (action === 'edit') {
+                        const ev = this.data.events.find(x => x.id === id);
+                        if (ev) this.openModal(ev);
+                    } else if (action === 'delete') {
+                        const ok = await Admin.confirm('Delete this event?', 'Confirm Delete');
+                        if (!ok) return;
+                        try {
+                            if (Admin.config.useAPI) {
+                                await Admin.apiDelete(`events/${id}`);
+                                Admin.showToast('success', 'Deleted', 'Event deleted');
+                                await this.load();
+                            } else {
+                                this.data.events = this.data.events.filter(x => x.id !== id);
+                                await Admin.saveData('events.json', this.data);
+                            }
+                            this.render();
+                        } catch (error) {
+                            console.error('Delete event error:', error);
+                            Admin.showToast('error', 'Error', error.message || 'Failed to delete event');
+                        }
+                    } else if (action === 'duplicate') {
+                        const src = this.data.events.find(x => x.id === id);
+                        if (src) {
+                            const copy = Object.assign({}, src);
+                            delete copy._id;
+                            delete copy.id;
+                            copy.slug = Admin.generateSlug(copy.name + ' copy');
+                            copy.name = copy.name + ' (Copy)';
+                            try {
+                                if (Admin.config.useAPI) {
+                                    await Admin.apiPost('events', copy);
+                                    Admin.showToast('success', 'Duplicated', 'Event duplicated');
+                                    await this.load();
+                                } else {
+                                    copy.id = Admin.generateId('evt');
+                                    copy.createdAt = new Date().toISOString();
+                                    this.data.events.unshift(copy);
+                                    await Admin.saveData('events.json', this.data);
+                                }
+                                this.render();
+                            } catch (error) {
+                                console.error('Duplicate event error:', error);
+                                Admin.showToast('error', 'Error', error.message || 'Failed to duplicate event');
+                            }
+                        }
+                    } else if (action === 'toggle') {
+                        const ev = this.data.events.find(x => x.id === id);
+                        if (ev) {
+                            const newStatus = ev.status === 'active' ? 'hidden' : 'active';
+                            try {
+                                if (Admin.config.useAPI) {
+                                    await Admin.apiPut(`events/${id}`, { status: newStatus });
+                                    await this.load();
+                                } else {
+                                    ev.status = newStatus;
+                                    await Admin.saveData('events.json', this.data);
+                                }
+                                this.render();
+                            } catch (error) {
+                                console.error('Toggle event error:', error);
+                                Admin.showToast('error', 'Error', error.message || 'Failed to toggle event');
+                            }
+                        }
+                    }
+                });
+            },
+
+            openModal(prefill = null) {
+                // populate form
+                const form = document.getElementById('eventForm');
+                form.reset();
+                document.getElementById('eventId').value = '';
+                if (prefill) {
+                    document.getElementById('eventId').value = prefill.id;
+                    document.getElementById('eventLogo').value = prefill.logo || '';
+                    document.getElementById('eventName').value = prefill.name || '';
+                    document.getElementById('eventTag').value = prefill.category || '';
+                    document.getElementById('eventDescription').value = prefill.shortDescription || prefill.description || '';
+                    document.getElementById('teamMin').value = prefill.teamSize?.min || '';
+                    document.getElementById('teamMax').value = prefill.teamSize?.max || '';
+                    document.getElementById('materials').value = (prefill.materials || []).join('\n');
+                    document.getElementById('duration').value = prefill.duration || '';
+                    document.getElementById('price1').value = prefill.prizeMoney?.first || '';
+                    document.getElementById('price2').value = prefill.prizeMoney?.second || '';
+                    document.getElementById('price3').value = prefill.prizeMoney?.third || '';
+                    const certYes = document.getElementById('certificateYes');
+                    const certNo = document.getElementById('certificateNo');
+                    if (certYes && certNo) {
+                        if (typeof prefill.certificate !== 'undefined') {
+                            if (prefill.certificate) certYes.checked = true; else certNo.checked = true;
+                        } else {
+                            certNo.checked = true;
+                        }
+                    }
+                    document.getElementById('rules').value = (prefill.rules || []).join('\n');
+                    const statusEl = document.getElementById('eventStatusSelect');
+                    if (statusEl) statusEl.value = prefill.status || 'active';
+                    const pv = document.getElementById('previewVenue'); if (pv) pv.textContent = prefill.venue || 'TBD';
+                    const pt = document.getElementById('previewTime'); if (pt) pt.textContent = (Array.isArray(prefill.timeline) && prefill.timeline.length) ? prefill.timeline[0].date : prefill.time || 'TBD';
+                }
+                Admin.openModal('addEventModal');
+                // trigger preview update for logo input and show clear button if needed
+                const logoEl = document.getElementById('eventLogo');
+                if (logoEl) logoEl.dispatchEvent(new Event('input'));
+                const clearBtn = document.getElementById('clearLogoBtn');
+                if (clearBtn && logoEl && logoEl.value) clearBtn.style.display = 'inline-block';
+            },
+
+            async saveEvent() {
+                const id = document.getElementById('eventId').value || null;
+                const name = document.getElementById('eventName').value.trim();
+                const nameErrorEl = document.getElementById('nameError');
+                if (!name) {
+                    if (nameErrorEl) { nameErrorEl.style.display = 'block'; }
+                    Admin.showToast('error', 'Validation', 'Event name is required');
+                    return;
+                } else if (nameErrorEl) { nameErrorEl.style.display = 'none'; }
+
+                const obj = {
+                    name: name,
+                    slug: Admin.generateSlug(name),
+                    category: document.getElementById('eventTag').value || 'technical',
+                    logo: document.getElementById('eventLogo').value || '',
+                    shortDescription: document.getElementById('eventDescription').value || '',
+                    teamSize: {
+                        min: parseInt(document.getElementById('teamMin').value) || null,
+                        max: parseInt(document.getElementById('teamMax').value) || null
+                    },
+                    materials: document.getElementById('materials').value.split('\n').filter(l => l.trim()),
+                    duration: document.getElementById('duration').value || '',
+                    prizeMoney: {
+                        first: parseInt(document.getElementById('price1').value) || 0,
+                        second: parseInt(document.getElementById('price2').value) || 0,
+                        third: parseInt(document.getElementById('price3').value) || 0
+                    },
+                    certificate: (document.querySelector('input[name="certificate"]:checked') || { value: 'no' }).value === 'yes',
+                    rules: document.getElementById('rules').value.split('\n').filter(l => l.trim()),
+                    venue: 'TBD',
+                    time: '',
+                    status: (document.getElementById('eventStatusSelect') && document.getElementById('eventStatusSelect').value) || 'active'
+                };
+
+                // logical validation: team min should not exceed max
+                if (obj.teamSize.min && obj.teamSize.max && obj.teamSize.min > obj.teamSize.max) {
+                    Admin.showToast('error', 'Validation', 'Team minimum cannot be greater than maximum');
+                    return;
+                }
+
+                try {
+                    if (Admin.config.useAPI) {
+                        if (id) {
+                            // Update existing event via PUT /api/events/:id
+                            await Admin.apiPut(`events/${id}`, obj);
+                            Admin.showToast('success', 'Updated', `Event "${name}" updated`);
+                        } else {
+                            // Create new event via POST /api/events
+                            await Admin.apiPost('events', obj);
+                            Admin.showToast('success', 'Created', `Event "${name}" created`);
+                        }
+                        await this.load();
+                    } else {
+                        // Fallback to local mode
+                        obj.id = id || Admin.generateId('evt');
+                        obj.createdAt = new Date().toISOString();
+                        obj.updatedAt = new Date().toISOString();
+
+                        if (id) {
+                            const idx = this.data.events.findIndex(x => x.id === id);
+                            if (idx !== -1) {
+                                obj.createdAt = this.data.events[idx].createdAt || obj.createdAt;
+                                this.data.events[idx] = Object.assign({}, this.data.events[idx], obj);
+                            } else {
+                                this.data.events.unshift(obj);
+                            }
+                        } else {
+                            this.data.events.unshift(obj);
+                        }
+                        await Admin.saveData('events.json', this.data);
+                    }
+                    this.populateFilters();
+                    this.render();
+                    Admin.closeModal('addEventModal');
+                } catch (error) {
+                    console.error('Save event error:', error);
+                    Admin.showToast('error', 'Error', error.message || 'Failed to save event');
+                }
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => EventsPage.init());
+    </script>
+    <script>
+        // Wire modal open/save buttons
+        document.addEventListener('DOMContentLoaded', () => {
+            const addBtn = document.getElementById('addEventBtn');
+            if (addBtn) addBtn.addEventListener('click', (e) => { e.preventDefault(); EventsPage.openModal(); });
+
+            const saveBtn = document.getElementById('saveEventBtn');
+            if (saveBtn) saveBtn.addEventListener('click', async (e) => { e.preventDefault(); await EventsPage.saveEvent(); });
+
+            // bind grid actions after initial render
+            EventsPage.bindGridActions();
+            // Ensure modal close buttons reliably close the modal (fallback if inline handlers fail)
+            const closeSelectors = ['#addEventModal .modal-close', '#addEventModal .modal-footer .btn-secondary'];
+            closeSelectors.forEach(sel => {
+                document.querySelectorAll(sel).forEach(btn => {
+                    btn.addEventListener('click', (ev) => {
+                        ev.preventDefault();
+                        try { Admin.closeModal('addEventModal'); } catch (err) { /* silent */ }
+                    });
+                });
+            });
+        });
+    </script>
+    <script>
+        // Logo file preview handling and keeping preview synced
+        document.addEventListener('DOMContentLoaded', () => {
+            const logoInput = document.getElementById('eventLogo');
+            const logoFile = document.getElementById('eventLogoFile');
+            const preview = document.getElementById('logoPreview');
+            const clearBtn = document.getElementById('clearLogoBtn');
+
+            function setPreviewFromValue(val) {
+                if (!preview) return;
+                if (!val) {
+                    preview.textContent = '🎫';
+                    preview.style.backgroundImage = '';
+                    if (clearBtn) clearBtn.style.display = 'none';
+                    return;
+                }
+                // data URL
+                if (val.indexOf('data:') === 0) {
+                    preview.innerHTML = `<img src="${val}" alt="logo" style="width:100%;height:100%;object-fit:cover;">`;
+                    if (clearBtn) clearBtn.style.display = 'inline-block';
+                    return;
+                }
+                if (/^https?:\/\//.test(val)) {
+                    preview.innerHTML = `<img src="${val}" alt="logo" style="width:100%;height:100%;object-fit:cover;">`;
+                    if (clearBtn) clearBtn.style.display = 'inline-block';
+                    return;
+                }
+                if (val.length <= 2) {
+                    preview.textContent = val;
+                    preview.style.backgroundImage = '';
+                    if (clearBtn) clearBtn.style.display = 'inline-block';
+                    return;
+                }
+                // fallback
+                preview.textContent = '📌';
+                if (clearBtn) clearBtn.style.display = 'inline-block';
+            }
+
+            if (logoInput) {
+                logoInput.addEventListener('input', (e) => setPreviewFromValue(e.target.value));
+            }
+
+            if (logoFile) {
+                logoFile.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    const reader = new FileReader();
+                    reader.onload = (ev) => {
+                        preview.innerHTML = `<img src="${ev.target.result}" alt="logo" style="width:100%;height:100%;object-fit:cover;">`;
+                        // set the eventLogo to data URL so it persists in demo mode
+                        if (logoInput) logoInput.value = ev.target.result;
+                        if (clearBtn) clearBtn.style.display = 'inline-block';
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            if (clearBtn) {
+                clearBtn.addEventListener('click', () => {
+                    if (logoInput) logoInput.value = '';
+                    if (logoFile) logoFile.value = '';
+                    setPreviewFromValue('');
+                });
+            }
+        });
+    </script>
+    <script>
+        // Prize Pool Configuration Handler
+        document.addEventListener('DOMContentLoaded', async () => {
+            const prizeAmountInput = document.getElementById('prizePoolAmount');
+            const prizeSubtitleInput = document.getElementById('prizePoolSubtitle');
+            const saveBtn = document.getElementById('savePrizePoolBtn');
+
+            // Load existing prize pool data
+            async function loadPrizePool() {
+                try {
+                    const data = await Admin.getData('events.json');
+                    if (data && data.prizePool) {
+                        if (prizeAmountInput) prizeAmountInput.value = data.prizePool.amount || '';
+                        if (prizeSubtitleInput) prizeSubtitleInput.value = data.prizePool.subtitle || '';
+                    }
+                } catch (e) {
+                    console.warn('Failed to load prize pool data', e);
+                }
+            }
+
+            // Save prize pool data
+            async function savePrizePool() {
+                const amount = prizeAmountInput?.value?.trim() || '50,000+';
+                const subtitle = prizeSubtitleInput?.value?.trim() || 'Certificates for all participants';
+
+                try {
+                    if (Admin.config.useAPI) {
+                        await Admin.apiPut('events/prize-pool', { amount, subtitle });
+                        Admin.showToast('success', 'Saved', 'Prize pool updated');
+                    } else {
+                        const data = await Admin.getData('events.json') || { events: [], categories: [] };
+                        data.prizePool = { amount, subtitle };
+                        await Admin.saveData('events.json', data);
+                        Admin.showToast('success', 'Saved', 'Prize pool updated');
+                    }
+                } catch (e) {
+                    console.error('Failed to save prize pool', e);
+                    Admin.showToast('error', 'Error', 'Failed to save prize pool');
+                }
+            }
+
+            if (saveBtn) saveBtn.addEventListener('click', savePrizePool);
+            await loadPrizePool();
+        });
+    </script>
+    <script type="module" src="../js/supabase-config.js"></script>
+    <script type="module" src="../js/auth.js"></script>
+    <script type="module" src="../js/admin.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organizers | CONSTRUO Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <aside class="admin-sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="../dashboard.html" class="sidebar-logo">
+                    <div class="sidebar-logo-icon">🏗️</div>
+                    <div class="sidebar-logo-text"><span>CONSTRUO</span><span>Admin Panel</span></div>
+                </a>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Overview</div>
+                    <ul class="nav-menu">
+                        <li class="nav-item"><a href="../dashboard.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/></svg><span>Dashboard</span></a></li>
+                    </ul>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Website Sections</div>
+                    <ul class="nav-menu">
+                        <li class="nav-item"><a href="hero.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/></svg><span>Hero</span></a></li>
+                        <li class="nav-item"><a href="about.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg><span>About</span></a></li>
+                        <li class="nav-item"><a href="events.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/></svg><span>Events</span></a></li>
+                        <li class="nav-item"><a href="timeline.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg><span>Timeline</span></a></li>
+                        <li class="nav-item"><a href="speakers.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><span>Speakers</span></a></li>
+                        <li class="nav-item"><a href="sponsors.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/></svg><span>Sponsors</span></a></li>
+                        <li class="nav-item"><a href="organizers.html" class="nav-link active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>Organizers</span></a></li>
+                        <li class="nav-item"><a href="venue.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/></svg><span>Venue</span></a></li>
+                        <li class="nav-item"><a href="footer.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/></svg><span>Footer</span></a></li>
+                    </ul>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Management</div>
+                    <ul class="nav-menu">
+                        <li class="nav-item"><a href="registrations.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg><span>Registrations</span></a></li>
+                        <li class="nav-item"><a href="users.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/></svg><span>Users</span></a></li>
+                        <li class="nav-item"><a href="media.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/></svg><span>Media</span></a></li>
+                        <li class="nav-item"><a href="settings.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/></svg><span>Settings</span></a></li>
+                    </ul>
+                </div>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="sidebar-user" id="sidebarUser"><div class="user-avatar" id="userAvatar">SA</div><div class="user-info"><div class="user-name" id="userName">Super Admin</div></div></div>
+            </div>
+        </aside>
+
+        <main class="admin-main">
+            <header class="admin-header">
+                <div class="header-left">
+                    <button class="sidebar-toggle mobile-toggle" id="mobileSidebarToggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+                    <div>
+                        <h1 class="header-title">Organizers</h1>
+                        <div class="header-breadcrumb"><a href="../dashboard.html">Dashboard</a><span>/</span><span>Organizers</span></div>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <select id="categoryFilter" class="form-select">
+                        <option value="all">All Categories</option>
+                        <option value="patron">Patron</option>
+                        <option value="advisory">Advisory Committee</option>
+                        <option value="organizing">Organizing Committee</option>
+                        <option value="faculty">Faculty Coordinators</option>
+                        <option value="student">Student Coordinators</option>
+                        <option value="volunteer">Volunteers</option>
+                    </select>
+                    <button class="btn btn-primary" id="addOrganizerBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add Organizer</button>
+                </div>
+            </header>
+
+            <div class="admin-content">
+                <div id="organizersContainer"></div>
+                <div class="empty-state" id="emptyState" style="display:none;">
+                    <div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+                    <h3>No organizers yet</h3>
+                    <p>Add your first organizer to get started</p>
+                    <button class="btn btn-primary" id="emptyAddBtn">Add Organizer</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Organizer Modal -->
+    <div id="organizerModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Add Organizer</h2>
+                <button type="button" class="modal-close" id="organizerModalClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            </div>
+            <div class="modal-body">
+                <form id="organizerForm">
+                    <input type="hidden" id="organizerId" name="id">
+                    <div class="form-group">
+                        <label class="form-label">Name *</label>
+                        <input type="text" class="form-input" id="organizerName" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Role / Title</label>
+                            <input type="text" class="form-input" id="organizerRole" placeholder="e.g. Coordinator, Volunteer Lead">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Designation</label>
+                            <input type="text" class="form-input" id="organizerDesignation" placeholder="e.g. Assistant Professor">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Category *</label>
+                        <select class="form-select" id="organizerCategory" required>
+                            <option value="patron">Patron</option>
+                            <option value="advisory">Advisory Committee</option>
+                            <option value="organizing">Organizing Committee</option>
+                            <option value="faculty">Faculty Coordinators</option>
+                            <option value="student" selected>Student Coordinators</option>
+                            <option value="volunteer">Volunteers</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Department</label>
+                        <input type="text" class="form-input" id="organizerDepartment" placeholder="e.g. Civil Engineering">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" id="organizerEmail" placeholder="email@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Phone</label>
+                        <input type="tel" class="form-input" id="organizerPhone" placeholder="+91 9876543210">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Image URL</label>
+                        <input type="text" class="form-input" id="organizerImage" placeholder="https://...">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">LinkedIn</label>
+                            <input type="text" class="form-input" id="organizerLinkedin" placeholder="https://linkedin.com/in/...">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Twitter</label>
+                            <input type="text" class="form-input" id="organizerTwitter" placeholder="https://twitter.com/...">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Order</label>
+                            <input type="number" class="form-input" id="organizerOrder" min="1" placeholder="1">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Status</label>
+                            <select class="form-select" id="organizerStatus">
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="organizerModalCancel">Cancel</button>
+                <button type="button" class="btn btn-primary" id="organizerModalSave">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+    <script>
+        const OrganizerManager = {
+            organizers: [],
+            categories: [
+                { id: 'patron', name: 'Patron', color: '#8b5cf6' },
+                { id: 'advisory', name: 'Advisory Committee', color: '#3b82f6' },
+                { id: 'organizing', name: 'Organizing Committee', color: '#10b981' },
+                { id: 'faculty', name: 'Faculty Coordinators', color: '#f59e0b' },
+                { id: 'student', name: 'Student Coordinators', color: '#ef4444' },
+                { id: 'volunteer', name: 'Volunteers', color: '#6366f1' }
+            ],
+
+            async init() {
+                await this.loadData();
+                this.bindEvents();
+                this.render();
+                // Subscribe to live updates
+                if (Admin.config.useAPI) this.subscribeUpdates();
+            },
+
+            subscribeUpdates() {
+                if (this._sse) return;
+                try {
+                    const url = `${Admin.config.apiPath}organizers/stream`;
+                    const es = new EventSource(url);
+                    this._sse = es;
+                    es.onmessage = async (msg) => {
+                        try {
+                            const payload = JSON.parse(msg.data);
+                            if (payload.status === 'connected') return;
+                            // Reload data on any change
+                            await this.loadData();
+                            this.render();
+                        } catch (e) { console.error('SSE error', e); }
+                    };
+                    es.onerror = () => {
+                        es.close();
+                        this._sse = null;
+                        setTimeout(() => this.subscribeUpdates(), 3000);
+                    };
+                } catch (e) { console.warn('SSE failed', e); }
+            },
+
+            async loadData() {
+                try {
+                    const data = await Admin.getData('organizers.json');
+                    // API returns { total, categories, organizers }
+                    if (data && typeof data === 'object') {
+                        // If API returns flat organizers array directly
+                        if (data.organizers && Array.isArray(data.organizers)) {
+                            this.organizers = data.organizers;
+                        } else if (Array.isArray(data)) {
+                            this.organizers = data;
+                        } else {
+                            // Convert grouped object to flat array (legacy format)
+                            this.organizers = [];
+                            Object.keys(data).forEach(cat => {
+                                if (Array.isArray(data[cat])) {
+                                    data[cat].forEach(org => {
+                                        org.category = org.category || cat;
+                                        this.organizers.push(org);
+                                    });
+                                }
+                            });
+                        }
+                    } else {
+                        this.organizers = [];
+                    }
+                } catch (error) {
+                    console.error('Load organizers error:', error);
+                    this.organizers = [];
+                }
+            },
+
+            bindEvents() {
+                document.getElementById('addOrganizerBtn').addEventListener('click', () => this.openModal());
+                document.getElementById('emptyAddBtn')?.addEventListener('click', () => this.openModal());
+                document.getElementById('categoryFilter').addEventListener('change', () => this.render());
+
+                // Modal event listeners
+                document.getElementById('organizerModalClose').addEventListener('click', () => this.closeModal());
+                document.getElementById('organizerModalCancel').addEventListener('click', () => this.closeModal());
+                document.getElementById('organizerModalSave').addEventListener('click', () => this.saveOrganizer());
+                document.getElementById('organizerModal').addEventListener('click', (e) => {
+                    if (e.target.id === 'organizerModal') this.closeModal();
+                });
+            },
+
+            render() {
+                const container = document.getElementById('organizersContainer');
+                const emptyState = document.getElementById('emptyState');
+                const filterCategory = document.getElementById('categoryFilter').value;
+
+                // Filter organizers
+                let filtered = this.organizers;
+                if (filterCategory !== 'all') {
+                    filtered = this.organizers.filter(o => o.category === filterCategory);
+                }
+
+                if (filtered.length === 0) {
+                    container.innerHTML = '';
+                    emptyState.style.display = 'flex';
+                    return;
+                }
+
+                emptyState.style.display = 'none';
+
+                // Group by category
+                const grouped = {};
+                this.categories.forEach(cat => grouped[cat.id] = []);
+                filtered.forEach(org => {
+                    if (grouped[org.category]) {
+                        grouped[org.category].push(org);
+                    }
+                });
+
+                // Render categories with organizers
+                container.innerHTML = this.categories.map(cat => {
+                    const members = grouped[cat.id] || [];
+                    if (members.length === 0 && filterCategory === 'all') return '';
+                    if (members.length === 0) return '';
+
+                    return `
+                        <div class="category-section">
+                            <div class="category-header">
+                                <div class="category-badge" style="background: ${cat.color}20; color: ${cat.color}; border-color: ${cat.color}">
+                                    ${cat.name}
+                                </div>
+                                <span class="category-count">${members.length} member${members.length !== 1 ? 's' : ''}</span>
+                            </div>
+                            <div class="organizers-grid">
+                                ${members.map(o => `
+                                    <div class="organizer-card" data-id="${o.id || o._id}">
+                                        <div class="organizer-avatar">
+                                            ${o.image ? `<img src="${o.image}" alt="${o.name}">` : `<span>${(o.name || 'O').charAt(0).toUpperCase()}</span>`}
+                                        </div>
+                                        <div class="organizer-info">
+                                            <h4>${o.name || 'Unknown'}</h4>
+                                            ${o.role ? `<div class="organizer-role">${o.role}</div>` : ''}
+                                            ${o.designation ? `<div class="organizer-designation">${o.designation}</div>` : ''}
+                                            ${o.department ? `<div class="organizer-dept">${o.department}</div>` : ''}
+                                        </div>
+                                        <div class="organizer-actions">
+                                            <button class="btn btn-icon btn-ghost" data-action="edit" data-id="${o.id || o._id}" title="Edit">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                            </button>
+                                            <button class="btn btn-icon btn-ghost btn-danger" data-action="delete" data-id="${o.id || o._id}" title="Delete">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                // Add event delegation for dynamic buttons
+                container.querySelectorAll('[data-action]').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const action = btn.dataset.action;
+                        const id = btn.dataset.id;
+                        if (action === 'edit') this.edit(id);
+                        else if (action === 'delete') this.delete(id);
+                    });
+                });
+            },
+
+            openModal(organizer = null) {
+                document.getElementById('organizerForm').reset();
+                document.getElementById('modalTitle').textContent = organizer ? 'Edit Organizer' : 'Add Organizer';
+
+                if (organizer) {
+                    document.getElementById('organizerId').value = organizer.id || organizer._id || '';
+                    document.getElementById('organizerName').value = organizer.name || '';
+                    document.getElementById('organizerRole').value = organizer.role || '';
+                    document.getElementById('organizerDesignation').value = organizer.designation || '';
+                    document.getElementById('organizerCategory').value = organizer.category || 'student';
+                    document.getElementById('organizerDepartment').value = organizer.department || '';
+                    document.getElementById('organizerEmail').value = organizer.email || '';
+                    document.getElementById('organizerPhone').value = organizer.phone || '';
+                    document.getElementById('organizerImage').value = organizer.image || '';
+                    document.getElementById('organizerLinkedin').value = organizer.social?.linkedin || '';
+                    document.getElementById('organizerTwitter').value = organizer.social?.twitter || '';
+                    document.getElementById('organizerOrder').value = organizer.order || '';
+                    document.getElementById('organizerStatus').value = organizer.status || 'active';
+                }
+
+                document.getElementById('organizerModal').classList.add('active');
+            },
+
+            closeModal() {
+                document.getElementById('organizerModal').classList.remove('active');
+            },
+
+            async saveOrganizer() {
+                const name = document.getElementById('organizerName').value.trim();
+                if (!name) {
+                    Admin.showToast('error', 'Error', 'Name is required');
+                    return;
+                }
+
+                const existingId = document.getElementById('organizerId').value;
+
+                const data = {
+                    name,
+                    role: document.getElementById('organizerRole').value.trim(),
+                    designation: document.getElementById('organizerDesignation').value.trim(),
+                    category: document.getElementById('organizerCategory').value,
+                    department: document.getElementById('organizerDepartment').value.trim(),
+                    email: document.getElementById('organizerEmail').value.trim(),
+                    phone: document.getElementById('organizerPhone').value.trim(),
+                    image: document.getElementById('organizerImage').value.trim(),
+                    social: {
+                        linkedin: document.getElementById('organizerLinkedin').value.trim(),
+                        twitter: document.getElementById('organizerTwitter').value.trim()
+                    },
+                    order: parseInt(document.getElementById('organizerOrder').value) || 999,
+                    status: document.getElementById('organizerStatus').value
+                };
+
+                try {
+                    if (Admin.config.useAPI) {
+                        if (existingId) {
+                            // Update existing organizer via PUT /api/organizers/:id
+                            await Admin.apiPut(`organizers/${existingId}`, data);
+                            Admin.showToast('success', 'Updated', `Organizer "${name}" updated`);
+                        } else {
+                            // Create new organizer via POST /api/organizers
+                            await Admin.apiPost('organizers', data);
+                            Admin.showToast('success', 'Created', `Organizer "${name}" added`);
+                        }
+                        // Reload data from server
+                        await this.loadData();
+                    } else {
+                        // Fallback to local mode
+                        data.id = existingId || Admin.generateId();
+                        if (existingId) {
+                            const idx = this.organizers.findIndex(o => (o.id || o._id) === existingId);
+                            if (idx !== -1) this.organizers[idx] = { ...this.organizers[idx], ...data };
+                        } else {
+                            this.organizers.push(data);
+                        }
+                        await Admin.saveData('organizers.json', this.organizers);
+                    }
+                    this.closeModal();
+                    this.render();
+                } catch (error) {
+                    console.error('Save organizer error:', error);
+                    Admin.showToast('error', 'Error', error.message || 'Failed to save organizer');
+                }
+            },
+
+            edit(id) {
+                const organizer = this.organizers.find(o => (o.id || o._id) === id);
+                if (organizer) this.openModal(organizer);
+            },
+
+            async delete(id) {
+                if (!confirm('Delete this organizer?')) return;
+                const organizer = this.organizers.find(o => (o.id || o._id) === id);
+                const name = organizer?.name || 'Organizer';
+
+                try {
+                    if (Admin.config.useAPI) {
+                        await Admin.apiDelete(`organizers/${id}`);
+                        Admin.showToast('success', 'Deleted', `Organizer "${name}" deleted`);
+                        await this.loadData();
+                    } else {
+                        this.organizers = this.organizers.filter(o => (o.id || o._id) !== id);
+                        await Admin.saveData('organizers.json', this.organizers);
+                    }
+                    this.render();
+                } catch (error) {
+                    console.error('Delete organizer error:', error);
+                    Admin.showToast('error', 'Error', error.message || 'Failed to delete organizer');
+                }
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => OrganizerManager.init());
+    </script>
+    <style>
+        .category-section { margin-bottom: 2rem; }
+        .category-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+        .category-badge { padding: 0.5rem 1rem; border-radius: 50px; font-weight: 600; font-size: 0.875rem; border: 1px solid; text-transform: uppercase; letter-spacing: 0.05em; }
+        .category-count { color: var(--admin-text-muted); font-size: 0.875rem; }
+        .organizers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+        .organizer-card { background: var(--admin-card); border: 1px solid var(--admin-border); border-radius: var(--card-radius); padding: 1.25rem; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 1rem; transition: transform 0.2s, box-shadow 0.2s; }
+        .organizer-card:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
+        .organizer-avatar { width: 80px; height: 80px; border-radius: 50%; overflow: hidden; background: linear-gradient(135deg, var(--admin-primary), #7c3aed); display: flex; align-items: center; justify-content: center; }
+        .organizer-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .organizer-avatar span { font-size: 2rem; color: white; font-weight: 700; }
+        .organizer-info { flex: 1; }
+        .organizer-info h4 { font-size: 1rem; margin-bottom: 0.25rem; color: var(--admin-text); }
+        .organizer-role { font-size: 0.875rem; color: var(--admin-primary); font-weight: 500; }
+        .organizer-designation { font-size: 0.8rem; color: var(--admin-text-muted); }
+        .organizer-dept { font-size: 0.75rem; color: var(--admin-text-dark); margin-top: 0.25rem; }
+        .organizer-actions { display: flex; gap: 0.5rem; margin-top: auto; }
+        .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4rem 2rem; text-align: center; }
+        .empty-icon { width: 80px; height: 80px; border-radius: 50%; background: var(--admin-bg); display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; }
+        .empty-icon svg { width: 40px; height: 40px; opacity: 0.5; }
+        .empty-state h3 { margin-bottom: 0.5rem; }
+        .empty-state p { color: var(--admin-text-muted); margin-bottom: 1.5rem; }
+    </style>
+    <script type="module" src="../js/admin.js"></script>
+    <script type="module" src="../js/supabase-config.js"></script>
+    <script type="module" src="../js/auth.js"></script>
+</body>
+</html>

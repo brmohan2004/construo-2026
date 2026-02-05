@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speakers | CONSTRUO Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/admin.css">
+</head>
+
+<body>
+    <div class="admin-layout">
+        <aside class="admin-sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="../dashboard.html" class="sidebar-logo">
+                    <div class="sidebar-logo-icon">🏗️</div>
+                    <div class="sidebar-logo-text"><span>CONSTRUO</span><span>Admin Panel</span></div>
+                </a>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Overview</div>
+                    <ul class="nav-menu">
+                        <li class="nav-item"><a href="../dashboard.html" class="nav-link"><svg viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="7" height="9" />
+                                </svg><span>Dashboard</span></a></li>
+                    </ul>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Website Sections</div>
+                    <ul class="nav-menu">
+                        <li class="nav-item"><a href="hero.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <polygon points="12 2 2 7 12 12 22 7 12 2" />
+                                </svg><span>Hero</span></a></li>
+                        <li class="nav-item"><a href="about.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                </svg><span>About</span></a></li>
+                        <li class="nav-item"><a href="events.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                                </svg><span>Events</span></a></li>
+                        <li class="nav-item"><a href="timeline.html" class="nav-link"><svg viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                </svg><span>Timeline</span></a></li>
+                        <li class="nav-item"><a href="speakers.html" class="nav-link active"><svg viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                    <circle cx="9" cy="7" r="4" />
+                                </svg><span>Speakers</span></a></li>
+                        <li class="nav-item"><a href="sponsors.html" class="nav-link"><svg viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                                </svg><span>Sponsors</span></a></li>
+                        <li class="nav-item"><a href="organizers.html" class="nav-link"><svg viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                    <circle cx="9" cy="7" r="4" />
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                                </svg><span>Organizers</span></a></li>
+                        <li class="nav-item"><a href="venue.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                </svg><span>Venue</span></a></li>
+                        <li class="nav-item"><a href="footer.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                </svg><span>Footer</span></a></li>
+                    </ul>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Management</div>
+                    <ul class="nav-menu">
+                        <li class="nav-item"><a href="registrations.html" class="nav-link"><svg viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                </svg><span>Registrations</span></a></li>
+                        <li class="nav-item"><a href="users.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                </svg><span>Users</span></a></li>
+                        <li class="nav-item"><a href="media.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                </svg><span>Media</span></a></li>
+                        <li class="nav-item"><a href="settings.html" class="nav-link"><svg viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="3" />
+                                </svg><span>Settings</span></a></li>
+                    </ul>
+                </div>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="sidebar-user" id="sidebarUser">
+                    <div class="user-avatar" id="userAvatar">SA</div>
+                    <div class="user-info">
+                        <div class="user-name" id="userName">Super Admin</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="admin-main">
+            <header class="admin-header">
+                <div class="header-left">
+                    <button class="sidebar-toggle mobile-toggle" id="mobileSidebarToggle"><svg viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12" />
+                            <line x1="3" y1="6" x2="21" y2="6" />
+                            <line x1="3" y1="18" x2="21" y2="18" />
+                        </svg></button>
+                    <div>
+                        <h1 class="header-title">Speakers</h1>
+                        <div class="header-breadcrumb"><a
+                                href="../dashboard.html">Dashboard</a><span>/</span><span>Speakers</span></div>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button class="btn btn-primary" id="addSpeakerBtn"><svg viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19" />
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                        </svg>Add Speaker</button>
+                </div>
+            </header>
+
+            <div class="admin-content">
+                <div class="speakers-grid" id="speakersGrid"></div>
+                <div class="empty-state" id="emptyState" style="display:none;">
+                    <div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                        </svg></div>
+                    <h3>No speakers yet</h3>
+                    <p>Add your first speaker to get started</p>
+                    <button class="btn btn-primary" id="emptyAddBtn">Add Speaker</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Speaker Modal -->
+    <div id="speakerModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Add Speaker</h2>
+                <button type="button" class="modal-close" id="speakerModalClose"><svg viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg></button>
+            </div>
+            <div class="modal-body">
+                <form id="speakerForm">
+                    <input type="hidden" id="speakerId" name="id">
+                    <div class="form-group">
+                        <label class="form-label">Name *</label>
+                        <input type="text" class="form-input" id="speakerName" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Title</label>
+                            <input type="text" class="form-input" id="speakerTitle" placeholder="Dr. / Prof. / Er.">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Designation</label>
+                            <input type="text" class="form-input" id="speakerDesignation"
+                                placeholder="CEO, Professor, etc.">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Organization</label>
+                        <input type="text" class="form-input" id="speakerOrganization">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Bio</label>
+                        <textarea class="form-textarea" id="speakerBio" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Topic</label>
+                        <input type="text" class="form-input" id="speakerTopic" placeholder="Speaking topic">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Speaker Image</label>
+                        <div class="image-upload-container" style="display: flex; gap: 1rem; align-items: start;">
+                            <div class="preview-box" id="imagePreview"
+                                style="width: 100px; height: 100px; border: 2px dashed var(--admin-border); border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden; background: var(--admin-bg);">
+                                <span style="font-size: 2rem; opacity: 0.3;">👤</span>
+                            </div>
+                            <div class="upload-controls" style="flex: 1;">
+                                <input type="file" id="speakerImageFile" accept="image/*" class="file-input"
+                                    style="display: none;">
+                                <button type="button" class="btn btn-secondary btn-sm"
+                                    onclick="document.getElementById('speakerImageFile').click()">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        style="width: 16px; height: 16px; margin-right: 8px;">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                        <circle cx="8.5" cy="8.5" r="1.5" />
+                                        <polyline points="21 15 16 10 5 21" />
+                                    </svg>
+                                    Choose Details Image
+                                </button>
+                                <p class="form-hint"
+                                    style="margin-top: 0.5rem; font-size: 0.75rem; color: var(--admin-text-muted);">
+                                    Recommended: Square ratio, max 2MB. Leave empty to keep existing image.
+                                </p>
+                                <input type="hidden" id="speakerExistingImage">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">LinkedIn</label>
+                            <input type="url" class="form-input" id="speakerLinkedIn">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Twitter</label>
+                            <input type="url" class="form-input" id="speakerTwitter">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="speakerModalCancel">Cancel</button>
+                <button type="submit" class="btn btn-primary" id="speakerModalSave">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+    <script>
+        const SpeakerManager = {
+            speakers: [],
+
+            async init() {
+                const data = await Admin.getData('speakers.json');
+                if (data && data.speakers) this.speakers = data.speakers;
+                this.bindEvents();
+                this.render();
+                // Subscribe to live updates
+                if (Admin.config.useAPI) this.subscribeUpdates();
+            },
+
+            subscribeUpdates() {
+                if (this._sse) return;
+                try {
+                    const url = `${Admin.config.apiPath}speakers/stream`;
+                    const es = new EventSource(url);
+                    this._sse = es;
+                    es.onmessage = async (msg) => {
+                        try {
+                            const payload = JSON.parse(msg.data);
+                            if (payload.status === 'connected') return;
+                            // Reload data on any change
+                            const data = await Admin.getData('speakers.json');
+                            if (data && data.speakers) this.speakers = data.speakers;
+                            this.render();
+                        } catch (e) { console.error('SSE error', e); }
+                    };
+                    es.onerror = () => {
+                        es.close();
+                        this._sse = null;
+                        setTimeout(() => this.subscribeUpdates(), 3000);
+                    };
+                } catch (e) { console.warn('SSE failed', e); }
+            },
+
+            bindEvents() {
+                const addBtn = document.getElementById('addSpeakerBtn');
+                const emptyAddBtn = document.getElementById('emptyAddBtn');
+                const modalClose = document.getElementById('speakerModalClose');
+                const modalCancel = document.getElementById('speakerModalCancel');
+                const modalSave = document.getElementById('speakerModalSave');
+                const modalBackdrop = document.getElementById('speakerModal');
+                const speakerForm = document.getElementById('speakerForm');
+
+                if (addBtn) addBtn.addEventListener('click', () => this.openModal());
+                if (emptyAddBtn) emptyAddBtn.addEventListener('click', () => this.openModal());
+                if (modalClose) modalClose.addEventListener('click', () => this.closeModal());
+                if (modalCancel) modalCancel.addEventListener('click', () => this.closeModal());
+                if (modalSave) modalSave.addEventListener('click', () => this.saveSpeaker());
+
+                // Handle form submission
+                if (speakerForm) {
+                    speakerForm.addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        this.saveSpeaker();
+                    });
+                }
+
+                // Close modal when clicking outside
+                if (modalBackdrop) {
+                    modalBackdrop.addEventListener('click', (e) => {
+                        if (e.target === modalBackdrop) this.closeModal();
+                    });
+                }
+
+                // File Upload Preview
+                const fileInput = document.getElementById('speakerImageFile');
+                if (fileInput) {
+                    fileInput.addEventListener('change', (e) => {
+                        if (e.target.files && e.target.files[0]) {
+                            const reader = new FileReader();
+                            reader.onload = (e) => {
+                                const preview = document.getElementById('imagePreview');
+                                preview.innerHTML = `<img src="${e.target.result}" style="width:100%; height:100%; object-fit:cover;">`;
+                            };
+                            reader.readAsDataURL(e.target.files[0]);
+                        }
+                    });
+                }
+            },
+
+            render() {
+                const grid = document.getElementById('speakersGrid');
+                const empty = document.getElementById('emptyState');
+
+                if (this.speakers.length === 0) {
+                    grid.innerHTML = '';
+                    empty.style.display = 'flex';
+                    return;
+                }
+
+                empty.style.display = 'none';
+                grid.innerHTML = this.speakers.map(s => `
+                    <div class="speaker-card">
+                        <div class="speaker-image">
+                            ${s.image ? `<img src="${s.image}" alt="${s.name}">` : `<div class="speaker-placeholder">👤</div>`}
+                        </div>
+                        <div class="speaker-info">
+                            <h3>${s.title || ''} ${s.name}</h3>
+                            <p class="speaker-role">${s.designation || ''} ${s.organization ? `at ${s.organization}` : ''}</p>
+                            ${s.topic ? `<p class="speaker-topic">"${s.topic}"</p>` : ''}
+                            <div class="speaker-actions">
+                                <button class="btn btn-icon btn-ghost speaker-edit-btn" data-speaker-id="${s.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                                <button class="btn btn-icon btn-ghost btn-danger speaker-delete-btn" data-speaker-id="${s.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                // Attach event listeners to dynamically created buttons
+                document.querySelectorAll('.speaker-edit-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const id = e.currentTarget.getAttribute('data-speaker-id');
+                        this.edit(id);
+                    });
+                });
+
+                document.querySelectorAll('.speaker-delete-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const id = e.currentTarget.getAttribute('data-speaker-id');
+                        this.delete(id);
+                    });
+                });
+            },
+
+            openModal(speaker = null) {
+                document.getElementById('speakerForm').reset();
+                document.getElementById('modalTitle').textContent = speaker ? 'Edit Speaker' : 'Add Speaker';
+                document.getElementById('speakerExistingImage').value = '';
+
+                // Reset preview
+                const preview = document.getElementById('imagePreview');
+                preview.innerHTML = '<span style="font-size: 2rem; opacity: 0.3;">👤</span>';
+
+                if (speaker) {
+                    document.getElementById('speakerId').value = speaker.id;
+                    document.getElementById('speakerName').value = speaker.name || '';
+                    document.getElementById('speakerTitle').value = speaker.title || '';
+                    document.getElementById('speakerDesignation').value = speaker.designation || '';
+                    document.getElementById('speakerOrganization').value = speaker.organization || '';
+                    document.getElementById('speakerBio').value = speaker.bio || '';
+                    document.getElementById('speakerTopic').value = speaker.topic || '';
+                    // speakerImage input removed, using file upload now
+
+                    const existingImg = speaker.image || speaker.photo || '';
+                    document.getElementById('speakerExistingImage').value = existingImg;
+                    if (existingImg) {
+                        preview.innerHTML = `<img src="${existingImg}" style="width:100%; height:100%; object-fit:cover;">`;
+                    }
+
+                    document.getElementById('speakerLinkedIn').value = speaker.social?.linkedin || '';
+                    document.getElementById('speakerTwitter').value = speaker.social?.twitter || '';
+                } else {
+                    document.getElementById('speakerId').value = '';
+                }
+
+                document.getElementById('speakerModal').classList.add('active');
+            },
+
+            closeModal() {
+                document.getElementById('speakerModal').classList.remove('active');
+            },
+
+            async saveSpeaker() {
+                const name = document.getElementById('speakerName').value.trim();
+                if (!name) {
+                    Admin.showToast('error', 'Error', 'Name is required');
+                    return;
+                }
+
+                const existingId = document.getElementById('speakerId').value;
+                const isEdit = existingId && this.speakers.find(s => s.id === existingId);
+
+                const data = {
+                    name,
+                    title: document.getElementById('speakerTitle').value.trim(),
+                    designation: document.getElementById('speakerDesignation').value.trim(),
+                    organization: document.getElementById('speakerOrganization').value.trim(),
+                    bio: document.getElementById('speakerBio').value.trim(),
+                    topic: document.getElementById('speakerTopic').value.trim(),
+                    image: document.getElementById('speakerExistingImage').value,
+                    social: {
+                        linkedin: document.getElementById('speakerLinkedIn').value.trim(),
+                        twitter: document.getElementById('speakerTwitter').value.trim()
+                    }
+                };
+
+                try {
+                    if (Admin.config.useAPI) {
+                        let savedSpeaker;
+
+                        // Step 1: Save Speaker Data
+                        if (isEdit) {
+                            const res = await Admin.apiPut(`speakers/${existingId}`, data);
+                            savedSpeaker = res.data || res;
+                            Admin.showToast('success', 'Updated', `Speaker "${name}" updated`);
+                        } else {
+                            const res = await Admin.apiPost('speakers', data);
+                            savedSpeaker = res.data || res;
+                            Admin.showToast('success', 'Created', `Speaker "${name}" added`);
+                        }
+
+                        // Step 2: Upload Image if selected
+                        const fileInput = document.getElementById('speakerImageFile');
+                        if (fileInput && fileInput.files[0]) {
+                            try {
+                                const uploadRes = await Admin.apiUpload(`speakers/${savedSpeaker.id}/photo`, fileInput.files[0]);
+                                if (uploadRes.url) {
+                                    savedSpeaker.image = uploadRes.url;
+                                    savedSpeaker.photo = uploadRes.url; // Ensure consistency
+                                }
+                            } catch (uploadError) {
+                                console.error('Image upload failed:', uploadError);
+                                Admin.showToast('warning', 'Warning', 'Speaker saved but image upload failed');
+                            }
+                        }
+
+                        // Update local list
+                        if (isEdit) {
+                            const idx = this.speakers.findIndex(s => s.id === savedSpeaker.id);
+                            if (idx >= 0) this.speakers[idx] = savedSpeaker;
+                        } else {
+                            this.speakers.push(savedSpeaker);
+                        }
+
+                    } else {
+                        // Fallback to bulk save for demo mode
+                        data.id = existingId || Admin.generateId();
+                        // For demo mode, we can't really upload files easily, so we just keep the existing image or use placeholder
+                        const idx = this.speakers.findIndex(s => s.id === data.id);
+                        if (idx >= 0) this.speakers[idx] = data;
+                        else this.speakers.push(data);
+                        await Admin.saveData('speakers.json', { speakers: this.speakers });
+                    }
+                    this.closeModal();
+                    this.render();
+                } catch (error) {
+                    console.error('Save speaker error:', error);
+                    Admin.showToast('error', 'Error', error.message || 'Failed to save speaker');
+                }
+            },
+
+            edit(id) {
+                const speaker = this.speakers.find(s => s.id === id);
+                if (speaker) this.openModal(speaker);
+            },
+
+            async delete(id) {
+                if (!confirm('Delete this speaker?')) return;
+                const speaker = this.speakers.find(s => s.id === id);
+                const name = speaker?.name;
+
+                try {
+                    if (Admin.config.useAPI) {
+                        // Delete via DELETE /api/speakers/:id
+                        await Admin.apiDelete(`speakers/${id}`);
+                        this.speakers = this.speakers.filter(s => s.id !== id);
+                        Admin.showToast('success', 'Deleted', `Speaker "${name}" removed`);
+                    } else {
+                        // Fallback to bulk save for demo mode
+                        this.speakers = this.speakers.filter(s => s.id !== id);
+                        await Admin.saveData('speakers.json', { speakers: this.speakers });
+                    }
+                    this.render();
+                } catch (error) {
+                    console.error('Delete speaker error:', error);
+                    Admin.showToast('error', 'Error', error.message || 'Failed to delete speaker');
+                }
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => SpeakerManager.init());
+    </script>
+    <style>
+        .speakers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .speaker-card {
+            background: var(--admin-card);
+            border: 1px solid var(--admin-border);
+            border-radius: var(--card-radius);
+            overflow: hidden;
+        }
+
+        .speaker-image {
+            height: 200px;
+            background: var(--admin-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .speaker-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .speaker-placeholder {
+            font-size: 4rem;
+            opacity: 0.3;
+        }
+
+        .speaker-info {
+            padding: 1.25rem;
+        }
+
+        .speaker-info h3 {
+            font-size: 1.125rem;
+            margin-bottom: 0.25rem;
+            color: var(--admin-text);
+        }
+
+        .speaker-role {
+            font-size: 0.875rem;
+            color: var(--admin-text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .speaker-topic {
+            font-size: 0.813rem;
+            color: var(--admin-primary);
+            font-style: italic;
+            margin-bottom: 0.75rem;
+        }
+
+        .speaker-actions {
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .empty-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--admin-card);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .empty-icon svg {
+            width: 40px;
+            height: 40px;
+            color: var(--admin-text-muted);
+        }
+
+        .empty-state h3 {
+            margin-bottom: 0.5rem;
+            color: var(--admin-text);
+        }
+
+        .empty-state p {
+            color: var(--admin-text-muted);
+            margin-bottom: 1.5rem;
+        }
+    </style>
+    <script type="module" src="../js/supabase-config.js"></script>
+    <script type="module" src="../js/auth.js"></script>
+    <script type="module" src="../js/admin.js"></script>
+</body>
+
+</html>

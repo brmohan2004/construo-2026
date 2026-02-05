@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Environment files (not needed for Supabase, but keep for safety)
+.env
+.env.local
+.env.production
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+npm-debug.log*
+logs/
+
+# Temporary files
+*.tmp
+.cache/
+dist/
+build/
+
+# Legacy backend (removed in Supabase migration)
+# api/ - already removed
+# Dockerfile - already removed
+# railway.json - already removed
+
+# Don't ignore these (they're part of the static site)
+!data/
+!images/
+!css/
+!js/
+!admin/

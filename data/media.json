@@ -1,0 +1,148 @@
+{
+  "files": [
+    {
+      "id": "file_1706976000001",
+      "name": "hero-background.jpg",
+      "type": "image",
+      "size": 245678,
+      "url": "/uploads/hero-background.jpg",
+      "uploadedAt": "2024-02-01"
+    },
+    {
+      "id": "file_1706976000002",
+      "name": "construo-logo.png",
+      "type": "image",
+      "size": 45234,
+      "url": "/uploads/construo-logo.png",
+      "uploadedAt": "2024-02-01"
+    },
+    {
+      "id": "file_1706976000003",
+      "name": "event-poster.pdf",
+      "type": "document",
+      "size": 1256789,
+      "url": "/uploads/event-poster.pdf",
+      "uploadedAt": "2024-02-02"
+    },
+    {
+      "id": "file_1770096696054",
+      "name": "agents working screen.png",
+      "filename": "agents_working_screen_1770096696039_b9a9b28b71a450ca.png",
+      "type": "image",
+      "mimetype": "image/png",
+      "size": 123781,
+      "url": "/uploads/general/agents_working_screen_1770096696039_b9a9b28b71a450ca.png",
+      "folder": "general",
+      "uploadedAt": "2026-02-03T05:31:36.054Z",
+      "uploadedBy": "user_001"
+    },
+    {
+      "id": "file_1770096701532",
+      "name": "agents working screen-1.png",
+      "filename": "agents_working_screen-1_1770096701520_66ba82f62e51d1bb.png",
+      "type": "image",
+      "mimetype": "image/png",
+      "size": 112436,
+      "url": "/uploads/general/agents_working_screen-1_1770096701520_66ba82f62e51d1bb.png",
+      "folder": "general",
+      "uploadedAt": "2026-02-03T05:31:41.532Z",
+      "uploadedBy": "user_001"
+    },
+    {
+      "id": "file_1770097215254",
+      "name": "Screenshot 2025-08-21 215858.png",
+      "filename": "Screenshot_2025-08-21_215858_1770097215239_3021c58ac388149b.png",
+      "type": "image",
+      "mimetype": "image/png",
+      "size": 149236,
+      "url": "/uploads/general/Screenshot_2025-08-21_215858_1770097215239_3021c58ac388149b.png",
+      "folder": "general",
+      "uploadedAt": "2026-02-03T05:40:15.254Z",
+      "uploadedBy": "user_001"
+    },
+    {
+      "id": "file_1770097232769",
+      "name": "Screenshot 2025-08-21 204813.png",
+      "filename": "Screenshot_2025-08-21_204813_1770097232762_cdaf6d7129e27f16.png",
+      "type": "image",
+      "mimetype": "image/png",
+      "size": 45655,
+      "url": "/uploads/general/Screenshot_2025-08-21_204813_1770097232762_cdaf6d7129e27f16.png",
+      "folder": "general",
+      "uploadedAt": "2026-02-03T05:40:32.770Z",
+      "uploadedBy": "user_001"
+    },
+    {
+      "id": "file_1770098489788",
+      "name": "Screenshot 2025-09-20 205152.png",
+      "filename": "Screenshot_2025-09-20_205152_1770098489780_121a20f565a035b5.png",
+      "type": "image",
+      "mimetype": "image/png",
+      "size": 85803,
+      "url": "/uploads/events/Screenshot_2025-09-20_205152_1770098489780_121a20f565a035b5.png",
+      "folder": "events",
+      "uploadedAt": "2026-02-03T06:01:29.788Z",
+      "uploadedBy": "user_001"
+    },
+    {
+      "id": "file_1770098970845",
+      "name": "Screenshot 2025-09-20 205152.png",
+      "filename": "Screenshot_2025-09-20_205152_1770098970834_e44158341aa0b375.png",
+      "type": "image",
+      "mimetype": "image/png",
+      "size": 85803,
+      "url": "/uploads/events/Screenshot_2025-09-20_205152_1770098970834_e44158341aa0b375.png",
+      "folder": "events",
+      "uploadedAt": "2026-02-03T06:09:30.845Z",
+      "uploadedBy": "user_001"
+    },
+    {
+      "id": "file_1770099838920",
+      "name": "Screenshot 2025-09-20 205152.png",
+      "filename": "Screenshot_2025-09-20_205152_1770099838912_205930485ca975ec.png",
+      "type": "image",
+      "mimetype": "image/png",
+      "size": 85803,
+      "url": "/uploads/events/Screenshot_2025-09-20_205152_1770099838912_205930485ca975ec.png",
+      "folder": "events",
+      "uploadedAt": "2026-02-03T06:23:58.920Z",
+      "uploadedBy": "user_001"
+    },
+    {
+      "id": "file_1770100266321",
+      "name": "Screenshot 2025-09-20 205152.png",
+      "filename": "Screenshot_2025-09-20_205152_1770100266309_5bd6cbfe8e09e0a6.png",
+      "type": "image",
+      "mimetype": "image/png",
+      "size": 85803,
+      "url": "/uploads/events/Screenshot_2025-09-20_205152_1770100266309_5bd6cbfe8e09e0a6.png",
+      "folder": "events",
+      "uploadedAt": "2026-02-03T06:31:06.321Z",
+      "uploadedBy": "user_001"
+    },
+    {
+      "id": "file_1770181632830",
+      "name": "Screenshot 2025-09-20 205152.png",
+      "filename": "construo-2026/odhmzhm54z2ox2gypgtt",
+      "type": "image",
+      "mimetype": "image/png",
+      "size": 85803,
+      "url": "https://res.cloudinary.com/dymhvee8z/image/upload/v1770181630/construo-2026/odhmzhm54z2ox2gypgtt.png",
+      "folder": "general",
+      "uploadedAt": "2026-02-04T05:07:12.830Z",
+      "uploadedBy": "user_001"
+    },
+    {
+      "id": "file_1770260073855",
+      "name": "Screenshot 2025-09-20 205152.png",
+      "filename": "construo-2026/hsq1qnj6jzp0om9tzhbj",
+      "type": "image",
+      "mimetype": "image/png",
+      "size": 85803,
+      "url": "https://res.cloudinary.com/dymhvee8z/image/upload/v1770260071/construo-2026/hsq1qnj6jzp0om9tzhbj.png",
+      "folder": "general",
+      "uploadedAt": "2026-02-05T02:54:33.855Z",
+      "uploadedBy": "user_1770221322658"
+    }
+  ]
+}

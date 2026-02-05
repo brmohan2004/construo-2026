@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timeline | CONSTRUO Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/admin.css">
+</head>
+
+<body>
+    <div class="admin-layout">
+        <aside class="admin-sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="../dashboard.html" class="sidebar-logo">
+                    <div class="sidebar-logo-icon">🏗️</div>
+                    <div class="sidebar-logo-text"><span>CONSTRUO</span><span>Admin Panel</span></div>
+                </a>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Overview</div>
+                    <ul class="nav-menu">
+                        <li class="nav-item"><a href="../dashboard.html" class="nav-link"><svg viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="7" height="9" />
+                                </svg><span>Dashboard</span></a></li>
+                    </ul>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Website Sections</div>
+                    <ul class="nav-menu">
+                        <li class="nav-item"><a href="hero.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <polygon points="12 2 2 7 12 12 22 7 12 2" />
+                                </svg><span>Hero</span></a></li>
+                        <li class="nav-item"><a href="about.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                </svg><span>About</span></a></li>
+                        <li class="nav-item"><a href="events.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                                </svg><span>Events</span></a></li>
+                        <li class="nav-item"><a href="timeline.html" class="nav-link active"><svg viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <polyline points="12 6 12 12 16 14" />
+                                </svg><span>Timeline</span></a></li>
+                        <li class="nav-item"><a href="speakers.html" class="nav-link"><svg viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                </svg><span>Speakers</span></a></li>
+                        <li class="nav-item"><a href="sponsors.html" class="nav-link"><svg viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                                </svg><span>Sponsors</span></a></li>
+                        <li class="nav-item"><a href="organizers.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                    <circle cx="9" cy="7" r="4" />
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                                </svg><span>Organizers</span></a></li>
+                        <li class="nav-item"><a href="venue.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                </svg><span>Venue</span></a></li>
+                        <li class="nav-item"><a href="footer.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                </svg><span>Footer</span></a></li>
+                    </ul>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Management</div>
+                    <ul class="nav-menu">
+                        <li class="nav-item"><a href="registrations.html" class="nav-link"><svg viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                </svg><span>Registrations</span></a></li>
+                        <li class="nav-item"><a href="users.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                </svg><span>Users</span></a></li>
+                        <li class="nav-item"><a href="media.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                </svg><span>Media</span></a></li>
+                        <li class="nav-item"><a href="settings.html" class="nav-link"><svg viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="3" />
+                                </svg><span>Settings</span></a></li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="admin-main">
+            <header class="admin-header">
+                <div class="header-left">
+                    <button class="sidebar-toggle mobile-toggle" id="mobileSidebarToggle"><svg viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12" />
+                            <line x1="3" y1="6" x2="21" y2="6" />
+                            <line x1="3" y1="18" x2="21" y2="18" />
+                        </svg></button>
+                    <div>
+                        <h1 class="header-title">Event Timeline</h1>
+                        <div class="header-breadcrumb"><a
+                                href="../dashboard.html">Dashboard</a><span>/</span><span>Timeline</span></div>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button type="button" class="btn btn-secondary" id="addDayBtn"><svg viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19" />
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                        </svg>Add Day</button>
+                    <button type="button" class="btn btn-primary" id="saveBtn"><svg viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                        </svg>Save</button>
+                </div>
+            </header>
+
+            <div class="admin-content">
+                <div class="timeline-days" id="timelineDays"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Session Modal -->
+    <div id="sessionModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="sessionModalTitle">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="sessionModalTitle">Add Session</h2>
+                <button type="button" class="modal-close" id="sessionModalClose"><svg viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg></button>
+            </div>
+            <div class="modal-body">
+                <form id="sessionForm" onsubmit="return false;">
+                    <input type="hidden" id="sessionDayIndex">
+                    <input type="hidden" id="sessionIndex">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Start Time</label>
+                            <input type="time" class="form-input" id="sessionStart" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">End Time</label>
+                            <input type="time" class="form-input" id="sessionEnd" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Title *</label>
+                        <input type="text" class="form-input" id="sessionTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-textarea" id="sessionDescription" rows="2"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Venue</label>
+                            <input type="text" class="form-input" id="sessionVenue">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Type</label>
+                            <select class="form-select" id="sessionType">
+                                <option value="event">Event</option>
+                                <option value="break">Break</option>
+                                <option value="ceremony">Ceremony</option>
+                                <option value="workshop">Workshop</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="sessionModalCancel">Cancel</button>
+                <button type="button" class="btn btn-primary" id="sessionModalSave">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+    <script>
+        const TimelineManager = {
+            data: { days: [] },
+
+            async init() {
+                await Admin.init?.();
+                this.data = await Admin.getData('timeline.json') || { days: [] };
+                this.bind();
+                this.render();
+            },
+
+            bind() {
+                console.log('Binding events...');
+                const addDayBtn = document.getElementById('addDayBtn');
+                const saveBtn = document.getElementById('saveBtn');
+                const sessionModalClose = document.getElementById('sessionModalClose');
+                const sessionModalCancel = document.getElementById('sessionModalCancel');
+                const sessionModalSave = document.getElementById('sessionModalSave');
+
+                console.log('Add Day button:', addDayBtn);
+                console.log('Save button:', saveBtn);
+
+                if (addDayBtn) {
+                    addDayBtn.addEventListener('click', async (e) => {
+                        e.preventDefault();
+                        console.log('Add Day button clicked');
+                        await this.addDay();
+                    });
+                } else {
+                    console.error('Add Day button not found!');
+                }
+                
+                if (saveBtn) {
+                    saveBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        console.log('Save button clicked');
+                        this.save();
+                    });
+                } else {
+                    console.error('Save button not found!');
+                }
+                
+                if (sessionModalClose) sessionModalClose.addEventListener('click', () => this.closeSessionModal());
+                if (sessionModalCancel) sessionModalCancel.addEventListener('click', () => this.closeSessionModal());
+                if (sessionModalSave) sessionModalSave.addEventListener('click', () => this.handleSaveSession());
+            },
+
+            render() {
+                const container = document.getElementById('timelineDays');
+                container.innerHTML = '';
+
+                if (!this.data.days || this.data.days.length === 0) {
+                    // show empty state
+                    const empty = document.createElement('div');
+                    empty.className = 'card';
+                    empty.style.padding = '36px';
+                    empty.textContent = 'No days yet. Click "Add Day" to begin.';
+                    container.appendChild(empty);
+                    return;
+                }
+
+                this.data.days.forEach((day, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'card timeline-day';
+
+                    card.innerHTML = `
+                        <div class="card-header">
+                            <div style="display:flex;gap:12px;align-items:center;width:100%">
+                                <input type="date" class="form-input" data-day-index="${index}" value="${day.date || ''}">
+                                <input type="text" class="form-input" data-day-title-index="${index}" placeholder="Day title" value="${day.title || ''}">
+                                <div style="margin-left:auto;display:flex;gap:8px">
+                                    <button class="btn btn-secondary add-session-btn" data-day-index="${index}">+ Add Session</button>
+                                    <button class="btn btn-danger delete-day-btn" data-day-index="${index}" title="Delete Day">🗑️</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body sessions-area" data-sessions-index="${index}"></div>
+                    `;
+
+                    // attach simple listeners
+                    card.querySelector(`[data-day-index="${index}"]`).addEventListener('change', (e) => this.updateDayDate(index, e.target.value));
+                    card.querySelector(`[data-day-title-index="${index}"]`).addEventListener('input', (e) => this.updateDayTitle(index, e.target.value));
+                    card.querySelector('.add-session-btn').addEventListener('click', () => this.openSessionModal(index));
+                    card.querySelector('.delete-day-btn').addEventListener('click', async () => {
+                        if (confirm('Delete this day?')) {
+                            await this.deleteDay(index);
+                        }
+                    });
+
+                    // render sessions
+                    const sessionsArea = card.querySelector('.sessions-area');
+                    const sessions = day.sessions || [];
+                    console.log(`Rendering day ${index}, sessions:`, sessions);
+
+                    if (sessions.length === 0) {
+                        const p = document.createElement('div');
+                        p.className = 'muted';
+                        p.style.padding = '36px';
+                        p.textContent = 'No sessions yet. Click "Add Session" to begin.';
+                        sessionsArea.appendChild(p);
+                    } else {
+                        sessions.forEach((s, sIndex) => {
+                            const sEl = document.createElement('div');
+                            sEl.className = 'session-item';
+
+                            // Build session display with time, title and optional description
+                            const timeStr = `${s.start || ''} - ${s.end || ''}`.trim();
+                            const titleStr = s.title || 'Untitled Session';
+                            const descStr = s.description ? `<div style="color: #8892b0; font-size: 0.9em; margin-top: 4px;">${s.description}</div>` : '';
+
+                            sEl.innerHTML = `
+                                <div style="display:flex;align-items:flex-start;gap:12px;justify-content:space-between;padding:12px;border-left:3px solid #64ffda;">
+                                    <div style="flex:1;">
+                                        <div style="display:flex;align-items:center;gap:12px;margin-bottom:4px;">
+                                            <span style="color:#8892b0;font-size:0.9em;font-family:monospace;">${timeStr || 'Time not set'}</span>
+                                        </div>
+                                        <div style="font-weight:500;color:#ccd6f6;">${titleStr}</div>
+                                        ${descStr}
+                                    </div>
+                                    <div style="display:flex;gap:8px;flex-shrink:0;">
+                                        <button class="btn btn-outline btn-sm edit-session-btn" data-day-index="${index}" data-session-index="${sIndex}" title="Edit">
+                                            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                        </button>
+                                        <button class="btn btn-danger btn-sm delete-session-btn" data-day-index="${index}" data-session-index="${sIndex}" title="Delete">
+                                            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            `;
+
+                            sEl.querySelector('.edit-session-btn').addEventListener('click', () => this.openSessionModal(index, sIndex));
+                            sEl.querySelector('.delete-session-btn').addEventListener('click', async () => {
+                                if (confirm('Delete this session?')) {
+                                    await this.deleteSession(index, sIndex);
+                                }
+                            });
+
+                            sessionsArea.appendChild(sEl);
+                        });
+                    }
+
+                    container.appendChild(card);
+                });
+            },
+
+            updateDayDate(index, value) {
+                this.data.days[index].date = value;
+            },
+
+            updateDayTitle(index, value) {
+                this.data.days[index].title = value;
+            },
+
+            async addDay() {
+                const next = (this.data.days?.length || 0) + 1;
+                const today = new Date().toISOString().slice(0, 10);
+                const payload = {
+                    date: today,
+                    title: `Day ${next}`,
+                    sessions: []
+                };
+
+                // If API mode is enabled, create on server
+                if (Admin.config.useAPI) {
+                    try {
+                        const res = await Admin.apiPost('timeline', payload);
+                        const added = res.data || res;
+                        this.data.days = this.data.days || [];
+                        this.data.days.push(added);
+                        Admin.showToast('success', 'Added', 'Day added');
+                    } catch (e) {
+                        console.error('Add day API failed', e);
+                        // fallback to local
+                        const newDay = { id: `day_${Date.now()}`, ...payload };
+                        this.data.days = this.data.days || [];
+                        this.data.days.push(newDay);
+                        Admin.showToast('warning', 'Offline', 'Day added locally (server failed)');
+                        await Admin.saveData('timeline.json', this.data);
+                    }
+                } else {
+                    const newDay = { id: `day_${Date.now()}`, ...payload };
+                    this.data.days = this.data.days || [];
+                    this.data.days.push(newDay);
+                }
+
+                this.render();
+                // focus newly added title
+                setTimeout(() => {
+                    const input = document.querySelector(`[data-day-title-index="${this.data.days.length - 1}"]`);
+                    if (input) input.focus();
+                }, 50);
+            },
+
+            async deleteDay(index) {
+                const day = this.data.days[index];
+                if (!day) return;
+
+                // If API mode, call delete endpoint
+                if (Admin.config.useAPI && day.id) {
+                    try {
+                        await Admin.apiDelete(`timeline/${day.id}`);
+                        this.data.days.splice(index, 1);
+                        this.render();
+                        Admin.showToast('success', 'Deleted', 'Day deleted');
+                        return;
+                    } catch (e) {
+                        console.error('Delete day API failed', e);
+                        Admin.showToast('error', 'Error', 'Failed to delete day on server');
+                        // fallthrough to local removal if user confirms
+                        if (!confirm('Server delete failed. Remove locally?')) return;
+                    }
+                }
+
+                // Local removal
+                this.data.days.splice(index, 1);
+                await Admin.saveData('timeline.json', this.data);
+                this.render();
+            },
+
+            async deleteSession(dayIndex, sessionIndex) {
+                const day = this.data.days[dayIndex];
+                if (!day || !day.sessions || !day.sessions[sessionIndex]) return;
+
+                // remove locally first (optimistic)
+                const removed = day.sessions.splice(sessionIndex, 1)[0];
+
+                if (Admin.config.useAPI && day.id) {
+                    try {
+                        // update whole day on server
+                        const res = await Admin.apiPut(`timeline/${day.id}`, day);
+                        const updated = res.data || res;
+                        this.data.days[dayIndex] = updated || this.data.days[dayIndex];
+                        Admin.showToast('success', 'Deleted', 'Session deleted');
+                        this.render();
+                        return;
+                    } catch (e) {
+                        console.error('Delete session API failed', e);
+                        Admin.showToast('error', 'Error', 'Failed to delete session on server');
+                        if (!confirm('Server delete failed. Keep session removed locally?')) {
+                            // revert
+                            day.sessions.splice(sessionIndex, 0, removed);
+                            return;
+                        }
+                    }
+                }
+
+                // fallback local save
+                await Admin.saveData('timeline.json', this.data);
+                this.render();
+            },
+
+            openSessionModal(dayIndex, sessionIndex = null) {
+                const modal = document.getElementById('sessionModal');
+                const titleEl = document.getElementById('sessionModalTitle');
+                const form = document.getElementById('sessionForm');
+
+                document.getElementById('sessionDayIndex').value = dayIndex;
+                document.getElementById('sessionIndex').value = sessionIndex ?? '';
+
+                // If editing, populate fields
+                if (sessionIndex !== null && sessionIndex !== '' && this.data.days[dayIndex]) {
+                    const s = this.data.days[dayIndex].sessions?.[sessionIndex];
+                    if (s) {
+                        document.getElementById('sessionStart').value = s.start || '';
+                        document.getElementById('sessionEnd').value = s.end || '';
+                        document.getElementById('sessionTitle').value = s.title || '';
+                        document.getElementById('sessionDescription').value = s.description || '';
+                        document.getElementById('sessionVenue').value = s.venue || '';
+                        document.getElementById('sessionType').value = s.type || 'event';
+                        titleEl.textContent = 'Edit Session';
+                    }
+                } else {
+                    form.reset();
+                    titleEl.textContent = 'Add Session';
+                }
+
+                modal.classList.add('active');
+            },
+
+            closeSessionModal() {
+                document.getElementById('sessionModal').classList.remove('active');
+                document.getElementById('sessionForm').reset();
+            },
+
+            handleSaveSession() {
+                console.log('handleSaveSession called - Save button clicked!');
+                const form = document.getElementById('sessionForm');
+
+                // Check form validity
+                if (!form.checkValidity()) {
+                    console.warn('Form validation failed');
+                    form.reportValidity();
+                    return;
+                }
+
+                // Form is valid, proceed with save
+                this.saveSession();
+            },
+
+            async saveSession() {
+                console.log('saveSession called!');
+
+                const form = document.getElementById('sessionForm');
+                if (!form.checkValidity()) {
+                    console.warn('Form validation failed');
+                    form.reportValidity();
+                    return;
+                }
+
+                const dayIndex = parseInt(document.getElementById('sessionDayIndex').value, 10);
+                console.log('Saving session for day index:', dayIndex);
+                console.log('Current data:', JSON.parse(JSON.stringify(this.data)));
+
+                if (isNaN(dayIndex) || !this.data.days[dayIndex]) {
+                    console.error('Invalid day index or day not found:', dayIndex);
+                    Admin.showToast('error', 'Error', 'Invalid day');
+                    return this.closeSessionModal();
+                }
+
+                const session = {
+                    id: `sess_${Date.now()}`,
+                    start: document.getElementById('sessionStart').value,
+                    end: document.getElementById('sessionEnd').value,
+                    title: document.getElementById('sessionTitle').value,
+                    description: document.getElementById('sessionDescription').value,
+                    venue: document.getElementById('sessionVenue').value,
+                    type: document.getElementById('sessionType').value
+                };
+
+                console.log('Session data:', session);
+
+                // Ensure sessions array exists
+                if (!this.data.days[dayIndex].sessions) {
+                    console.log('Creating new sessions array');
+                    this.data.days[dayIndex].sessions = [];
+                }
+
+                // If editing existing sessionIndex -> update
+                const existingIndexValue = document.getElementById('sessionIndex').value;
+                const existingIndex = existingIndexValue ? parseInt(existingIndexValue, 10) : NaN;
+                const day = this.data.days[dayIndex];
+
+                if (!isNaN(existingIndex) && existingIndex >= 0) {
+                    // update existing session
+                    console.log('Updating existing session at index:', existingIndex);
+                    this.data.days[dayIndex].sessions[existingIndex] = { ...(day.sessions?.[existingIndex] || {}), ...session };
+
+                    // If API mode, update entire day on server (PUT /timeline/days/:dayId)
+                    if (Admin.config?.useAPI && day.id) {
+                        try {
+                            const res = await Admin.apiPut(`timeline/${day.id}`, this.data.days[dayIndex]);
+                            const updated = res.data || res;
+                            this.data.days[dayIndex] = updated || this.data.days[dayIndex];
+                            Admin.showToast('success', 'Updated', 'Session updated');
+                        } catch (e) {
+                            console.error('Update session API failed', e);
+                            Admin.showToast('warning', 'Offline', 'Session updated locally (server failed)');
+                            await Admin.saveData('timeline.json', this.data);
+                        }
+                    } else {
+                        await Admin.saveData('timeline.json', this.data);
+                        Admin.showToast('success', 'Updated', 'Session updated');
+                    }
+                } else {
+                    // create new session
+                    console.log('Adding new session to day:', dayIndex);
+                    console.log('Sessions before push:', this.data.days[dayIndex].sessions);
+
+                    if (Admin.config?.useAPI && day.id) {
+                        try {
+                            const res = await Admin.apiPost(`timeline/${day.id}/sessions`, session);
+                            const added = res.data || res;
+                            this.data.days[dayIndex].sessions.push(added);
+                            Admin.showToast('success', 'Added', 'Session added');
+                        } catch (e) {
+                            console.error('Add session API failed', e);
+                            this.data.days[dayIndex].sessions.push(session);
+                            Admin.showToast('warning', 'Offline', 'Session added locally (server failed)');
+                            await Admin.saveData('timeline.json', this.data);
+                        }
+                    } else {
+                        // Local mode - just push and save
+                        this.data.days[dayIndex].sessions.push(session);
+                        console.log('Sessions after push:', this.data.days[dayIndex].sessions);
+                        console.log('Saving to localStorage...');
+                        const saved = await Admin.saveData('timeline.json', this.data);
+                        console.log('Save result:', saved);
+                        Admin.showToast('success', 'Added', 'Session added');
+                    }
+                }
+
+                console.log('Final day data:', JSON.parse(JSON.stringify(this.data.days[dayIndex])));
+                console.log('Closing modal and rendering...');
+                this.closeSessionModal();
+                this.render();
+            },
+
+            async save() {
+                // update metadata
+                this.data.updatedAt = new Date().toISOString();
+                this.data.updatedBy = this.data.updatedBy || 'local_user';
+                const ok = await Admin.saveData('timeline.json', this.data);
+                if (ok) {
+                    Admin.showToast('success', 'Saved', 'Timeline saved');
+                }
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Ensure Admin is loaded
+            if (typeof Admin === 'undefined') {
+                console.error('Admin.js not loaded!');
+                return;
+            }
+            console.log('Initializing TimelineManager...');
+            TimelineManager.init();
+        });
+    </script>
+    <script type="module" src="../js/admin.js"></script>
+    <script type="module" src="../js/supabase-config.js"></script>
+    <script type="module" src="../js/auth.js"></script>

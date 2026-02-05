@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hero Section | CONSTRUO Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/admin.css">
+</head>
+
+<body>
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="../dashboard.html" class="sidebar-logo">
+                    <div class="sidebar-logo-icon">🏗️</div>
+                    <div class="sidebar-logo-text">
+                        <span>CONSTRUO</span>
+                        <span>Admin Panel</span>
+                    </div>
+                </a>
+                <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="12" x2="21" y2="12" />
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <line x1="3" y1="18" x2="21" y2="18" />
+                    </svg>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Overview</div>
+                    <ul class="nav-menu">
+                        <li class="nav-item">
+                            <a href="../dashboard.html" class="nav-link">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="7" height="9" />
+                                    <rect x="14" y="3" width="7" height="5" />
+                                    <rect x="14" y="12" width="7" height="9" />
+                                    <rect x="3" y="16" width="7" height="5" />
+                                </svg>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Website Sections</div>
+                    <ul class="nav-menu">
+                        <li class="nav-item">
+                            <a href="hero.html" class="nav-link active">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="12 2 2 7 12 12 22 7 12 2" />
+                                    <polyline points="2 17 12 22 22 17" />
+                                    <polyline points="2 12 12 17 22 12" />
+                                </svg>
+                                <span>Hero Section</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="about.html" class="nav-link">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <line x1="12" y1="16" x2="12" y2="12" />
+                                    <line x1="12" y1="8" x2="12.01" y2="8" />
+                                </svg>
+                                <span>About</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="events.html" class="nav-link">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                                    <line x1="16" y1="2" x2="16" y2="6" />
+                                    <line x1="8" y1="2" x2="8" y2="6" />
+                                    <line x1="3" y1="10" x2="21" y2="10" />
+                                </svg>
+                                <span>Events</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="timeline.html" class="nav-link">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <polyline points="12 6 12 12 16 14" />
+                                </svg>
+                                <span>Timeline</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="speakers.html" class="nav-link">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                    <circle cx="9" cy="7" r="4" />
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                                </svg>
+                                <span>Speakers</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="sponsors.html" class="nav-link">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+                                </svg>
+                                <span>Sponsors</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="organizers.html" class="nav-link">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                    <circle cx="9" cy="7" r="4" />
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                                </svg>
+                                <span>Organizers</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="venue.html" class="nav-link">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                    <circle cx="12" cy="10" r="3" />
+                                </svg>
+                                <span>Venue</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="footer.html" class="nav-link">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                    <line x1="3" y1="15" x2="21" y2="15" />
+                                </svg>
+                                <span>Footer</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Management</div>
+                    <ul class="nav-menu">
+                        <li class="nav-item">
+                            <a href="registrations.html" class="nav-link">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                    <polyline points="14 2 14 8 20 8" />
+                                    <line x1="16" y1="13" x2="8" y2="13" />
+                                    <line x1="16" y1="17" x2="8" y2="17" />
+                                </svg>
+                                <span>Registrations</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="users.html" class="nav-link">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                    <circle cx="12" cy="7" r="4" />
+                                </svg>
+                                <span>Users</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="media.html" class="nav-link">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                    <circle cx="8.5" cy="8.5" r="1.5" />
+                                    <polyline points="21 15 16 10 5 21" />
+                                </svg>
+                                <span>Media</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="settings.html" class="nav-link">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="3" />
+                                    <path
+                                        d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                                </svg>
+                                <span>Settings</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="sidebar-user" id="sidebarUser">
+                    <div class="user-avatar" id="userAvatar">SA</div>
+                    <div class="user-info">
+                        <div class="user-name" id="userName">Super Admin</div>
+                        <div class="user-role" id="userRole">Super Admin</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <!-- Header -->
+            <header class="admin-header">
+                <div class="header-left">
+                    <button class="sidebar-toggle mobile-toggle" id="mobileSidebarToggle">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12" />
+                            <line x1="3" y1="6" x2="21" y2="6" />
+                            <line x1="3" y1="18" x2="21" y2="18" />
+                        </svg>
+                    </button>
+                    <div>
+                        <h1 class="header-title">Hero Section</h1>
+                        <div class="header-breadcrumb">
+                            <a href="../dashboard.html">Dashboard</a>
+                            <span>/</span>
+                            <span>Hero Section</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <a href="../../index.html" target="_blank" class="btn btn-secondary btn-sm">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                            <polyline points="15 3 21 3 21 9" />
+                            <line x1="10" y1="14" x2="21" y2="3" />
+                        </svg>
+                        Preview
+                    </a>
+                    <button class="header-btn" id="logoutBtn" title="Logout">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                            <polyline points="16 17 21 12 16 7" />
+                            <line x1="21" y1="12" x2="9" y2="12" />
+                        </svg>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="admin-content">
+                <div class="page-header">
+                    <div>
+                        <h2 class="page-title">Edit Hero Section</h2>
+                        <p class="page-subtitle">Manage the main hero section of your website</p>
+                    </div>
+                    <div class="page-actions">
+                        <button type="button" class="btn btn-secondary" id="resetBtn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="1 4 1 10 7 10" />
+                                <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
+                            </svg>
+                            Reset
+                        </button>
+                        <button type="button" class="btn btn-primary" id="saveBtn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                                <polyline points="17 21 17 13 7 13 7 21" />
+                                <polyline points="7 3 7 8 15 8" />
+                            </svg>
+                            Save Changes
+                        </button>
+                    </div>
+                </div>
+
+                <div class="editor-grid">
+                    <!-- Form Panel -->
+                    <div class="editor-form">
+                        <form id="heroForm">
+                            <!-- Badge Section -->
+                            <div class="card mb-3">
+                                <div class="card-header">
+                                    <h3 class="card-title">Badge & Title</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label class="form-label" for="badge">Badge Text</label>
+                                        <input type="text" class="form-input" id="badge" name="badge"
+                                            placeholder="e.g., Civil Engineering Symposium">
+                                        <span class="form-hint">Appears above the main title</span>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label" for="title">Main Title</label>
+                                            <input type="text" class="form-input" id="title" name="title"
+                                                placeholder="e.g., CONSTRUO">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label" for="titleOutline">Title Outline Text</label>
+                                            <input type="text" class="form-input" id="titleOutline" name="titleOutline"
+                                                placeholder="e.g., 2026">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="tagline">Tagline</label>
+                                        <input type="text" class="form-input" id="tagline" name="tagline"
+                                            placeholder="e.g., Building Tomorrow's Engineers">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Date Section -->
+                            <div class="card mb-3">
+                                <div class="card-header">
+                                    <h3 class="card-title">Event Date</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label" for="dateDays">Days</label>
+                                            <input type="text" class="form-input" id="dateDays" name="dateDays"
+                                                placeholder="e.g., 15-17">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label" for="dateMonth">Month</label>
+                                            <select class="form-select" id="dateMonth" name="dateMonth">
+                                                <option value="January">January</option>
+                                                <option value="February">February</option>
+                                                <option value="March">March</option>
+                                                <option value="April">April</option>
+                                                <option value="May">May</option>
+                                                <option value="June">June</option>
+                                                <option value="July">July</option>
+                                                <option value="August">August</option>
+                                                <option value="September">September</option>
+                                                <option value="October">October</option>
+                                                <option value="November">November</option>
+                                                <option value="December">December</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label" for="dateYear">Year</label>
+                                            <input type="text" class="form-input" id="dateYear" name="dateYear"
+                                                placeholder="e.g., 2026">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Registration Fee Section -->
+                            <div class="card mb-3">
+                                <div class="card-header">
+                                    <h3 class="card-title">Registration Fee</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label" for="feeAmount">Amount</label>
+                                            <div class="input-group">
+                                                <span class="input-prefix">₹</span>
+                                                <input type="number" class="form-input" id="feeAmount" name="feeAmount"
+                                                    placeholder="500">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label" for="feeNote">Note</label>
+                                            <input type="text" class="form-input" id="feeNote" name="feeNote"
+                                                placeholder="e.g., per participant">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- CTA Buttons Section -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">CTA Buttons</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="cta-buttons-list" id="ctaButtonsList">
+                                        <!-- Buttons will be dynamically added here -->
+                                    </div>
+                                    <button type="button" class="btn btn-secondary btn-sm mt-3" id="addCtaBtn">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <line x1="12" y1="5" x2="12" y2="19" />
+                                            <line x1="5" y1="12" x2="19" y2="12" />
+                                        </svg>
+                                        Add Button
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Preview Panel -->
+                    <div class="editor-preview">
+                        <div class="card sticky-card">
+                            <div class="card-header">
+                                <h3 class="card-title">Live Preview</h3>
+                                <span class="badge badge-info">Auto-updates</span>
+                            </div>
+                            <div class="card-body preview-container">
+                                <div class="hero-preview" id="heroPreview">
+                                    <div class="preview-badge" id="previewBadge">Civil Engineering Symposium</div>
+                                    <h1 class="preview-title">
+                                        <span class="preview-title-main" id="previewTitle">CONSTRUO</span>
+                                        <span class="preview-title-outline" id="previewTitleOutline">2026</span>
+                                    </h1>
+                                    <p class="preview-tagline" id="previewTagline">Building Tomorrow's Engineers</p>
+                                    <div class="preview-date">
+                                        <span class="preview-date-day" id="previewDateDay">15-17</span>
+                                        <span class="preview-date-month" id="previewDateMonth">March</span>
+                                        <span class="preview-date-year" id="previewDateYear">2026</span>
+                                    </div>
+                                    <div class="preview-fee">
+                                        <div class="preview-fee-item">
+                                            <span class="preview-fee-label">Registration Fee</span>
+                                            <span class="preview-fee-amount" id="previewFeeAmount">₹500</span>
+                                            <span class="preview-fee-note" id="previewFeeNote">per participant</span>
+                                        </div>
+                                    </div>
+                                    <div class="preview-cta" id="previewCta">
+                                        <a href="#" class="preview-btn preview-btn-primary">Register Now</a>
+                                        <a href="#" class="preview-btn preview-btn-secondary">Explore</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        // Hero Page specific functionality
+        const HeroEditor = {
+            data: null,
+            originalData: null,
+
+            async init() {
+                await this.loadData();
+                this.bindEvents();
+                this.render();
+            },
+
+            async loadData() {
+                try {
+                    if (Admin.config.useAPI) {
+                        // Load directly from hero API endpoint
+                        this.data = await Admin.apiGet('hero');
+                        this.originalData = JSON.parse(JSON.stringify(this.data));
+                    } else {
+                        // Fallback to site-config.json for demo mode
+                        const config = await Admin.getData('site-config.json');
+                        this.data = config?.hero || {};
+                        this.originalData = JSON.parse(JSON.stringify(this.data));
+                    }
+                } catch (error) {
+                    console.error('Failed to load hero data:', error);
+                    this.data = {};
+                    this.originalData = {};
+                    Admin.showToast('warning', 'Load Failed', 'Could not load hero data. Starting with empty form.');
+                }
+            },
+
+            bindEvents() {
+                // Form inputs - live preview
+                document.querySelectorAll('#heroForm input, #heroForm select').forEach(input => {
+                    input.addEventListener('input', () => this.updatePreview());
+                });
+
+                // Save button
+                document.getElementById('saveBtn').addEventListener('click', () => this.save());
+
+                // Reset button
+                document.getElementById('resetBtn').addEventListener('click', () => this.reset());
+
+                // Add CTA button
+                document.getElementById('addCtaBtn').addEventListener('click', () => this.addCtaButton());
+            },
+
+            render() {
+                if (!this.data) return;
+
+                // this.data is now the hero object directly
+                const hero = this.data;
+
+                // Populate form fields
+                document.getElementById('badge').value = hero.badge || '';
+                document.getElementById('title').value = hero.title || '';
+                document.getElementById('titleOutline').value = hero.titleOutline || '';
+                document.getElementById('tagline').value = hero.tagline || '';
+                document.getElementById('dateDays').value = hero.date?.days || '';
+                document.getElementById('dateMonth').value = hero.date?.month || 'March';
+                document.getElementById('dateYear').value = hero.date?.year || '';
+                document.getElementById('feeAmount').value = hero.registrationFee?.amount || '';
+                document.getElementById('feeNote').value = hero.registrationFee?.note || '';
+
+                // Render CTA buttons
+                this.renderCtaButtons(hero.ctaButtons || []);
+
+                // Update preview
+                this.updatePreview();
+            },
+
+            renderCtaButtons(buttons) {
+                const container = document.getElementById('ctaButtonsList');
+                container.innerHTML = buttons.map((btn, index) => `
+                    <div class="cta-button-item" data-index="${index}">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Button Text</label>
+                                <input type="text" class="form-input cta-text" value="${btn.text || ''}" data-index="${index}">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Action</label>
+                                <select class="form-select cta-action" data-index="${index}">
+                                    <option value="link" ${!btn.action || btn.action === 'link' ? 'selected' : ''}>External Link</option>
+                                    <option value="popup" ${btn.action === 'popup' ? 'selected' : ''}>Registration Popup</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Link</label>
+                                <input type="text" class="form-input cta-link" value="${btn.link || ''}" data-index="${index}" ${btn.action === 'popup' ? 'readonly' : ''}>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Type</label>
+                                <select class="form-select cta-type" data-index="${index}">
+                                    <option value="primary" ${btn.type === 'primary' ? 'selected' : ''}>Primary</option>
+                                    <option value="secondary" ${btn.type === 'secondary' ? 'selected' : ''}>Secondary</option>
+                                </select>
+                            </div>
+                            <button type="button" class="btn btn-icon btn-ghost remove-cta" data-index="${index}" title="Remove">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="3 6 5 6 21 6"/>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+
+                // Bind events for CTA buttons
+                container.querySelectorAll('.cta-text, .cta-link, .cta-type, .cta-action').forEach(input => {
+                    input.addEventListener('input', (e) => {
+                        // Handle action change
+                        if (e.target.classList.contains('cta-action')) {
+                            const row = e.target.closest('.form-row');
+                            const linkInput = row.querySelector('.cta-link');
+                            if (e.target.value === 'popup') {
+                                linkInput.value = '#register';
+                                linkInput.readOnly = true;
+                            } else {
+                                linkInput.readOnly = false;
+                                if (linkInput.value === '#register') linkInput.value = '#';
+                            }
+                        }
+                        this.updatePreview();
+                    });
+                });
+
+                container.querySelectorAll('.remove-cta').forEach(btn => {
+                    btn.addEventListener('click', (e) => this.removeCtaButton(e.currentTarget.dataset.index));
+                });
+            },
+
+            addCtaButton() {
+                if (!this.data.hero.ctaButtons) {
+                    this.data.hero.ctaButtons = [];
+                }
+                this.data.hero.ctaButtons.push({ text: 'New Button', link: '#', type: 'secondary', action: 'link' });
+                this.renderCtaButtons(this.data.hero.ctaButtons);
+                this.updatePreview();
+            },
+
+            removeCtaButton(index) {
+                this.data.hero.ctaButtons.splice(index, 1);
+                this.renderCtaButtons(this.data.hero.ctaButtons);
+                this.updatePreview();
+            },
+
+            updatePreview() {
+                // Update preview elements
+                document.getElementById('previewBadge').textContent = document.getElementById('badge').value || 'Badge Text';
+                document.getElementById('previewTitle').textContent = document.getElementById('title').value || 'TITLE';
+                document.getElementById('previewTitleOutline').textContent = document.getElementById('titleOutline').value || '2026';
+                document.getElementById('previewTagline').textContent = document.getElementById('tagline').value || 'Tagline';
+                document.getElementById('previewDateDay').textContent = document.getElementById('dateDays').value || '00';
+                document.getElementById('previewDateMonth').textContent = document.getElementById('dateMonth').value || 'Month';
+                document.getElementById('previewDateYear').textContent = document.getElementById('dateYear').value || 'Year';
+
+                const feeAmount = document.getElementById('feeAmount').value;
+                document.getElementById('previewFeeAmount').textContent = feeAmount ? `₹${feeAmount}` : '₹0';
+                document.getElementById('previewFeeNote').textContent = document.getElementById('feeNote').value || '';
+
+                // Update CTA buttons preview
+                const ctaContainer = document.getElementById('previewCta');
+                const ctaButtons = this.getCtaButtonsFromForm();
+                ctaContainer.innerHTML = ctaButtons.map(btn => `
+                    <a href="${btn.link}" class="preview-btn preview-btn-${btn.type}">${btn.text}</a>
+                `).join('');
+            },
+
+            getCtaButtonsFromForm() {
+                const buttons = [];
+                document.querySelectorAll('.cta-button-item').forEach((item, index) => {
+                    buttons.push({
+                        text: item.querySelector('.cta-text').value,
+                        link: item.querySelector('.cta-link').value,
+                        type: item.querySelector('.cta-type').value,
+                        action: item.querySelector('.cta-action').value
+                    });
+                });
+                return buttons;
+            },
+
+            async save() {
+                // Collect form data
+                const heroData = {
+                    badge: document.getElementById('badge').value,
+                    title: document.getElementById('title').value,
+                    titleOutline: document.getElementById('titleOutline').value,
+                    tagline: document.getElementById('tagline').value,
+                    date: {
+                        days: document.getElementById('dateDays').value,
+                        month: document.getElementById('dateMonth').value,
+                        year: document.getElementById('dateYear').value
+                    },
+                    registrationFee: {
+                        amount: parseInt(document.getElementById('feeAmount').value) || 0,
+                        currency: 'INR',
+                        symbol: '₹',
+                        note: document.getElementById('feeNote').value
+                    },
+                    ctaButtons: this.getCtaButtonsFromForm()
+                };
+
+                try {
+                    if (Admin.config.useAPI) {
+                        // Save via PUT /api/hero
+                        const response = await Admin.apiPut('hero', heroData);
+                        this.data = response.data || heroData;
+                        this.originalData = JSON.parse(JSON.stringify(this.data));
+                        Admin.showToast('success', 'Saved', 'Hero section updated');
+                    } else {
+                        // Fallback to local mode
+                        const config = await Admin.getData('site-config.json');
+                        config.hero = heroData;
+                        const success = await Admin.saveData('site-config.json', config);
+                        if (success) {
+                            this.data = heroData;
+                            this.originalData = JSON.parse(JSON.stringify(heroData));
+                            Admin.logActivity('update', 'hero', 'Updated hero section');
+                        }
+                    }
+                } catch (error) {
+                    console.error('Save hero error:', error);
+                    Admin.showToast('error', 'Error', error.message || 'Failed to save hero section');
+                }
+            },
+
+            reset() {
+                if (this.originalData) {
+                    this.data.hero = JSON.parse(JSON.stringify(this.originalData));
+                    this.render();
+                    Admin.showToast('info', 'Reset', 'Changes have been reverted');
+                }
+            }
+        };
+
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            HeroEditor.init();
+        });
+    </script>
+    <style>
+        /* Hero Editor specific styles */
+        .editor-grid {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 1200px) {
+            .editor-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .mb-3 {
+            margin-bottom: 1rem;
+        }
+
+        .mt-3 {
+            margin-top: 1rem;
+        }
+
+        .sticky-card {
+            position: sticky;
+            top: calc(var(--header-height) + 1.5rem);
+        }
+
+        .input-group {
+            display: flex;
+            align-items: stretch;
+        }
+
+        .input-prefix {
+            display: flex;
+            align-items: center;
+            padding: 0 1rem;
+            background: var(--admin-bg);
+            border: 1px solid var(--admin-border);
+            border-right: none;
+            border-radius: var(--input-radius) 0 0 var(--input-radius);
+            color: var(--admin-text-muted);
+            font-weight: 500;
+        }
+
+        .input-group .form-input {
+            border-radius: 0 var(--input-radius) var(--input-radius) 0;
+        }
+
+        .cta-button-item {
+            padding: 1rem;
+            background: var(--admin-bg);
+            border-radius: var(--card-radius);
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-button-item .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 120px auto;
+            gap: 0.75rem;
+            align-items: end;
+        }
+
+        .cta-button-item .form-group {
+            margin-bottom: 0;
+        }
+
+        /* Preview Styles */
+        .preview-container {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            border-radius: 8px;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .hero-preview {
+            padding: 2rem;
+            text-align: center;
+            color: #f1f5f9;
+        }
+
+        .preview-badge {
+            display: inline-block;
+            padding: 0.375rem 1rem;
+            background: rgba(74, 144, 217, 0.1);
+            border: 1px solid rgba(74, 144, 217, 0.3);
+            border-radius: 50px;
+            font-size: 0.625rem;
+            color: #4a90d9;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .preview-title {
+            margin-bottom: 0.75rem;
+        }
+
+        .preview-title-main {
+            display: block;
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+        }
+
+        .preview-title-outline {
+            display: block;
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            -webkit-text-stroke: 1px #f1f5f9;
+            color: transparent;
+        }
+
+        .preview-tagline {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .preview-date {
+            display: flex;
+            justify-content: center;
+            align-items: baseline;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            font-family: var(--font-mono);
+        }
+
+        .preview-date-day {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #f97316;
+        }
+
+        .preview-date-month {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+        }
+
+        .preview-date-year {
+            font-size: 0.625rem;
+            color: #64748b;
+        }
+
+        .preview-fee {
+            margin-bottom: 1.5rem;
+        }
+
+        .preview-fee-item {
+            display: inline-flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            padding: 0.75rem 1.25rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+        }
+
+        .preview-fee-label {
+            font-size: 0.625rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .preview-fee-amount {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #f97316;
+        }
+
+        .preview-fee-note {
+            font-size: 0.5rem;
+            color: #64748b;
+            font-family: var(--font-mono);
+        }
+
+        .preview-cta {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .preview-btn {
+            padding: 0.5rem 1.25rem;
+            font-size: 0.625rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .preview-btn-primary {
+            background: #f97316;
+            color: white;
+        }
+
+        .preview-btn-secondary {
+            background: transparent;
+            color: #f1f5f9;
+            border: 1px solid #f1f5f9;
+        }
+
+        @media (max-width: 768px) {
+            .cta-button-item .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <script type="module" src="../js/supabase-config.js"></script>
+    <script type="module" src="../js/auth.js"></script>
+    <script type="module" src="../js/admin.js"></script>
+</body>
+
+</html>

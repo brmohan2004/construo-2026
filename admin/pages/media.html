@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Library | CONSTRUO Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <aside class="admin-sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="../dashboard.html" class="sidebar-logo">
+                    <div class="sidebar-logo-icon">🏗️</div>
+                    <div class="sidebar-logo-text"><span>CONSTRUO</span><span>Admin Panel</span></div>
+                </a>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Overview</div>
+                    <ul class="nav-menu">
+                        <li class="nav-item"><a href="../dashboard.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/></svg><span>Dashboard</span></a></li>
+                    </ul>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Website Sections</div>
+                    <ul class="nav-menu">
+                        <li class="nav-item"><a href="hero.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/></svg><span>Hero</span></a></li>
+                        <li class="nav-item"><a href="about.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg><span>About</span></a></li>
+                        <li class="nav-item"><a href="events.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/></svg><span>Events</span></a></li>
+                        <li class="nav-item"><a href="timeline.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg><span>Timeline</span></a></li>
+                        <li class="nav-item"><a href="speakers.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/></svg><span>Speakers</span></a></li>
+                        <li class="nav-item"><a href="sponsors.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/></svg><span>Sponsors</span></a></li>
+                        <li class="nav-item"><a href="organizers.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>Organizers</span></a></li>
+                        <li class="nav-item"><a href="venue.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/></svg><span>Venue</span></a></li>
+                        <li class="nav-item"><a href="footer.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/></svg><span>Footer</span></a></li>
+                    </ul>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Management</div>
+                    <ul class="nav-menu">
+                        <li class="nav-item"><a href="registrations.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg><span>Registrations</span></a></li>
+                        <li class="nav-item"><a href="users.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/></svg><span>Users</span></a></li>
+                        <li class="nav-item"><a href="media.html" class="nav-link active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span>Media</span></a></li>
+                        <li class="nav-item"><a href="settings.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/></svg><span>Settings</span></a></li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="admin-main">
+            <header class="admin-header">
+                <div class="header-left">
+                    <button class="sidebar-toggle mobile-toggle" id="mobileSidebarToggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+                    <div>
+                        <h1 class="header-title">Media Library</h1>
+                        <div class="header-breadcrumb"><a href="../dashboard.html">Dashboard</a><span>/</span><span>Media</span></div>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button class="btn btn-primary" id="uploadBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Upload</button>
+                </div>
+            </header>
+
+            <div class="admin-content">
+                <!-- Stats -->
+                <div class="stats-row">
+                    <div class="stat-mini"><span id="totalFiles">0</span> files</div>
+                    <div class="stat-mini"><span id="totalSize">0 KB</span> used</div>
+                    <div class="stat-mini"><span id="imageCount">0</span> images</div>
+                    <div class="stat-mini"><span id="docCount">0</span> documents</div>
+                </div>
+
+                <!-- Toolbar -->
+                <div class="media-toolbar">
+                    <div class="toolbar-left">
+                        <input type="text" class="form-input" id="searchInput" placeholder="Search files...">
+                        <select class="form-select" id="typeFilter">
+                            <option value="">All Types</option>
+                            <option value="image">Images</option>
+                            <option value="document">Documents</option>
+                            <option value="video">Videos</option>
+                        </select>
+                    </div>
+                    <div class="toolbar-right">
+                        <div class="view-toggle">
+                            <button class="view-btn active" data-view="grid">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                            </button>
+                            <button class="view-btn" data-view="list">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Media Grid/List -->
+                <div class="media-container grid" id="mediaContainer"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Upload Modal -->
+    <div class="modal-backdrop" id="uploadModal">
+        <div class="modal modal-md">
+            <div class="modal-header">
+                <h2 class="modal-title">Upload Files</h2>
+                <button class="modal-close" id="uploadModalClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            </div>
+            <div class="modal-body">
+                <div class="upload-zone" id="uploadZone">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    <p>Drag & drop files here</p>
+                    <span>or</span>
+                    <label class="btn btn-secondary">
+                        Browse Files
+                        <input type="file" multiple hidden id="fileInput">
+                    </label>
+                </div>
+                <div class="upload-list" id="uploadList"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="uploadModalCancel">Cancel</button>
+                <button class="btn btn-primary" id="uploadModalSubmit" disabled>Upload Files</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Preview Modal -->
+    <div class="modal-backdrop" id="previewModal">
+        <div class="modal modal-lg">
+            <div class="modal-header">
+                <h2 class="modal-title" id="previewTitle">File Preview</h2>
+                <button class="modal-close" id="previewModalClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            </div>
+            <div class="modal-body">
+                <div class="preview-content" id="previewContent"></div>
+                <div class="file-details" id="fileDetails"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="previewCopyUrl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy URL</button>
+                <button class="btn btn-danger" id="previewDeleteFile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+    <script>
+        const MediaManager = {
+            files: [],
+            pendingFiles: [],
+            currentView: 'grid',
+            selectedFile: null,
+
+            async init() {
+                const data = await Admin.getData('media.json');
+                if (data && data.files) this.files = data.files;
+                this.bindEvents();
+                this.render();
+            },
+
+            bindEvents() {
+                document.getElementById('searchInput').addEventListener('input', () => this.render());
+                document.getElementById('typeFilter').addEventListener('change', () => this.render());
+                
+                // View toggle buttons
+                document.querySelectorAll('.view-btn').forEach(btn => {
+                    btn.addEventListener('click', () => this.setView(btn.dataset.view));
+                });
+                
+                // Upload modal
+                document.getElementById('uploadBtn').addEventListener('click', () => this.openUploadModal());
+                document.getElementById('uploadModalClose').addEventListener('click', () => this.closeUploadModal());
+                document.getElementById('uploadModalCancel').addEventListener('click', () => this.closeUploadModal());
+                document.getElementById('uploadModalSubmit').addEventListener('click', () => this.uploadFiles());
+                document.getElementById('uploadModal').addEventListener('click', (e) => {
+                    if (e.target.id === 'uploadModal') this.closeUploadModal();
+                });
+                
+                // File input
+                document.getElementById('fileInput').addEventListener('change', (e) => this.handleFileSelect(e));
+                
+                // Upload zone drag & drop
+                const uploadZone = document.getElementById('uploadZone');
+                uploadZone.addEventListener('drop', (e) => this.handleDrop(e));
+                uploadZone.addEventListener('dragover', (e) => this.handleDragOver(e));
+                uploadZone.addEventListener('dragleave', (e) => this.handleDragLeave(e));
+                
+                // Preview modal
+                document.getElementById('previewModalClose').addEventListener('click', () => this.closePreviewModal());
+                document.getElementById('previewCopyUrl').addEventListener('click', () => this.copyUrl());
+                document.getElementById('previewDeleteFile').addEventListener('click', () => this.deleteFile());
+                document.getElementById('previewModal').addEventListener('click', (e) => {
+                    if (e.target.id === 'previewModal') this.closePreviewModal();
+                });
+            },
+
+            updateStats() {
+                document.getElementById('totalFiles').textContent = this.files.length;
+                const totalSize = this.files.reduce((sum, f) => sum + (f.size || 0), 0);
+                document.getElementById('totalSize').textContent = this.formatSize(totalSize);
+                document.getElementById('imageCount').textContent = this.files.filter(f => f.type === 'image').length;
+                document.getElementById('docCount').textContent = this.files.filter(f => f.type === 'document').length;
+            },
+
+            formatSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            },
+
+            getFilteredFiles() {
+                const search = document.getElementById('searchInput').value.toLowerCase();
+                const typeFilter = document.getElementById('typeFilter').value;
+
+                return this.files.filter(file => {
+                    if (search && !file.name.toLowerCase().includes(search)) return false;
+                    if (typeFilter && file.type !== typeFilter) return false;
+                    return true;
+                });
+            },
+
+            setView(view) {
+                this.currentView = view;
+                document.querySelectorAll('.view-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.view === view));
+                const container = document.getElementById('mediaContainer');
+                container.className = `media-container ${view}`;
+            },
+
+            render() {
+                this.updateStats();
+                const filtered = this.getFilteredFiles();
+                const container = document.getElementById('mediaContainer');
+
+                if (filtered.length === 0) {
+                    container.innerHTML = '<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="48" height="48"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><h3>No files found</h3><p>Upload some files to get started</p></div>';
+                    return;
+                }
+
+                container.innerHTML = filtered.map(file => `
+                    <div class="media-item" data-file-id="${file.id}">
+                        <div class="media-thumb">${this.getThumb(file)}</div>
+                        <div class="media-info">
+                            <span class="media-name" title="${file.name}">${file.name}</span>
+                            <span class="media-meta">${this.formatSize(file.size)} • ${file.uploadedAt || 'Unknown'}</span>
+                        </div>
+                    </div>
+                `).join('');
+                
+                // Add event delegation for media items
+                container.addEventListener('click', (e) => {
+                    const item = e.target.closest('.media-item');
+                    if (item) {
+                        this.previewFile(item.dataset.fileId);
+                    }
+                });
+            },
+
+            getThumb(file) {
+                if (file.type === 'image') {
+                    return `<img src="${file.url}" alt="${file.name}" loading="lazy">`;
+                }
+                const icons = {
+                    document: '📄',
+                    video: '🎬',
+                    audio: '🎵',
+                    archive: '📦'
+                };
+                return `<span class="file-icon">${icons[file.type] || '📁'}</span>`;
+            },
+
+            openUploadModal() {
+                this.pendingFiles = [];
+                document.getElementById('uploadList').innerHTML = '';
+                document.getElementById('uploadBtn').disabled = true;
+                document.getElementById('uploadModal').classList.add('active');
+            },
+
+            closeUploadModal() {
+                document.getElementById('uploadModal').classList.remove('active');
+            },
+
+            handleDragOver(e) {
+                e.preventDefault();
+                e.currentTarget.classList.add('dragover');
+            },
+
+            handleDragLeave(e) {
+                e.currentTarget.classList.remove('dragover');
+            },
+
+            handleDrop(e) {
+                e.preventDefault();
+                e.currentTarget.classList.remove('dragover');
+                const files = Array.from(e.dataTransfer.files);
+                this.addPendingFiles(files);
+            },
+
+            handleFileSelect(e) {
+                const files = Array.from(e.target.files);
+                this.addPendingFiles(files);
+            },
+
+            addPendingFiles(files) {
+                this.pendingFiles = [...this.pendingFiles, ...files];
+                this.renderPendingFiles();
+                document.getElementById('uploadModalSubmit').disabled = this.pendingFiles.length === 0;
+            },
+
+            renderPendingFiles() {
+                const list = document.getElementById('uploadList');
+                list.innerHTML = this.pendingFiles.map((file, index) => `
+                    <div class="pending-file">
+                        <span class="pending-name">${file.name}</span>
+                        <span class="pending-size">${this.formatSize(file.size)}</span>
+                        <button class="btn btn-icon btn-ghost btn-sm" data-remove-index="${index}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+                    </div>
+                `).join('');
+                
+                // Add event delegation for remove buttons
+                list.addEventListener('click', (e) => {
+                    const btn = e.target.closest('[data-remove-index]');
+                    if (btn) {
+                        this.removePendingFile(parseInt(btn.dataset.removeIndex));
+                    }
+                });
+            },
+
+            removePendingFile(index) {
+                this.pendingFiles.splice(index, 1);
+                this.renderPendingFiles();
+                document.getElementById('uploadModalSubmit').disabled = this.pendingFiles.length === 0;
+            },
+
+            async uploadFiles() {
+                // In production, this would upload to a server
+                // For demo, we simulate the upload
+                for (const file of this.pendingFiles) {
+                    const fileType = file.type.startsWith('image/') ? 'image' :
+                                    file.type.startsWith('video/') ? 'video' :
+                                    file.type.startsWith('audio/') ? 'audio' : 'document';
+                    
+                    this.files.push({
+                        id: 'file_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+                        name: file.name,
+                        type: fileType,
+                        size: file.size,
+                        url: URL.createObjectURL(file), // In production, this would be the server URL
+                        uploadedAt: new Date().toLocaleDateString()
+                    });
+                }
+
+                const success = await Admin.saveData('media.json', { files: this.files });
+                if (success) {
+                    this.closeUploadModal();
+                    this.render();
+                    Admin.logActivity('upload', 'media', `Uploaded ${this.pendingFiles.length} file(s)`);
+                }
+            },
+
+            previewFile(id) {
+                this.selectedFile = this.files.find(f => f.id === id);
+                if (!this.selectedFile) return;
+
+                document.getElementById('previewTitle').textContent = this.selectedFile.name;
+                
+                const content = document.getElementById('previewContent');
+                if (this.selectedFile.type === 'image') {
+                    content.innerHTML = `<img src="${this.selectedFile.url}" alt="${this.selectedFile.name}">`;
+                } else if (this.selectedFile.type === 'video') {
+                    content.innerHTML = `<video controls><source src="${this.selectedFile.url}"></video>`;
+                } else {
+                    content.innerHTML = `<div class="file-preview-icon">${this.getThumb(this.selectedFile)}</div>`;
+                }
+
+                document.getElementById('fileDetails').innerHTML = `
+                    <div class="detail-row"><span>Type:</span><span>${this.selectedFile.type}</span></div>
+                    <div class="detail-row"><span>Size:</span><span>${this.formatSize(this.selectedFile.size)}</span></div>
+                    <div class="detail-row"><span>Uploaded:</span><span>${this.selectedFile.uploadedAt || 'Unknown'}</span></div>
+                    <div class="detail-row"><span>URL:</span><code class="file-url">${this.selectedFile.url}</code></div>
+                `;
+
+                document.getElementById('previewModal').classList.add('active');
+            },
+
+            closePreviewModal() {
+                document.getElementById('previewModal').classList.remove('active');
+                this.selectedFile = null;
+            },
+
+            copyUrl() {
+                if (!this.selectedFile) return;
+                navigator.clipboard.writeText(this.selectedFile.url);
+                Admin.showToast('success', 'Copied', 'URL copied to clipboard');
+            },
+
+            async deleteFile() {
+                if (!this.selectedFile) return;
+                if (!confirm(`Delete "${this.selectedFile.name}"?`)) return;
+
+                this.files = this.files.filter(f => f.id !== this.selectedFile.id);
+                const success = await Admin.saveData('media.json', { files: this.files });
+                if (success) {
+                    this.closePreviewModal();
+                    this.render();
+                    Admin.logActivity('delete', 'media', `Deleted file: ${this.selectedFile.name}`);
+                }
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => MediaManager.init());
+    </script>
+    <style>
+        .stats-row { display: flex; gap: 1.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+        .stat-mini { color: var(--admin-text-muted); font-size: 0.875rem; }
+        .stat-mini span { color: var(--admin-text); font-weight: 600; }
+
+        .media-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; gap: 1rem; flex-wrap: wrap; }
+        .toolbar-left { display: flex; gap: 0.75rem; flex: 1; }
+        .toolbar-left .form-input { max-width: 300px; }
+        .toolbar-left .form-select { width: 150px; }
+        .view-toggle { display: flex; background: var(--admin-card); border: 1px solid var(--admin-border); border-radius: 8px; overflow: hidden; }
+        .view-btn { padding: 0.5rem 0.75rem; background: none; border: none; color: var(--admin-text-muted); cursor: pointer; }
+        .view-btn:hover { color: var(--admin-text); }
+        .view-btn.active { background: var(--admin-primary); color: white; }
+        .view-btn svg { width: 18px; height: 18px; }
+
+        .media-container { min-height: 300px; }
+        .media-container.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
+        .media-container.list { display: flex; flex-direction: column; gap: 0.5rem; }
+
+        .media-item { background: var(--admin-card); border: 1px solid var(--admin-border); border-radius: var(--card-radius); overflow: hidden; cursor: pointer; transition: all 0.2s; }
+        .media-item:hover { border-color: var(--admin-primary); transform: translateY(-2px); }
+        .grid .media-thumb { height: 140px; display: flex; align-items: center; justify-content: center; background: var(--admin-bg); }
+        .grid .media-thumb img { width: 100%; height: 100%; object-fit: cover; }
+        .grid .media-info { padding: 0.75rem; }
+        .grid .media-name { display: block; font-size: 0.813rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .grid .media-meta { font-size: 0.75rem; color: var(--admin-text-muted); }
+
+        .list .media-item { display: flex; align-items: center; padding: 0.75rem; }
+        .list .media-thumb { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; background: var(--admin-bg); border-radius: 8px; margin-right: 1rem; }
+        .list .media-thumb img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
+        .list .media-info { flex: 1; }
+        .list .media-name { font-size: 0.875rem; }
+        .list .media-meta { font-size: 0.75rem; color: var(--admin-text-muted); }
+
+        .file-icon { font-size: 2rem; }
+
+        .upload-zone { border: 2px dashed var(--admin-border); border-radius: var(--card-radius); padding: 3rem; text-align: center; transition: all 0.2s; }
+        .upload-zone.dragover { border-color: var(--admin-primary); background: rgba(249, 115, 22, 0.05); }
+        .upload-zone svg { width: 48px; height: 48px; margin-bottom: 1rem; color: var(--admin-text-muted); }
+        .upload-zone p { margin-bottom: 0.5rem; color: var(--admin-text); }
+        .upload-zone span { color: var(--admin-text-muted); font-size: 0.875rem; display: block; margin-bottom: 1rem; }
+        .upload-zone input { display: none; }
+
+        .upload-list { margin-top: 1.5rem; max-height: 200px; overflow-y: auto; }
+        .pending-file { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem; background: var(--admin-bg); border-radius: 8px; margin-bottom: 0.5rem; }
+        .pending-name { flex: 1; font-size: 0.875rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .pending-size { color: var(--admin-text-muted); font-size: 0.813rem; margin: 0 1rem; }
+
+        .preview-content { display: flex; justify-content: center; align-items: center; min-height: 200px; margin-bottom: 1.5rem; }
+        .preview-content img { max-width: 100%; max-height: 400px; border-radius: 8px; }
+        .preview-content video { max-width: 100%; max-height: 400px; }
+        .file-preview-icon { font-size: 5rem; }
+
+        .file-details { background: var(--admin-bg); border-radius: 8px; padding: 1rem; }
+        .detail-row { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--admin-border); }
+        .detail-row:last-child { border-bottom: none; }
+        .detail-row span:first-child { color: var(--admin-text-muted); }
+        .file-url { font-size: 0.75rem; word-break: break-all; background: var(--admin-card); padding: 0.25rem 0.5rem; border-radius: 4px; }
+
+        .empty-state { text-align: center; padding: 4rem 2rem; }
+        .empty-state svg { margin-bottom: 1rem; color: var(--admin-text-muted); }
+        .empty-state h3 { margin-bottom: 0.5rem; }
+        .empty-state p { color: var(--admin-text-muted); }
+    </style>
+    <script type="module" src="../js/supabase-config.js"></script>
+    <script type="module" src="../js/auth.js"></script>
+    <script type="module" src="../js/admin.js"></script>
+</body>
+</html>

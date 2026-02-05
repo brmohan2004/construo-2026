@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | CONSTRUO Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="dashboard.html" class="sidebar-logo">
+                    <div class="sidebar-logo-icon">🏗️</div>
+                    <div class="sidebar-logo-text">
+                        <span>CONSTRUO</span>
+                        <span>Admin Panel</span>
+                    </div>
+                </a>
+                <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="12" x2="21" y2="12"/>
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <line x1="3" y1="18" x2="21" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Overview</div>
+                    <ul class="nav-menu">
+                        <li class="nav-item">
+                            <a href="dashboard.html" class="nav-link active">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="7" height="9"/>
+                                    <rect x="14" y="3" width="7" height="5"/>
+                                    <rect x="14" y="12" width="7" height="9"/>
+                                    <rect x="3" y="16" width="7" height="5"/>
+                                </svg>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Website Sections</div>
+                    <ul class="nav-menu">
+                        <li class="nav-item">
+                            <a href="pages/hero.html" class="nav-link">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+                                    <polyline points="2 17 12 22 22 17"/>
+                                    <polyline points="2 12 12 17 22 12"/>
+                                </svg>
+                                <span>Hero Section</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="pages/about.html" class="nav-link">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <line x1="12" y1="16" x2="12" y2="12"/>
+                                    <line x1="12" y1="8" x2="12.01" y2="8"/>
+                                </svg>
+                                <span>About</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="pages/events.html" class="nav-link">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                    <line x1="16" y1="2" x2="16" y2="6"/>
+                                    <line x1="8" y1="2" x2="8" y2="6"/>
+                                    <line x1="3" y1="10" x2="21" y2="10"/>
+                                </svg>
+                                <span>Events</span>
+                                <span class="nav-badge">6</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="pages/timeline.html" class="nav-link">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <polyline points="12 6 12 12 16 14"/>
+                                </svg>
+                                <span>Timeline</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="pages/speakers.html" class="nav-link">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="9" cy="7" r="4"/>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                </svg>
+                                <span>Speakers</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="pages/sponsors.html" class="nav-link">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                                </svg>
+                                <span>Sponsors</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="pages/organizers.html" class="nav-link">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="9" cy="7" r="4"/>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                </svg>
+                                <span>Organizers</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="pages/venue.html" class="nav-link">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                    <circle cx="12" cy="10" r="3"/>
+                                </svg>
+                                <span>Venue</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="pages/footer.html" class="nav-link">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                    <line x1="3" y1="15" x2="21" y2="15"/>
+                                </svg>
+                                <span>Footer</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Management</div>
+                    <ul class="nav-menu">
+                        <li class="nav-item">
+                            <a href="pages/registrations.html" class="nav-link">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    <polyline points="14 2 14 8 20 8"/>
+                                    <line x1="16" y1="13" x2="8" y2="13"/>
+                                    <line x1="16" y1="17" x2="8" y2="17"/>
+                                    <polyline points="10 9 9 9 8 9"/>
+                                </svg>
+                                <span>Registrations</span>
+                                <span class="nav-badge">5</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="pages/users.html" class="nav-link">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="12" cy="7" r="4"/>
+                                </svg>
+                                <span>Users</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="pages/media.html" class="nav-link">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                                    <polyline points="21 15 16 10 5 21"/>
+                                </svg>
+                                <span>Media</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="pages/settings.html" class="nav-link">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="3"/>
+                                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                                </svg>
+                                <span>Settings</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="sidebar-user" id="sidebarUser">
+                    <div class="user-avatar" id="userAvatar">SA</div>
+                    <div class="user-info">
+                        <div class="user-name" id="userName">Super Admin</div>
+                        <div class="user-role" id="userRole">Super Admin</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <!-- Header -->
+            <header class="admin-header">
+                <div class="header-left">
+                    <button class="sidebar-toggle mobile-toggle" id="mobileSidebarToggle">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <line x1="3" y1="18" x2="21" y2="18"/>
+                        </svg>
+                    </button>
+                    <div>
+                        <h1 class="header-title">Dashboard</h1>
+                        <div class="header-breadcrumb">
+                            <a href="dashboard.html">Home</a>
+                            <span>/</span>
+                            <span>Dashboard</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="header-search">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                        <input type="text" placeholder="Search...">
+                    </div>
+                    <button class="header-btn" id="themeToggle" title="Toggle theme">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"/>
+                            <line x1="12" y1="1" x2="12" y2="3"/>
+                            <line x1="12" y1="21" x2="12" y2="23"/>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                            <line x1="1" y1="12" x2="3" y2="12"/>
+                            <line x1="21" y1="12" x2="23" y2="12"/>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                        </svg>
+                    </button>
+                    <button class="header-btn" title="Notifications">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                        </svg>
+                        <span class="notification-dot"></span>
+                    </button>
+                    <button class="header-btn" id="logoutBtn" title="Logout">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                            <polyline points="16 17 21 12 16 7"/>
+                            <line x1="21" y1="12" x2="9" y2="12"/>
+                        </svg>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="admin-content">
+                <!-- Welcome Message -->
+                <div class="welcome-card card mb-4">
+                    <div class="card-body d-flex align-center justify-between">
+                        <div>
+                            <h2 class="welcome-title">Welcome back, <span id="welcomeName">Admin</span>! 👋</h2>
+                            <p class="text-muted">Here's what's happening with CONSTRUO 2026 today.</p>
+                        </div>
+                        <a href="../index.html" target="_blank" class="btn btn-secondary">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                                <polyline points="15 3 21 3 21 9"/>
+                                <line x1="10" y1="14" x2="21" y2="3"/>
+                            </svg>
+                            View Website
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon primary">📝</div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="totalRegistrations">5</div>
+                            <div class="stat-label">Total Registrations</div>
+                            <div class="stat-change positive">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                                </svg>
+                                +12% from yesterday
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon success">📅</div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="totalEvents">6</div>
+                            <div class="stat-label">Total Events</div>
+                            <div class="stat-change positive">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                                </svg>
+                                2 new this week
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon warning">⏳</div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="pendingPayments">1</div>
+                            <div class="stat-label">Pending Payments</div>
+                            <div class="stat-change negative">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                                    <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/>
+                                </svg>
+                                Needs attention
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon info">💰</div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="totalRevenue">₹1,400</div>
+                            <div class="stat-label">Total Revenue</div>
+                            <div class="stat-change positive">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                                </svg>
+                                +₹500 today
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Grid -->
+                <div class="dashboard-grid">
+                    <!-- Recent Registrations -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Recent Registrations</h3>
+                            <a href="pages/registrations.html" class="btn btn-ghost btn-sm">View All</a>
+                        </div>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Events</th>
+                                        <th>Status</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recentRegistrations">
+                                    <tr>
+                                        <td><code>CONS2026004</code></td>
+                                        <td>Mohammed Faisal</td>
+                                        <td>2 events</td>
+                                        <td><span class="badge badge-success">Confirmed</span></td>
+                                        <td>₹500</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>CONS2026003</code></td>
+                                        <td>Karthik Nair</td>
+                                        <td>2 events</td>
+                                        <td><span class="badge badge-warning">Pending</span></td>
+                                        <td>₹150</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>CONS2026002</code></td>
+                                        <td>Sneha Reddy</td>
+                                        <td>2 events</td>
+                                        <td><span class="badge badge-success">Confirmed</span></td>
+                                        <td>₹450</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>CONS2026001</code></td>
+                                        <td>Amit Patel</td>
+                                        <td>2 events</td>
+                                        <td><span class="badge badge-success">Confirmed</span></td>
+                                        <td>₹450</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Quick Actions</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="quick-actions">
+                                <a href="pages/events.html" class="quick-action-btn">
+                                    <div class="quick-action-icon">➕</div>
+                                    <span>Add Event</span>
+                                </a>
+                                <a href="pages/speakers.html" class="quick-action-btn">
+                                    <div class="quick-action-icon">👤</div>
+                                    <span>Add Speaker</span>
+                                </a>
+                                <a href="pages/registrations.html" class="quick-action-btn">
+                                    <div class="quick-action-icon">📋</div>
+                                    <span>Export Data</span>
+                                </a>
+                                <a href="pages/hero.html" class="quick-action-btn">
+                                    <div class="quick-action-icon">✏️</div>
+                                    <span>Edit Hero</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Recent Activity</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="activity-feed" id="activityFeed">
+                                <div class="activity-item">
+                                    <div class="activity-icon success">✓</div>
+                                    <div class="activity-content">
+                                        <p><strong>Registration confirmed</strong> - Mohammed Faisal</p>
+                                        <span class="activity-time">2 hours ago</span>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon warning">⏳</div>
+                                    <div class="activity-content">
+                                        <p><strong>Payment pending</strong> - Karthik Nair</p>
+                                        <span class="activity-time">4 hours ago</span>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon info">✏️</div>
+                                    <div class="activity-content">
+                                        <p><strong>Hero section updated</strong> - Fee changed to ₹500</p>
+                                        <span class="activity-time">Yesterday</span>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon primary">➕</div>
+                                    <div class="activity-content">
+                                        <p><strong>New event created</strong> - Photography Contest</p>
+                                        <span class="activity-time">2 days ago</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Event Statistics -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Events by Category</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="category-stats">
+                                <div class="category-item">
+                                    <div class="category-info">
+                                        <span class="category-name">Technical Events</span>
+                                        <span class="category-count">3 events</span>
+                                    </div>
+                                    <div class="category-bar">
+                                        <div class="category-progress" style="width: 50%; background: var(--admin-primary);"></div>
+                                    </div>
+                                </div>
+                                <div class="category-item">
+                                    <div class="category-info">
+                                        <span class="category-name">Non-Technical Events</span>
+                                        <span class="category-count">2 events</span>
+                                    </div>
+                                    <div class="category-bar">
+                                        <div class="category-progress" style="width: 33%; background: var(--admin-info);"></div>
+                                    </div>
+                                </div>
+                                <div class="category-item">
+                                    <div class="category-info">
+                                        <span class="category-name">Workshops</span>
+                                        <span class="category-count">1 event</span>
+                                    </div>
+                                    <div class="category-bar">
+                                        <div class="category-progress" style="width: 17%; background: var(--admin-success);"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <style>
+        /* Dashboard specific styles */
+        .welcome-card {
+            background: linear-gradient(135deg, var(--admin-primary) 0%, #ea580c 100%);
+            border: none;
+        }
+        
+        .welcome-card .card-body {
+            padding: 2rem;
+        }
+        
+        .welcome-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .welcome-card .text-muted {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .welcome-card .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
+            color: white;
+        }
+        
+        .welcome-card .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+        
+        @media (max-width: 1200px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        
+        .quick-action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1.5rem;
+            background: var(--admin-bg);
+            border-radius: var(--card-radius);
+            transition: all var(--transition-fast);
+        }
+        
+        .quick-action-btn:hover {
+            background: var(--admin-card-hover);
+            transform: translateY(-2px);
+        }
+        
+        .quick-action-icon {
+            font-size: 1.5rem;
+        }
+        
+        .quick-action-btn span {
+            font-size: 0.875rem;
+            color: var(--admin-text-muted);
+        }
+        
+        .activity-feed {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .activity-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+        
+        .activity-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            flex-shrink: 0;
+        }
+        
+        .activity-icon.success { background: var(--admin-success-light); color: var(--admin-success); }
+        .activity-icon.warning { background: var(--admin-warning-light); color: var(--admin-warning); }
+        .activity-icon.info { background: var(--admin-info-light); color: var(--admin-info); }
+        .activity-icon.primary { background: var(--admin-primary-light); color: var(--admin-primary); }
+        
+        .activity-content p {
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .activity-time {
+            font-size: 0.75rem;
+            color: var(--admin-text-dark);
+        }
+        
+        .category-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+        
+        .category-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .category-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.875rem;
+        }
+        
+        .category-count {
+            color: var(--admin-text-muted);
+        }
+        
+        .category-bar {
+            height: 8px;
+            background: var(--admin-bg);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .category-progress {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        
+        .mb-4 {
+            margin-bottom: 1.5rem;
+        }
+        
+        code {
+            background: var(--admin-bg);
+            padding: 0.125rem 0.375rem;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 0.8125rem;
+        }
+    </style>
+    
+    <script type="module" src="js/supabase-config.js"></script>
+    <script type="module" src="js/auth.js"></script>
+    <script type="module" src="js/admin.js"></script>
+</body>
+</html>
