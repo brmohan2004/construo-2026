@@ -103,6 +103,17 @@ class ConstruoAnimations {
             }, '-=0.2');
     }
 
+    playHeroCtaEntrance() {
+        gsap.from('.hero-cta .btn', {
+            y: 20,
+            opacity: 0,
+            duration: 0.6,
+            stagger: 0.15,
+            ease: 'power3.out',
+            clearProps: 'all' // Ensure visibility persists after animation
+        });
+    }
+
     initHeroAnimations() {
         // Parallax title on scroll
         gsap.to('.hero-content', {
@@ -414,10 +425,10 @@ class ConstruoAnimations {
                 start: 'top 80%',
                 onEnter: () => {
                     gsap.from('.prize-amount', {
-                        innerText: 0,
-                        duration: 2,
-                        snap: { innerText: 1000 },
-                        ease: 'power2.out'
+                        scale: 0.5,
+                        opacity: 0,
+                        duration: 0.8,
+                        ease: 'back.out(1.7)'
                     });
                 },
                 once: true

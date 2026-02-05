@@ -67,8 +67,8 @@
                                     fill="none" stroke="currentColor" stroke-width="2">
                                     <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
                                 </svg><span>Sponsors</span></a></li>
-                        <li class="nav-item"><a href="organizers.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none"
-                                    stroke="currentColor" stroke-width="2">
+                        <li class="nav-item"><a href="organizers.html" class="nav-link"><svg viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                                     <circle cx="9" cy="7" r="4" />
                                     <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
@@ -270,14 +270,8 @@
 
             async loadData() {
                 try {
-                    if (Admin.config.useAPI) {
-                        // Load directly from about API endpoint
-                        this.data = await Admin.apiGet('about');
-                    } else {
-                        // Fallback to site-config.json for demo mode
-                        const config = await Admin.getData('site-config.json');
-                        this.data = config?.about || {};
-                    }
+                    const config = await Admin.getSiteConfig();
+                    this.data = config?.about || {};
                 } catch (error) {
                     console.error('Failed to load about data:', error);
                     // Initialize with empty data if API fails
@@ -299,13 +293,13 @@
                 const addStatBtn = document.getElementById('addStatBtn');
                 const uploadBtn = document.getElementById('uploadBtn');
                 const fileInput = document.getElementById('posterUpload');
-                
+
                 console.log('Binding events...');
                 console.log('Save button:', saveBtn);
                 console.log('Add stat button:', addStatBtn);
                 console.log('Upload button:', uploadBtn);
                 console.log('File input:', fileInput);
-                
+
                 if (saveBtn) {
                     saveBtn.addEventListener('click', (e) => {
                         e.preventDefault();
@@ -315,7 +309,7 @@
                 } else {
                     console.error('Save button not found!');
                 }
-                
+
                 if (addStatBtn) {
                     addStatBtn.addEventListener('click', (e) => {
                         e.preventDefault();
@@ -346,7 +340,7 @@
                         if (file) {
                             const btn = document.getElementById('uploadBtn');
                             if (!btn) return;
-                            
+
                             const originalText = btn.innerHTML;
                             try {
                                 btn.disabled = true;
@@ -355,10 +349,11 @@
                                     Uploading...
                                 `;
 
-                                const result = await Admin.apiUpload('media/upload?folder=general', file);
-                                if (result && result.data && result.data.url) {
-                                    document.getElementById('poster').value = result.data.url;
-                                    this.updatePosterPreview(result.data.url);
+                                // Use media bucket, 'about' folder
+                                const url = await Admin.uploadFile('media', file, 'about');
+                                if (url) {
+                                    document.getElementById('poster').value = url;
+                                    this.updatePosterPreview(url);
                                     Admin.showToast('success', 'Uploaded', 'Poster image uploaded successfully');
                                 }
                             } catch (error) {
@@ -451,29 +446,14 @@
                     poster: document.getElementById('poster').value,
                     brochure: document.getElementById('brochure').value
                 };
-                
+
                 console.log('About data to save:', aboutData);
                 console.log('Using API:', Admin.config.useAPI);
 
                 try {
-                    if (Admin.config.useAPI) {
-                        // Save via PUT /api/about
-                        console.log('Calling Admin.apiPut...');
-                        const response = await Admin.apiPut('about', aboutData);
-                        console.log('API response:', response);
-                        // Update local data with the response
-                        this.data = response.data || aboutData;
-                        Admin.showToast('success', 'Saved', 'About section updated');
-                    } else {
-                        // Fallback to local mode
-                        const config = await Admin.getData('site-config.json');
-                        config.about = aboutData;
-                        const success = await Admin.saveData('site-config.json', config);
-                        if (success) {
-                            this.data = aboutData;
-                            Admin.logActivity('update', 'about', 'Updated about section');
-                        }
-                    }
+                    const updatedConfig = await Admin.updateSiteConfig('about', aboutData);
+                    this.data = updatedConfig.about || aboutData;
+                    Admin.showToast('success', 'Saved', 'About section updated');
                 } catch (error) {
                     console.error('Save about error:', error);
                     Admin.showToast('error', 'Error', error.message || 'Failed to save about section');

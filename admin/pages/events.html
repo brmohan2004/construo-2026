@@ -468,14 +468,49 @@
                     this.render(e.target.value);
                 }, 250));
 
+                document.getElementById('addEventBtn').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.openModal();
+                });
+
                 document.getElementById('categoryFilter').addEventListener('change', (e) => this.render());
                 document.getElementById('statusFilter').addEventListener('change', (e) => this.render());
             },
 
             async load() {
-                this.data = await Admin.getData('events.json');
-                if (!this.data) this.data = { categories: [], events: [] };
-                this.populateFilters();
+                try {
+                    const rawEvents = await Admin.getEvents();
+                    // Map DB snake_case to frontend camelCase
+                    const events = (rawEvents || []).map(e => ({
+                        id: e.event_id,
+                        name: e.name,
+                        slug: e.slug,
+                        category: e.category,
+                        logo: e.logo,
+                        shortDescription: e.description,
+                        description: e.description,
+                        teamSize: e.team_size || { min: 1, max: 1 },
+                        entryFee: e.entry_fee,
+                        prizeMoney: e.prize_money,
+                        rules: e.rules,
+                        materials: e.materials,
+                        certificate: e.certificate,
+                        timeline: e.timeline,
+                        coordinator: e.coordinator,
+                        registrationLink: e.registration_link,
+                        status: e.status,
+                        featured: e.featured,
+                        venue: e.venue || 'TBD',
+                        time: (e.timeline && e.timeline.length) ? e.timeline[0].date : ''
+                    }));
+
+                    this.data = { events, categories: [] };
+                    this.populateFilters();
+                } catch (error) {
+                    console.error('Failed to load events:', error);
+                    this.data = { events: [], categories: [] };
+                    Admin.showToast('error', 'Load Error', 'Could not load events');
+                }
             },
 
             populateFilters() {
@@ -610,7 +645,6 @@
 
             // Handle action buttons via event delegation
             bindGridActions() {
-                // prevent multiple bindings
                 if (this._gridBound) return;
                 this._gridBound = true;
                 const grid = document.getElementById('eventGrid');
@@ -625,18 +659,15 @@
                         const ev = this.data.events.find(x => x.id === id);
                         if (ev) this.openModal(ev);
                     } else if (action === 'delete') {
-                        const ok = await Admin.confirm('Delete this event?', 'Confirm Delete');
+                        const ok = confirm('Delete this event?');
                         if (!ok) return;
                         try {
-                            if (Admin.config.useAPI) {
-                                await Admin.apiDelete(`events/${id}`);
+                            const success = await Admin.deleteEvent(id);
+                            if (success) {
                                 Admin.showToast('success', 'Deleted', 'Event deleted');
-                                await this.load();
-                            } else {
-                                this.data.events = this.data.events.filter(x => x.id !== id);
-                                await Admin.saveData('events.json', this.data);
+                                await this.load(); // Reload to refresh list
+                                this.render();
                             }
-                            this.render();
                         } catch (error) {
                             console.error('Delete event error:', error);
                             Admin.showToast('error', 'Error', error.message || 'Failed to delete event');
@@ -644,22 +675,19 @@
                     } else if (action === 'duplicate') {
                         const src = this.data.events.find(x => x.id === id);
                         if (src) {
-                            const copy = Object.assign({}, src);
-                            delete copy._id;
+                            const copy = JSON.parse(JSON.stringify(src));
+                            // Prepare for creation
                             delete copy.id;
-                            copy.slug = Admin.generateSlug(copy.name + ' copy');
+                            delete copy.event_id;
+                            delete copy.created_at;
+                            delete copy.updated_at;
                             copy.name = copy.name + ' (Copy)';
+                            copy.slug = Admin.slugify(copy.name);
+
                             try {
-                                if (Admin.config.useAPI) {
-                                    await Admin.apiPost('events', copy);
-                                    Admin.showToast('success', 'Duplicated', 'Event duplicated');
-                                    await this.load();
-                                } else {
-                                    copy.id = Admin.generateId('evt');
-                                    copy.createdAt = new Date().toISOString();
-                                    this.data.events.unshift(copy);
-                                    await Admin.saveData('events.json', this.data);
-                                }
+                                await Admin.createEvent(copy);
+                                Admin.showToast('success', 'Duplicated', 'Event duplicated');
+                                await this.load();
                                 this.render();
                             } catch (error) {
                                 console.error('Duplicate event error:', error);
@@ -669,15 +697,15 @@
                     } else if (action === 'toggle') {
                         const ev = this.data.events.find(x => x.id === id);
                         if (ev) {
-                            const newStatus = ev.status === 'active' ? 'hidden' : 'active';
+                            // Map 'hidden' to 'inactive' if DB constraint requires it, or check valid values.
+                            // The error 'events_status_check' suggests a CHECK constraint on the status column.
+                            // Common values are 'active', 'inactive', 'draft', 'archived'.
+                            // Let's assume 'inactive' is the valid opposite of 'active'.
+                            const newStatus = ev.status === 'active' ? 'inactive' : 'active';
                             try {
-                                if (Admin.config.useAPI) {
-                                    await Admin.apiPut(`events/${id}`, { status: newStatus });
-                                    await this.load();
-                                } else {
-                                    ev.status = newStatus;
-                                    await Admin.saveData('events.json', this.data);
-                                }
+                                await Admin.updateEvent(id, { status: newStatus });
+                                // Optimistic update
+                                ev.status = newStatus;
                                 this.render();
                             } catch (error) {
                                 console.error('Toggle event error:', error);
@@ -721,7 +749,9 @@
                     const pv = document.getElementById('previewVenue'); if (pv) pv.textContent = prefill.venue || 'TBD';
                     const pt = document.getElementById('previewTime'); if (pt) pt.textContent = (Array.isArray(prefill.timeline) && prefill.timeline.length) ? prefill.timeline[0].date : prefill.time || 'TBD';
                 }
-                Admin.openModal('addEventModal');
+
+                Admin.showModal('addEventModal');
+
                 // trigger preview update for logo input and show clear button if needed
                 const logoEl = document.getElementById('eventLogo');
                 if (logoEl) logoEl.dispatchEvent(new Event('input'));
@@ -741,7 +771,7 @@
 
                 const obj = {
                     name: name,
-                    slug: Admin.generateSlug(name),
+                    slug: Admin.slugify(name),
                     category: document.getElementById('eventTag').value || 'technical',
                     logo: document.getElementById('eventLogo').value || '',
                     shortDescription: document.getElementById('eventDescription').value || '',
@@ -770,39 +800,20 @@
                 }
 
                 try {
-                    if (Admin.config.useAPI) {
-                        if (id) {
-                            // Update existing event via PUT /api/events/:id
-                            await Admin.apiPut(`events/${id}`, obj);
-                            Admin.showToast('success', 'Updated', `Event "${name}" updated`);
-                        } else {
-                            // Create new event via POST /api/events
-                            await Admin.apiPost('events', obj);
-                            Admin.showToast('success', 'Created', `Event "${name}" created`);
-                        }
-                        await this.load();
-                    } else {
-                        // Fallback to local mode
-                        obj.id = id || Admin.generateId('evt');
-                        obj.createdAt = new Date().toISOString();
-                        obj.updatedAt = new Date().toISOString();
+                    // Normalize payload description to match DB expected fields if needed
+                    obj.description = obj.shortDescription;
 
-                        if (id) {
-                            const idx = this.data.events.findIndex(x => x.id === id);
-                            if (idx !== -1) {
-                                obj.createdAt = this.data.events[idx].createdAt || obj.createdAt;
-                                this.data.events[idx] = Object.assign({}, this.data.events[idx], obj);
-                            } else {
-                                this.data.events.unshift(obj);
-                            }
-                        } else {
-                            this.data.events.unshift(obj);
-                        }
-                        await Admin.saveData('events.json', this.data);
+                    if (id) {
+                        await Admin.updateEvent(id, obj);
+                        Admin.showToast('success', 'Updated', `Event "${name}" updated`);
+                    } else {
+                        await Admin.createEvent(obj);
+                        Admin.showToast('success', 'Created', `Event "${name}" created`);
                     }
-                    this.populateFilters();
-                    this.render();
+
                     Admin.closeModal('addEventModal');
+                    await this.load();
+                    this.render();
                 } catch (error) {
                     console.error('Save event error:', error);
                     Admin.showToast('error', 'Error', error.message || 'Failed to save event');
@@ -911,10 +922,12 @@
             // Load existing prize pool data
             async function loadPrizePool() {
                 try {
-                    const data = await Admin.getData('events.json');
-                    if (data && data.prizePool) {
-                        if (prizeAmountInput) prizeAmountInput.value = data.prizePool.amount || '';
-                        if (prizeSubtitleInput) prizeSubtitleInput.value = data.prizePool.subtitle || '';
+                    const config = await Admin.getSiteConfig();
+                    // Check for prizePool in events section first
+                    const pp = config?.events?.prizePool || config?.prizePool;
+                    if (pp) {
+                        if (prizeAmountInput) prizeAmountInput.value = pp.amount || '';
+                        if (prizeSubtitleInput) prizeSubtitleInput.value = pp.subtitle || '';
                     }
                 } catch (e) {
                     console.warn('Failed to load prize pool data', e);
@@ -927,15 +940,15 @@
                 const subtitle = prizeSubtitleInput?.value?.trim() || 'Certificates for all participants';
 
                 try {
-                    if (Admin.config.useAPI) {
-                        await Admin.apiPut('events/prize-pool', { amount, subtitle });
-                        Admin.showToast('success', 'Saved', 'Prize pool updated');
-                    } else {
-                        const data = await Admin.getData('events.json') || { events: [], categories: [] };
-                        data.prizePool = { amount, subtitle };
-                        await Admin.saveData('events.json', data);
-                        Admin.showToast('success', 'Saved', 'Prize pool updated');
-                    }
+                    // Fetch current config to merge
+                    const currentConfig = await Admin.getSiteConfig();
+                    const eventConfig = currentConfig.events || {};
+
+                    // update prize pool
+                    eventConfig.prizePool = { amount, subtitle };
+
+                    await Admin.updateSiteConfig('events', eventConfig);
+                    Admin.showToast('success', 'Saved', 'Prize pool updated');
                 } catch (e) {
                     console.error('Failed to save prize pool', e);
                     Admin.showToast('error', 'Error', 'Failed to save prize pool');

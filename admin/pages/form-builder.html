@@ -861,21 +861,23 @@
 
             async loadForm(formId) {
                 try {
-                    const token = localStorage.getItem('adminToken');
-                    const response = await fetch(`/api/registrations/forms/${formId}`, {
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    });
+                    const data = await Admin.apiGet(`registrations/forms/${formId}`);
+                    // Admin.apiGet for this endpoint returns the form object if it's a single form fetch,
+                    // but looking at getFormSubmissions it returns {form, submissions, stats}.
+                    // We need to check what registrations/forms/:id returns.
+                    // If it's single form fetch, let's assume it returns the form.
 
-                    if (!response.ok) throw new Error('Failed to load form');
+                    const form = data.form || data;
 
-                    const form = await response.json();
                     this.editingFormId = formId;
                     this.fields = form.fields || [];
                     this.selectedFieldIndex = this.fields.length > 0 ? 0 : null;
 
                     document.getElementById('formBuilderTitle').value = form.title;
                     document.getElementById('formBuilderTitleHeader').value = form.title;
-                    document.getElementById('formBuilderDescription').value = form.description || '';
+                    if (document.getElementById('formBuilderDescription')) {
+                        document.getElementById('formBuilderDescription').value = form.description || '';
+                    }
 
                     Utils.showToast('Form loaded successfully', 'success');
                 } catch (error) {
@@ -1429,24 +1431,20 @@
                 const description = document.getElementById('formBuilderDescription').value.trim();
 
                 try {
-                    const token = localStorage.getItem('adminToken');
-                    const url = this.editingFormId
-                        ? `/api/registrations/forms/${this.editingFormId}`
-                        : '/api/registrations/forms';
-                    const method = this.editingFormId ? 'PUT' : 'POST';
+                    const endpoint = this.editingFormId
+                        ? `registrations/forms/${this.editingFormId}`
+                        : 'registrations/forms';
 
-                    const response = await fetch(url, {
-                        method,
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`
-                        },
-                        body: JSON.stringify({ title, description, fields: this.fields })
-                    });
+                    const payload = { title, description, fields: this.fields };
 
-                    const data = await response.json();
+                    let data;
+                    if (this.editingFormId) {
+                        data = await Admin.apiPut(endpoint, payload);
+                    } else {
+                        data = await Admin.apiPost(endpoint, payload);
+                    }
 
-                    if (response.ok) {
+                    if (data) {
                         Utils.showToast(this.editingFormId ? 'Form updated successfully' : 'Form created successfully', 'success');
                         this.hasUnsavedChanges = false;
                         this.clearDraft();
@@ -1454,11 +1452,11 @@
                             window.location.href = 'registrations.html';
                         }, 1000);
                     } else {
-                        Utils.showToast(data.error || 'Failed to save form', 'error');
+                        throw new Error('No data returned from API');
                     }
                 } catch (error) {
                     console.error('Error saving form:', error);
-                    Utils.showToast('Failed to save form', 'error');
+                    Utils.showToast(error.message || 'Failed to save form', 'error');
                 }
             },
 

@@ -3,9 +3,9 @@ node_modules/
 package-lock.json
 
 # Environment files (not needed for Supabase, but keep for safety)
-#.env
-#.env.local
-#.env.production
+.env
+.env.local
+.env.production
 
 # IDE
 .vscode/

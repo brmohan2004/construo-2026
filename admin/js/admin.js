@@ -619,13 +619,20 @@ const Admin = {
                     order: dayData.order
                 })
                 .eq('day_id', id)
-                .select()
-                .single();
+                .select();
 
             if (error) throw error;
 
-            await this.logActivity('update', 'timeline', `Updated timeline day: ${dayData.title}`);
-            return data;
+            // If no data returned, it might mean the row wasn't found or just no return (though select() should return).
+            // PGRST116 "The result contains 0 rows" happens with .single() if no row matches.
+            // Without .single(), we get an empty array if no match.
+            const updated = (data && data.length > 0) ? data[0] : null;
+
+            if (updated) {
+                await this.logActivity('update', 'timeline', `Updated timeline day: ${dayData.title}`);
+                return updated;
+            }
+            return null;
         } catch (error) {
             console.error('Error updating timeline day:', error);
             throw error;
@@ -763,8 +770,25 @@ const Admin = {
                 .order('created_at', { ascending: false });
 
             if (error) throw error;
+
             this.cache.registrations = data;
-            return data;
+
+            const stats = {
+                total: data.length,
+                pending: data.filter(s => s.status === 'pending').length,
+                confirmed: data.filter(s => s.status === 'confirmed').length,
+                cancelled: data.filter(s => s.status === 'cancelled').length
+            };
+
+            return {
+                registrations: data.map(s => ({
+                    ...s,
+                    registrationId: s.registration_id,
+                    registrationNumber: s.registration_number,
+                    college: s.college || ''
+                })),
+                stats
+            };
         } catch (error) {
             console.error('Error fetching registrations:', error);
             throw error;
@@ -811,6 +835,223 @@ const Admin = {
             console.error('Error deleting registration:', error);
             throw error;
         }
+    },
+
+    // -------------------- REGISTRATION FORMS METHODS --------------------
+
+    async getRegistrationForms() {
+        try {
+            const { data, error } = await supabase
+                .from('registration_forms')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) throw error;
+
+            const formsWithCount = await Promise.all(data.map(async (form) => {
+                const { count, error: countError } = await supabase
+                    .from('registrations')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('form_id', form.id);
+                return {
+                    ...form,
+                    isActive: form.is_active,
+                    updatedAt: form.updated_at,
+                    submissionsCount: count || 0
+                };
+            }));
+
+            return { forms: formsWithCount };
+        } catch (error) {
+            console.error('Error fetching registration forms:', error);
+            throw error;
+        }
+    },
+
+    async getFormSubmissions(formId) {
+        try {
+            const { data: form, error: formError } = await supabase
+                .from('registration_forms')
+                .select('*')
+                .eq('id', formId)
+                .single();
+            if (formError) throw formError;
+
+            const { data: submissions, error: subError } = await supabase
+                .from('registrations')
+                .select('*')
+                .eq('form_id', formId)
+                .order('created_at', { ascending: false });
+            if (subError) throw subError;
+
+            return {
+                form: {
+                    ...form,
+                    isActive: form.is_active,
+                    updatedAt: form.updated_at
+                },
+                submissions: (submissions || []).map(s => ({
+                    ...s,
+                    registrationId: s.registration_id,
+                    registrationNumber: s.registration_number,
+                    college: s.college || '' // Ensure college exists
+                })),
+                stats: {
+                    total: submissions.length,
+                    pending: submissions.filter(s => s.status === 'pending').length,
+                    confirmed: submissions.filter(s => s.status === 'confirmed').length,
+                    cancelled: submissions.filter(s => s.status === 'cancelled').length
+                }
+            };
+        } catch (error) {
+            console.error('Error fetching form submissions:', error);
+            throw error;
+        }
+    },
+
+    async getRegistrationStats() {
+        try {
+            const { data: forms } = await supabase.from('registration_forms').select('id');
+            const { data: subs } = await supabase.from('registrations').select('status');
+
+            return {
+                totalForms: forms?.length || 0,
+                totalSubmissions: subs?.length || 0,
+                pendingSubmissions: subs?.filter(s => s.status === 'pending').length || 0,
+                confirmedSubmissions: subs?.filter(s => s.status === 'confirmed').length || 0,
+                cancelledSubmissions: subs?.filter(s => s.status === 'cancelled').length || 0
+            };
+        } catch (error) {
+            console.error('Error fetching registration stats:', error);
+            throw error;
+        }
+    },
+
+    // -------------------- GENERIC API HELPERS (BACKWARD COMPAT) --------------------
+
+    async apiGet(endpoint) {
+        if (endpoint === 'registrations/stats') return this.getRegistrationStats();
+        if (endpoint === 'registrations/forms') return this.getRegistrationForms();
+        if (endpoint === 'registrations') return this.getRegistrations();
+        if (endpoint.startsWith('registrations/forms/') && endpoint.split('/').length === 3) {
+            const formId = endpoint.split('/')[2];
+            const { data, error } = await supabase.from('registration_forms').select('*').eq('id', formId).single();
+            if (error) throw error;
+            return data;
+        }
+        if (endpoint.startsWith('registrations/forms/') && endpoint.endsWith('/submissions')) {
+            const formId = endpoint.split('/')[2];
+            return this.getFormSubmissions(formId);
+        }
+
+        // Fallback for other potential endpoints
+        console.warn(`Direct API call to ${endpoint} not fully mapped, trying fetch (likely to fail)`);
+        const { data: { session } } = await supabase.auth.getSession();
+        const response = await fetch(`/api/${endpoint}`, {
+            headers: { 'Authorization': `Bearer ${session?.access_token}` }
+        });
+        return response.json();
+    },
+
+    async apiPost(endpoint, body) {
+        if (endpoint === 'registrations/forms') {
+            const { data, error } = await supabase.from('registration_forms').insert({
+                ...body,
+                form_id: body.form_id || `form_${Date.now()}`,
+                created_at: new Date(),
+                updated_at: new Date()
+            }).select().single();
+            if (error) throw error;
+            return data;
+        }
+
+        if (endpoint.startsWith('registrations/forms/') && endpoint.endsWith('/duplicate')) {
+            const formId = endpoint.split('/')[2];
+            // Implement duplicate logic
+            const { data: original, error: fetchErr } = await supabase.from('registration_forms').select('*').eq('id', formId).single();
+            if (fetchErr) throw fetchErr;
+            const { data, error } = await supabase.from('registration_forms').insert({
+                ...original,
+                id: undefined,
+                form_id: `form_${Date.now()}`,
+                title: `${original.title} (Copy)`,
+                created_at: new Date(),
+                updated_at: new Date()
+            }).select().single();
+            if (error) throw error;
+            return data;
+        }
+
+        const { data: { session } } = await supabase.auth.getSession();
+        const response = await fetch(`/api/${endpoint}`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${session?.access_token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        });
+        return response.json();
+    },
+
+    async apiPut(endpoint, body) {
+        if (endpoint.startsWith('registrations/forms/')) {
+            const formId = endpoint.split('/')[2];
+            if (endpoint.endsWith('/toggle')) {
+                const { data: original } = await supabase.from('registration_forms').select('is_active').eq('id', formId).single();
+                const { error } = await supabase.from('registration_forms').update({ is_active: !original.is_active }).eq('id', formId);
+                if (error) throw error;
+                return { message: 'Status updated' };
+            }
+            // Update form
+            const { data, error } = await supabase.from('registration_forms').update({
+                ...body,
+                updated_at: new Date()
+            }).eq('id', formId).select().single();
+            if (error) throw error;
+            return data;
+        }
+
+        if (endpoint.startsWith('registrations/submissions/') && endpoint.endsWith('/status')) {
+            const subId = endpoint.split('/')[2];
+            const { error } = await supabase.from('registrations').update({ status: body.status }).eq('id', subId);
+            if (error) throw error;
+            return { message: 'Status updated' };
+        }
+
+        const { data: { session } } = await supabase.auth.getSession();
+        const response = await fetch(`/api/${endpoint}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${session?.access_token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        });
+        return response.json();
+    },
+
+    async apiDelete(endpoint) {
+        if (endpoint.startsWith('registrations/forms/')) {
+            const formId = endpoint.split('/')[2];
+            const { error } = await supabase.from('registration_forms').delete().eq('id', formId);
+            if (error) throw error;
+            return { message: 'Form deleted' };
+        }
+
+        if (endpoint.startsWith('registrations/submissions/')) {
+            const subId = endpoint.split('/')[2];
+            const { error } = await supabase.from('registrations').delete().eq('id', subId);
+            if (error) throw error;
+            return { message: 'Submission deleted' };
+        }
+
+        const { data: { session } } = await supabase.auth.getSession();
+        const response = await fetch(`/api/${endpoint}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${session?.access_token}` }
+        });
+        return response.json();
     },
 
     async getActivityLogs(limit = 100) {
@@ -868,6 +1109,10 @@ const Admin = {
             return publicUrl;
         } catch (error) {
             console.error('Error uploading file:', error);
+            if (error.message && error.message.includes('row-level security policy')) {
+                console.warn('💡 ACTION REQUIRED: Please run the "fix_sponsors_storage.sql" script in your Supabase SQL Editor to allow file uploads.');
+                this.showToast('error', 'Permission Error', 'Storage policies not configured. Check console.');
+            }
             throw error;
         }
     },

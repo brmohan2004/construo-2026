@@ -242,8 +242,12 @@
             speakers: [],
 
             async init() {
-                const data = await Admin.getData('speakers.json');
-                if (data && data.speakers) this.speakers = data.speakers;
+                try {
+                    this.speakers = await Admin.getSpeakers();
+                } catch (error) {
+                    console.error('Failed to load speakers:', error);
+                    this.speakers = [];
+                }
                 this.bindEvents();
                 this.render();
                 // Subscribe to live updates
@@ -341,8 +345,8 @@
                             <p class="speaker-role">${s.designation || ''} ${s.organization ? `at ${s.organization}` : ''}</p>
                             ${s.topic ? `<p class="speaker-topic">"${s.topic}"</p>` : ''}
                             <div class="speaker-actions">
-                                <button class="btn btn-icon btn-ghost speaker-edit-btn" data-speaker-id="${s.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
-                                <button class="btn btn-icon btn-ghost btn-danger speaker-delete-btn" data-speaker-id="${s.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+                                <button class="btn btn-icon btn-ghost speaker-edit-btn" data-speaker-id="${s.speaker_id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                                <button class="btn btn-icon btn-ghost btn-danger speaker-delete-btn" data-speaker-id="${s.speaker_id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
                             </div>
                         </div>
                     </div>
@@ -374,14 +378,13 @@
                 preview.innerHTML = '<span style="font-size: 2rem; opacity: 0.3;">👤</span>';
 
                 if (speaker) {
-                    document.getElementById('speakerId').value = speaker.id;
+                    document.getElementById('speakerId').value = speaker.speaker_id;
                     document.getElementById('speakerName').value = speaker.name || '';
                     document.getElementById('speakerTitle').value = speaker.title || '';
                     document.getElementById('speakerDesignation').value = speaker.designation || '';
                     document.getElementById('speakerOrganization').value = speaker.organization || '';
                     document.getElementById('speakerBio').value = speaker.bio || '';
-                    document.getElementById('speakerTopic').value = speaker.topic || '';
-                    // speakerImage input removed, using file upload now
+                    document.getElementById('speakerTopic').value = speaker.topic || ''; // Assuming 'topic' field exists or maps to 'details'
 
                     const existingImg = speaker.image || speaker.photo || '';
                     document.getElementById('speakerExistingImage').value = existingImg;
@@ -402,7 +405,7 @@
                 document.getElementById('speakerModal').classList.remove('active');
             },
 
-            async saveSpeaker() {
+            saveSpeaker() {
                 const name = document.getElementById('speakerName').value.trim();
                 if (!name) {
                     Admin.showToast('error', 'Error', 'Name is required');
@@ -410,7 +413,7 @@
                 }
 
                 const existingId = document.getElementById('speakerId').value;
-                const isEdit = existingId && this.speakers.find(s => s.id === existingId);
+                const isEdit = existingId && this.speakers.find(s => s.speaker_id === existingId);
 
                 const data = {
                     name,
@@ -418,6 +421,7 @@
                     designation: document.getElementById('speakerDesignation').value.trim(),
                     organization: document.getElementById('speakerOrganization').value.trim(),
                     bio: document.getElementById('speakerBio').value.trim(),
+                    // topic field might need to be adjusted based on schema match
                     topic: document.getElementById('speakerTopic').value.trim(),
                     image: document.getElementById('speakerExistingImage').value,
                     social: {
@@ -426,52 +430,49 @@
                     }
                 };
 
+                // Original save logic follows...
+                // Calling the actual save method from here
+                this.performSave(isEdit, existingId, data, name);
+            },
+
+            // Helper to keep logic clean and match previous replacement targeting
+            async performSave(isEdit, existingId, data, name) {
                 try {
-                    if (Admin.config.useAPI) {
-                        let savedSpeaker;
+                    let savedSpeaker;
 
-                        // Step 1: Save Speaker Data
-                        if (isEdit) {
-                            const res = await Admin.apiPut(`speakers/${existingId}`, data);
-                            savedSpeaker = res.data || res;
-                            Admin.showToast('success', 'Updated', `Speaker "${name}" updated`);
-                        } else {
-                            const res = await Admin.apiPost('speakers', data);
-                            savedSpeaker = res.data || res;
-                            Admin.showToast('success', 'Created', `Speaker "${name}" added`);
-                        }
-
-                        // Step 2: Upload Image if selected
-                        const fileInput = document.getElementById('speakerImageFile');
-                        if (fileInput && fileInput.files[0]) {
-                            try {
-                                const uploadRes = await Admin.apiUpload(`speakers/${savedSpeaker.id}/photo`, fileInput.files[0]);
-                                if (uploadRes.url) {
-                                    savedSpeaker.image = uploadRes.url;
-                                    savedSpeaker.photo = uploadRes.url; // Ensure consistency
-                                }
-                            } catch (uploadError) {
-                                console.error('Image upload failed:', uploadError);
-                                Admin.showToast('warning', 'Warning', 'Speaker saved but image upload failed');
-                            }
-                        }
-
-                        // Update local list
-                        if (isEdit) {
-                            const idx = this.speakers.findIndex(s => s.id === savedSpeaker.id);
-                            if (idx >= 0) this.speakers[idx] = savedSpeaker;
-                        } else {
-                            this.speakers.push(savedSpeaker);
-                        }
-
+                    // Step 1: Save Speaker Data
+                    if (isEdit) {
+                        savedSpeaker = await Admin.updateSpeaker(existingId, data);
+                        Admin.showToast('success', 'Updated', `Speaker "${name}" updated`);
                     } else {
-                        // Fallback to bulk save for demo mode
-                        data.id = existingId || Admin.generateId();
-                        // For demo mode, we can't really upload files easily, so we just keep the existing image or use placeholder
-                        const idx = this.speakers.findIndex(s => s.id === data.id);
-                        if (idx >= 0) this.speakers[idx] = data;
-                        else this.speakers.push(data);
-                        await Admin.saveData('speakers.json', { speakers: this.speakers });
+                        savedSpeaker = await Admin.createSpeaker(data);
+                        Admin.showToast('success', 'Created', `Speaker "${name}" added`);
+                    }
+
+                    // Step 2: Upload Image if selected
+                    const fileInput = document.getElementById('speakerImageFile');
+                    if (fileInput && fileInput.files[0]) {
+                        try {
+                            const uploadUrl = await Admin.uploadFile('media', fileInput.files[0], `speakers/${savedSpeaker.speaker_id}`);
+
+                            if (uploadUrl) {
+                                // Update speaker record with new image URL
+                                savedSpeaker.image = uploadUrl;
+                                savedSpeaker.photo = uploadUrl;
+                                await Admin.updateSpeaker(savedSpeaker.speaker_id, { image: uploadUrl, photo: uploadUrl });
+                            }
+                        } catch (uploadError) {
+                            console.error('Image upload failed:', uploadError);
+                            Admin.showToast('warning', 'Warning', 'Speaker saved but image upload failed');
+                        }
+                    }
+
+                    // Update local list
+                    if (isEdit) {
+                        const idx = this.speakers.findIndex(s => s.speaker_id === savedSpeaker.speaker_id);
+                        if (idx >= 0) this.speakers[idx] = savedSpeaker;
+                    } else {
+                        this.speakers.push(savedSpeaker);
                     }
                     this.closeModal();
                     this.render();
@@ -482,26 +483,19 @@
             },
 
             edit(id) {
-                const speaker = this.speakers.find(s => s.id === id);
+                const speaker = this.speakers.find(s => s.speaker_id === id);
                 if (speaker) this.openModal(speaker);
             },
 
             async delete(id) {
                 if (!confirm('Delete this speaker?')) return;
-                const speaker = this.speakers.find(s => s.id === id);
+                const speaker = this.speakers.find(s => s.speaker_id === id); // Use correct ID field
                 const name = speaker?.name;
 
                 try {
-                    if (Admin.config.useAPI) {
-                        // Delete via DELETE /api/speakers/:id
-                        await Admin.apiDelete(`speakers/${id}`);
-                        this.speakers = this.speakers.filter(s => s.id !== id);
-                        Admin.showToast('success', 'Deleted', `Speaker "${name}" removed`);
-                    } else {
-                        // Fallback to bulk save for demo mode
-                        this.speakers = this.speakers.filter(s => s.id !== id);
-                        await Admin.saveData('speakers.json', { speakers: this.speakers });
-                    }
+                    await Admin.deleteSpeaker(id);
+                    this.speakers = this.speakers.filter(s => s.speaker_id !== id);
+                    Admin.showToast('success', 'Deleted', `Speaker "${name}" removed`);
                     this.render();
                 } catch (error) {
                     console.error('Delete speaker error:', error);

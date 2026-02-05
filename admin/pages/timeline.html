@@ -60,8 +60,8 @@
                                     fill="none" stroke="currentColor" stroke-width="2">
                                     <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
                                 </svg><span>Sponsors</span></a></li>
-                        <li class="nav-item"><a href="organizers.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none"
-                                    stroke="currentColor" stroke-width="2">
+                        <li class="nav-item"><a href="organizers.html" class="nav-link"><svg viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                                     <circle cx="9" cy="7" r="4" />
                                     <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
@@ -198,8 +198,14 @@
             data: { days: [] },
 
             async init() {
-                await Admin.init?.();
-                this.data = await Admin.getData('timeline.json') || { days: [] };
+                try {
+                    const days = await Admin.getTimeline();
+                    this.data = { days: days || [] };
+                } catch (error) {
+                    console.error('Failed to load timeline:', error);
+                    this.data = { days: [] };
+                    Admin.showToast('error', 'Load Error', 'Could not load timeline');
+                }
                 this.bind();
                 this.render();
             },
@@ -224,7 +230,7 @@
                 } else {
                     console.error('Add Day button not found!');
                 }
-                
+
                 if (saveBtn) {
                     saveBtn.addEventListener('click', (e) => {
                         e.preventDefault();
@@ -234,7 +240,7 @@
                 } else {
                     console.error('Save button not found!');
                 }
-                
+
                 if (sessionModalClose) sessionModalClose.addEventListener('click', () => this.closeSessionModal());
                 if (sessionModalCancel) sessionModalCancel.addEventListener('click', () => this.closeSessionModal());
                 if (sessionModalSave) sessionModalSave.addEventListener('click', () => this.handleSaveSession());
@@ -340,10 +346,21 @@
 
             updateDayDate(index, value) {
                 this.data.days[index].date = value;
+                // Auto-save on blur? For now user must click save or it saves on session edit.
+                // If we want auto-save for day properties:
+                const day = this.data.days[index];
+                if (day.day_id || day.id) {
+                    Admin.updateTimelineDay(day.day_id || day.id, day).catch(console.error);
+                }
             },
 
             updateDayTitle(index, value) {
                 this.data.days[index].title = value;
+                const day = this.data.days[index];
+                if (day.day_id || day.id) {
+                    // Debounce could be good, but for now simple change
+                    // Admin.updateTimelineDay(day.day_id || day.id, day).catch(console.error);
+                }
             },
 
             async addDay() {
@@ -352,30 +369,18 @@
                 const payload = {
                     date: today,
                     title: `Day ${next}`,
+                    order: next,
                     sessions: []
                 };
 
-                // If API mode is enabled, create on server
-                if (Admin.config.useAPI) {
-                    try {
-                        const res = await Admin.apiPost('timeline', payload);
-                        const added = res.data || res;
-                        this.data.days = this.data.days || [];
-                        this.data.days.push(added);
-                        Admin.showToast('success', 'Added', 'Day added');
-                    } catch (e) {
-                        console.error('Add day API failed', e);
-                        // fallback to local
-                        const newDay = { id: `day_${Date.now()}`, ...payload };
-                        this.data.days = this.data.days || [];
-                        this.data.days.push(newDay);
-                        Admin.showToast('warning', 'Offline', 'Day added locally (server failed)');
-                        await Admin.saveData('timeline.json', this.data);
-                    }
-                } else {
-                    const newDay = { id: `day_${Date.now()}`, ...payload };
+                try {
+                    const newDay = await Admin.createTimelineDay(payload);
                     this.data.days = this.data.days || [];
                     this.data.days.push(newDay);
+                    Admin.showToast('success', 'Added', 'Day added');
+                } catch (e) {
+                    console.error('Add day failed', e);
+                    Admin.showToast('error', 'Error', 'Failed to add day');
                 }
 
                 this.render();
@@ -390,58 +395,40 @@
                 const day = this.data.days[index];
                 if (!day) return;
 
-                // If API mode, call delete endpoint
-                if (Admin.config.useAPI && day.id) {
+                const id = day.day_id || day.id;
+                if (id) {
                     try {
-                        await Admin.apiDelete(`timeline/${day.id}`);
+                        await Admin.deleteTimelineDay(id);
                         this.data.days.splice(index, 1);
                         this.render();
                         Admin.showToast('success', 'Deleted', 'Day deleted');
-                        return;
                     } catch (e) {
-                        console.error('Delete day API failed', e);
-                        Admin.showToast('error', 'Error', 'Failed to delete day on server');
-                        // fallthrough to local removal if user confirms
-                        if (!confirm('Server delete failed. Remove locally?')) return;
+                        console.error('Delete day failed', e);
+                        Admin.showToast('error', 'Error', 'Failed to delete day');
                     }
                 }
-
-                // Local removal
-                this.data.days.splice(index, 1);
-                await Admin.saveData('timeline.json', this.data);
-                this.render();
             },
 
             async deleteSession(dayIndex, sessionIndex) {
                 const day = this.data.days[dayIndex];
                 if (!day || !day.sessions || !day.sessions[sessionIndex]) return;
 
-                // remove locally first (optimistic)
-                const removed = day.sessions.splice(sessionIndex, 1)[0];
+                // remove optimistically
+                day.sessions.splice(sessionIndex, 1);
 
-                if (Admin.config.useAPI && day.id) {
+                const id = day.day_id || day.id;
+                if (id) {
                     try {
-                        // update whole day on server
-                        const res = await Admin.apiPut(`timeline/${day.id}`, day);
-                        const updated = res.data || res;
-                        this.data.days[dayIndex] = updated || this.data.days[dayIndex];
+                        await Admin.updateTimelineDay(id, day); // Send full day object
                         Admin.showToast('success', 'Deleted', 'Session deleted');
                         this.render();
-                        return;
                     } catch (e) {
-                        console.error('Delete session API failed', e);
-                        Admin.showToast('error', 'Error', 'Failed to delete session on server');
-                        if (!confirm('Server delete failed. Keep session removed locally?')) {
-                            // revert
-                            day.sessions.splice(sessionIndex, 0, removed);
-                            return;
-                        }
+                        console.error('Delete session failed', e);
+                        Admin.showToast('error', 'Error', 'Failed to delete session');
+                        // revert
+                        this.init();
                     }
                 }
-
-                // fallback local save
-                await Admin.saveData('timeline.json', this.data);
-                this.render();
             },
 
             openSessionModal(dayIndex, sessionIndex = null) {
@@ -493,21 +480,14 @@
             },
 
             async saveSession() {
-                console.log('saveSession called!');
-
                 const form = document.getElementById('sessionForm');
                 if (!form.checkValidity()) {
-                    console.warn('Form validation failed');
                     form.reportValidity();
                     return;
                 }
 
                 const dayIndex = parseInt(document.getElementById('sessionDayIndex').value, 10);
-                console.log('Saving session for day index:', dayIndex);
-                console.log('Current data:', JSON.parse(JSON.stringify(this.data)));
-
                 if (isNaN(dayIndex) || !this.data.days[dayIndex]) {
-                    console.error('Invalid day index or day not found:', dayIndex);
                     Admin.showToast('error', 'Error', 'Invalid day');
                     return this.closeSessionModal();
                 }
@@ -522,81 +502,49 @@
                     type: document.getElementById('sessionType').value
                 };
 
-                console.log('Session data:', session);
-
-                // Ensure sessions array exists
-                if (!this.data.days[dayIndex].sessions) {
-                    console.log('Creating new sessions array');
-                    this.data.days[dayIndex].sessions = [];
-                }
-
-                // If editing existing sessionIndex -> update
-                const existingIndexValue = document.getElementById('sessionIndex').value;
-                const existingIndex = existingIndexValue ? parseInt(existingIndexValue, 10) : NaN;
                 const day = this.data.days[dayIndex];
+                if (!day.sessions) day.sessions = [];
+
+                const existingIndex = parseInt(document.getElementById('sessionIndex').value, 10);
 
                 if (!isNaN(existingIndex) && existingIndex >= 0) {
                     // update existing session
-                    console.log('Updating existing session at index:', existingIndex);
-                    this.data.days[dayIndex].sessions[existingIndex] = { ...(day.sessions?.[existingIndex] || {}), ...session };
-
-                    // If API mode, update entire day on server (PUT /timeline/days/:dayId)
-                    if (Admin.config?.useAPI && day.id) {
-                        try {
-                            const res = await Admin.apiPut(`timeline/${day.id}`, this.data.days[dayIndex]);
-                            const updated = res.data || res;
-                            this.data.days[dayIndex] = updated || this.data.days[dayIndex];
-                            Admin.showToast('success', 'Updated', 'Session updated');
-                        } catch (e) {
-                            console.error('Update session API failed', e);
-                            Admin.showToast('warning', 'Offline', 'Session updated locally (server failed)');
-                            await Admin.saveData('timeline.json', this.data);
-                        }
-                    } else {
-                        await Admin.saveData('timeline.json', this.data);
-                        Admin.showToast('success', 'Updated', 'Session updated');
-                    }
+                    day.sessions[existingIndex] = { ...day.sessions[existingIndex], ...session };
                 } else {
-                    // create new session
-                    console.log('Adding new session to day:', dayIndex);
-                    console.log('Sessions before push:', this.data.days[dayIndex].sessions);
-
-                    if (Admin.config?.useAPI && day.id) {
-                        try {
-                            const res = await Admin.apiPost(`timeline/${day.id}/sessions`, session);
-                            const added = res.data || res;
-                            this.data.days[dayIndex].sessions.push(added);
-                            Admin.showToast('success', 'Added', 'Session added');
-                        } catch (e) {
-                            console.error('Add session API failed', e);
-                            this.data.days[dayIndex].sessions.push(session);
-                            Admin.showToast('warning', 'Offline', 'Session added locally (server failed)');
-                            await Admin.saveData('timeline.json', this.data);
-                        }
-                    } else {
-                        // Local mode - just push and save
-                        this.data.days[dayIndex].sessions.push(session);
-                        console.log('Sessions after push:', this.data.days[dayIndex].sessions);
-                        console.log('Saving to localStorage...');
-                        const saved = await Admin.saveData('timeline.json', this.data);
-                        console.log('Save result:', saved);
-                        Admin.showToast('success', 'Added', 'Session added');
-                    }
+                    // new session
+                    day.sessions.push(session);
                 }
 
-                console.log('Final day data:', JSON.parse(JSON.stringify(this.data.days[dayIndex])));
-                console.log('Closing modal and rendering...');
-                this.closeSessionModal();
-                this.render();
+                // Save to DB
+                const id = day.day_id || day.id;
+                if (id) {
+                    try {
+                        // Pass the FULL day object, so date/title aren't undefined/lost if the method needs them
+                        // Although admin.js constructs the query, passing fully populated object is safer.
+                        await Admin.updateTimelineDay(id, day);
+                        Admin.showToast('success', 'Saved', 'Session saved');
+                        this.closeSessionModal();
+                        this.render();
+                    } catch (e) {
+                        console.error('Save session failed', e);
+                        Admin.showToast('error', 'Error', 'Failed to save session');
+                    }
+                }
             },
 
             async save() {
-                // update metadata
-                this.data.updatedAt = new Date().toISOString();
-                this.data.updatedBy = this.data.updatedBy || 'local_user';
-                const ok = await Admin.saveData('timeline.json', this.data);
-                if (ok) {
+                // Bulk save all days (optional, mostly individual updates are preferred)
+                try {
+                    for (const day of this.data.days) {
+                        const id = day.day_id || day.id;
+                        if (id) {
+                            await Admin.updateTimelineDay(id, day);
+                        }
+                    }
                     Admin.showToast('success', 'Saved', 'Timeline saved');
+                } catch (e) {
+                    console.error('Save all failed', e);
+                    Admin.showToast('error', 'Error', 'Failed to save entries');
                 }
             }
         };
@@ -611,6 +559,6 @@
             TimelineManager.init();
         });
     </script>
-    <script type="module" src="../js/admin.js"></script>
+    <script type="module" src="../js/admin.js?v=timeline_fix_3"></script>
     <script type="module" src="../js/supabase-config.js"></script>
     <script type="module" src="../js/auth.js"></script>

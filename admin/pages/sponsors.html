@@ -116,6 +116,14 @@
                     </div>
                 </div>
                 <div class="header-right">
+                    <button class="btn btn-secondary" id="configEmailBtn" style="margin-right: 0.5rem;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z">
+                            </path>
+                            <polyline points="22,6 12,13 2,6"></polyline>
+                        </svg>
+                        Config Email
+                    </button>
                     <button class="btn btn-primary" id="addSponsorBtn"><svg viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" stroke-width="2">
                             <line x1="12" y1="5" x2="12" y2="19" />
@@ -126,24 +134,7 @@
 
             <div class="admin-content">
                 <!-- Sponsor Email Configuration -->
-                <div class="card mb-4" id="sponsorEmailCard">
-                    <div class="card-header">
-                        <h3 class="card-title">📧 Become a Sponsor Email</h3>
-                        <span class="badge badge-info">Public Website</span>
-                    </div>
-                    <div class="card-body">
-                        <div class="form-row" style="display: flex; gap: 1rem; align-items: flex-end;">
-                            <div class="form-group" style="flex: 1;">
-                                <label class="form-label">Contact Email</label>
-                                <input type="email" class="form-input" id="sponsorContactEmail"
-                                    placeholder="sponsors@construo.org">
-                                <span class="form-hint">This email opens when users click "Become a Sponsor" on the
-                                    public website</span>
-                            </div>
-                            <button type="button" class="btn btn-primary" id="saveSponsorEmailBtn">Save</button>
-                        </div>
-                    </div>
-                </div>
+
 
                 <!-- Sponsor Tiers -->
                 <div id="sponsorTiers"></div>
@@ -179,8 +170,13 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Logo URL</label>
-                        <input type="url" class="form-input" id="sponsorLogo">
+                        <label class="form-label">Logo Image</label>
+                        <input type="file" class="form-input" id="sponsorLogoFile" accept="image/*">
+                        <input type="hidden" id="sponsorLogoUrl">
+                        <div id="sponsorLogoPreview" style="margin-top: 0.5rem; max-width: 200px; display: none;">
+                            <img src="" alt="Preview"
+                                style="width: 100%; border-radius: 4px; border: 1px solid var(--admin-border);">
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Website</label>
@@ -191,10 +187,47 @@
                         <textarea class="form-textarea" id="sponsorDescription" rows="3"></textarea>
                     </div>
                 </form>
+                </form>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" id="sponsorModalCancel">Cancel</button>
                 <button class="btn btn-primary" id="sponsorModalSave">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Email Configuration Modal -->
+    <div class="modal-backdrop" id="emailModal">
+        <div class="modal modal-md">
+            <div class="modal-header">
+                <h2 class="modal-title">Configure Sponsor Email</h2>
+                <button class="modal-close" id="emailModalClose"><svg viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Contact Email Address</label>
+                    <div style="position: relative;">
+                        <input type="email" class="form-input" id="configEmailInput" readonly>
+                        <button type="button" id="editEmailBtn"
+                            style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--admin-primary); cursor: pointer; padding: 4px;"
+                            title="Edit Email">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18"
+                                height="18">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <span class="form-hint">Inquiries from the "Become a Sponsor" button will be sent here.</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="emailModalCancel">Cancel</button>
+                <button class="btn btn-primary" id="emailModalSave" disabled>Save Changes</button>
             </div>
         </div>
     </div>
@@ -205,59 +238,117 @@
             sponsors: { platinum: [], gold: [], silver: [], bronze: [] },
             tierOrder: ['platinum', 'gold', 'silver', 'bronze'],
             tierColors: { platinum: '#e5e4e2', gold: '#ffd700', silver: '#c0c0c0', bronze: '#cd7f32' },
-            tiersData: [],
 
             async init() {
-                const data = await Admin.getData('sponsors.json');
-                if (data && data.tiers) {
-                    this.tiersData = data.tiers;
-                    // Convert tiers array to sponsors object for easier management
-                    this.sponsors = { platinum: [], gold: [], silver: [], bronze: [] };
-                    data.tiers.forEach(tier => {
-                        if (tier.sponsors && this.sponsors[tier.id] !== undefined) {
-                            this.sponsors[tier.id] = tier.sponsors;
-                        }
-                    });
-                }
                 this.bindEvents();
-                this.render();
-                // Subscribe to live updates
-                if (Admin.config.useAPI) this.subscribeUpdates();
-            },
-
-            subscribeUpdates() {
-                if (this._sse) return;
-                try {
-                    const url = `${Admin.config.apiPath}sponsors/stream`;
-                    const es = new EventSource(url);
-                    this._sse = es;
-                    es.onmessage = async (msg) => {
-                        try {
-                            const payload = JSON.parse(msg.data);
-                            if (payload.status === 'connected') return;
-                            // Reload data on any change
-                            await this.loadData();
-                            this.render();
-                        } catch (e) { console.error('SSE error', e); }
-                    };
-                    es.onerror = () => {
-                        es.close();
-                        this._sse = null;
-                        setTimeout(() => this.subscribeUpdates(), 3000);
-                    };
-                } catch (e) { console.warn('SSE failed', e); }
+                await this.loadData();
             },
 
             async loadData() {
-                const data = await Admin.getData('sponsors.json');
-                if (data && data.tiers) {
-                    this.tiersData = data.tiers;
+                try {
+                    const sponsorsList = await Admin.getSponsors();
                     this.sponsors = { platinum: [], gold: [], silver: [], bronze: [] };
-                    data.tiers.forEach(tier => {
-                        if (tier.sponsors && this.sponsors[tier.id] !== undefined) {
-                            this.sponsors[tier.id] = tier.sponsors;
-                        }
+
+                    if (sponsorsList) {
+                        sponsorsList.forEach(s => {
+                            const tierId = s.tier_id || 'bronze';
+                            const mapped = {
+                                id: s.sponsor_id,
+                                name: s.name,
+                                tierId: tierId,
+                                logo: s.logo,
+                                website: s.website,
+                                description: s.description,
+                                order: s.order
+                            };
+
+                            if (this.sponsors[tierId]) {
+                                this.sponsors[tierId].push(mapped);
+                            } else {
+                                if (this.sponsors['bronze']) this.sponsors['bronze'].push(mapped);
+                            }
+                        });
+                    }
+                    this.render();
+                } catch (e) {
+                    console.error('Load data error', e);
+                    Admin.showToast('error', 'Error', 'Failed to load sponsors');
+                }
+            },
+
+
+
+            async openEmailModal() {
+                const emailInput = document.getElementById('configEmailInput');
+                const saveBtn = document.getElementById('emailModalSave');
+                const editBtn = document.getElementById('editEmailBtn');
+
+                // Reset state
+                emailInput.value = 'Loading...';
+                emailInput.readOnly = true;
+                saveBtn.disabled = true;
+                editBtn.style.display = 'block';
+
+                document.getElementById('emailModal').classList.add('active');
+
+                try {
+                    const config = await Admin.getSiteConfig();
+                    const email = (config && config.sponsors && config.sponsors.email) ? config.sponsors.email : 'sponsors@construo.org';
+                    emailInput.value = email;
+                } catch (e) {
+                    console.error('Failed to load email', e);
+                    emailInput.value = 'sponsors@construo.org';
+                    Admin.showToast('error', 'Error', 'Failed to load configuration');
+                }
+            },
+
+            enableEmailEdit() {
+                const emailInput = document.getElementById('configEmailInput');
+                const saveBtn = document.getElementById('emailModalSave');
+                const editBtn = document.getElementById('editEmailBtn');
+
+                emailInput.readOnly = false;
+                emailInput.focus();
+                saveBtn.disabled = false;
+                editBtn.style.display = 'none';
+            },
+
+            closeEmailModal() {
+                document.getElementById('emailModal').classList.remove('active');
+            },
+
+            async saveSponsorEmail() {
+                const emailInput = document.getElementById('configEmailInput');
+                const email = emailInput?.value?.trim();
+                const saveBtn = document.getElementById('emailModalSave');
+
+                if (!email) {
+                    Admin.showToast('error', 'Error', 'Valid email is required');
+                    return;
+                }
+
+                try {
+                    saveBtn.textContent = 'Saving...';
+                    saveBtn.disabled = true;
+
+                    // Get current config to preserve other sponsor settings if any
+                    const currentConfig = await Admin.getSiteConfig() || {};
+                    const currentSponsorsConfig = currentConfig.sponsors || {};
+
+                    await Admin.updateSiteConfig('sponsors', {
+                        ...currentSponsorsConfig,
+                        email: email
                     });
+
+                    Admin.showToast('success', 'Saved', 'Sponsor email updated');
+                    this.closeEmailModal();
+
+                } catch (e) {
+                    console.error('Failed to save sponsor email', e);
+                    Admin.showToast('error', 'Error', 'Failed to save sponsor email');
+                } finally {
+                    saveBtn.textContent = 'Save Changes';
+                    saveBtn.disabled = false;
                 }
             },
 
@@ -271,6 +362,33 @@
                 document.getElementById('sponsorModal').addEventListener('click', (e) => {
                     if (e.target.id === 'sponsorModal') this.closeModal();
                 });
+
+                document.getElementById('configEmailBtn')?.addEventListener('click', () => this.openEmailModal());
+                document.getElementById('emailModalClose')?.addEventListener('click', () => this.closeEmailModal());
+                document.getElementById('emailModalCancel')?.addEventListener('click', () => this.closeEmailModal());
+                document.getElementById('emailModalSave')?.addEventListener('click', () => this.saveSponsorEmail());
+                document.getElementById('editEmailBtn')?.addEventListener('click', () => this.enableEmailEdit());
+                document.getElementById('emailModal')?.addEventListener('click', (e) => {
+                    if (e.target.id === 'emailModal') this.closeEmailModal();
+                });
+
+                // File input preview
+                const fileInput = document.getElementById('sponsorLogoFile');
+                if (fileInput) {
+                    fileInput.addEventListener('change', (e) => {
+                        const file = e.target.files[0];
+                        if (file) {
+                            const reader = new FileReader();
+                            reader.onload = (e) => {
+                                const preview = document.getElementById('sponsorLogoPreview');
+                                const img = preview.querySelector('img');
+                                img.src = e.target.result;
+                                preview.style.display = 'block';
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    });
+                }
             },
 
             render() {
@@ -306,7 +424,6 @@
                     `;
                 }).join('');
 
-                // Add event delegation for dynamic buttons
                 container.addEventListener('click', (e) => {
                     const btn = e.target.closest('[data-action]');
                     if (!btn) return;
@@ -328,9 +445,20 @@
                     document.getElementById('sponsorId').value = sponsor.id;
                     document.getElementById('sponsorName').value = sponsor.name || '';
                     document.getElementById('sponsorTier').value = tier || 'gold';
-                    document.getElementById('sponsorLogo').value = sponsor.logo || '';
+                    document.getElementById('sponsorLogoUrl').value = sponsor.logo || '';
                     document.getElementById('sponsorWebsite').value = sponsor.website || '';
                     document.getElementById('sponsorDescription').value = sponsor.description || '';
+
+                    if (sponsor.logo) {
+                        const preview = document.getElementById('sponsorLogoPreview');
+                        const img = preview.querySelector('img');
+                        img.src = sponsor.logo;
+                        preview.style.display = 'block';
+                    } else {
+                        document.getElementById('sponsorLogoPreview').style.display = 'none';
+                    }
+                } else {
+                    document.getElementById('sponsorLogoPreview').style.display = 'none';
                 }
 
                 document.getElementById('sponsorModal').classList.add('active');
@@ -349,72 +477,48 @@
                 }
 
                 const existingId = document.getElementById('sponsorId').value;
-                let existingSponsor = null;
-                let existingTier = null;
-
-                // Find existing sponsor if editing
-                if (existingId) {
-                    this.tierOrder.forEach(t => {
-                        const found = this.sponsors[t].find(s => s.id === existingId);
-                        if (found) {
-                            existingSponsor = found;
-                            existingTier = t;
-                        }
-                    });
-                }
-
-                const data = {
-                    name,
-                    tierId: tier,
-                    logo: document.getElementById('sponsorLogo').value.trim(),
-                    website: document.getElementById('sponsorWebsite').value.trim(),
-                    description: document.getElementById('sponsorDescription').value.trim(),
-                    order: existingSponsor ? existingSponsor.order : (this.sponsors[tier] || []).length + 1,
-                    status: 'active'
-                };
+                const modalSaveBtn = document.getElementById('sponsorModalSave');
+                const fileInput = document.getElementById('sponsorLogoFile');
 
                 try {
-                    if (Admin.config.useAPI) {
-                        if (existingSponsor) {
-                            // Update existing sponsor via PUT /api/sponsors/:id
-                            const res = await Admin.apiPut(`sponsors/${existingId}`, data);
-                            Admin.showToast('success', 'Updated', `Sponsor "${name}" updated`);
-                        } else {
-                            // Create new sponsor via POST /api/sponsors
-                            const res = await Admin.apiPost('sponsors', data);
-                            Admin.showToast('success', 'Created', `Sponsor "${name}" added`);
-                        }
-                        // Reload data from server
-                        await this.loadData();
-                    } else {
-                        // Fallback to local mode
-                        data.id = existingId || Admin.generateId();
-                        // Remove from old tier if editing
-                        if (existingId) {
-                            this.tierOrder.forEach(t => {
-                                this.sponsors[t] = this.sponsors[t].filter(s => s.id !== existingId);
-                            });
-                        }
-                        // Add to new tier
-                        if (!this.sponsors[tier]) this.sponsors[tier] = [];
-                        this.sponsors[tier].push(data);
-                        // Save
-                        const tiersData = this.tierOrder.map((tierKey) => {
-                            const tierInfo = {
-                                platinum: { id: 'platinum', name: 'Platinum Sponsors', description: 'Our premium partners', order: 1 },
-                                gold: { id: 'gold', name: 'Gold Sponsors', description: 'Our valued partners', order: 2 },
-                                silver: { id: 'silver', name: 'Silver Sponsors', description: 'Our supporting partners', order: 3 },
-                                bronze: { id: 'bronze', name: 'Bronze Sponsors', description: 'Our associate partners', order: 4 }
-                            };
-                            return { ...tierInfo[tierKey], sponsors: this.sponsors[tierKey] || [] };
-                        });
-                        await Admin.saveData('sponsors.json', { tiers: tiersData });
+                    modalSaveBtn.textContent = 'Saving...';
+                    modalSaveBtn.disabled = true;
+
+                    let logoUrl = document.getElementById('sponsorLogoUrl').value;
+
+                    // Upload image if selected
+                    if (fileInput.files.length > 0) {
+                        const file = fileInput.files[0];
+                        logoUrl = await Admin.uploadFile('sponsor-logos', file);
                     }
+
+                    const sponsorData = {
+                        name,
+                        tierId: tier,
+                        logo: logoUrl,
+                        website: document.getElementById('sponsorWebsite').value.trim(),
+                        description: document.getElementById('sponsorDescription').value.trim(),
+                        order: (this.sponsors[tier] || []).length + 1,
+                        status: 'active'
+                    };
+
+                    if (existingId) {
+                        await Admin.updateSponsor(existingId, sponsorData);
+                        Admin.showToast('success', 'Updated', `Sponsor "${name}" updated`);
+                    } else {
+                        await Admin.createSponsor(sponsorData);
+                        Admin.showToast('success', 'Created', `Sponsor "${name}" added`);
+                    }
+
+                    await this.loadData();
                     this.closeModal();
-                    this.render();
+
                 } catch (error) {
                     console.error('Save sponsor error:', error);
                     Admin.showToast('error', 'Error', error.message || 'Failed to save sponsor');
+                } finally {
+                    modalSaveBtn.textContent = 'Save';
+                    modalSaveBtn.disabled = false;
                 }
             },
 
@@ -425,31 +529,15 @@
 
             async delete(tier, id) {
                 if (!confirm('Delete this sponsor?')) return;
-                const name = this.sponsors[tier].find(s => s.id === id)?.name;
+
+                const sponsor = this.sponsors[tier].find(s => s.id === id);
 
                 try {
-                    if (Admin.config.useAPI) {
-                        // Delete via DELETE /api/sponsors/:id
-                        await Admin.apiDelete(`sponsors/${id}`);
-                        Admin.showToast('success', 'Deleted', `Sponsor "${name}" deleted`);
-                        // Reload data from server
-                        await this.loadData();
-                    } else {
-                        // Fallback to local mode
-                        this.sponsors[tier] = this.sponsors[tier].filter(s => s.id !== id);
-                        // Convert sponsors object back to tiers array structure
-                        const tiersData = this.tierOrder.map((tierKey) => {
-                            const tierInfo = {
-                                platinum: { id: 'platinum', name: 'Platinum Sponsors', description: 'Our premium partners', order: 1 },
-                                gold: { id: 'gold', name: 'Gold Sponsors', description: 'Our valued partners', order: 2 },
-                                silver: { id: 'silver', name: 'Silver Sponsors', description: 'Our supporting partners', order: 3 },
-                                bronze: { id: 'bronze', name: 'Bronze Sponsors', description: 'Our associate partners', order: 4 }
-                            };
-                            return { ...tierInfo[tierKey], sponsors: this.sponsors[tierKey] || [] };
-                        });
-                        await Admin.saveData('sponsors.json', { tiers: tiersData });
-                    }
-                    this.render();
+                    await Admin.deleteSponsor(id);
+                    if (sponsor) Admin.showToast('success', 'Deleted', `Sponsor "${sponsor.name}" deleted`);
+                    else Admin.showToast('success', 'Deleted', 'Sponsor deleted');
+
+                    await this.loadData();
                 } catch (error) {
                     console.error('Delete sponsor error:', error);
                     Admin.showToast('error', 'Error', error.message || 'Failed to delete sponsor');
@@ -564,49 +652,7 @@
             border-radius: var(--card-radius);
         }
     </style>
-    <script>
-        // Sponsor Email Configuration Handler
-        document.addEventListener('DOMContentLoaded', async () => {
-            const emailInput = document.getElementById('sponsorContactEmail');
-            const saveBtn = document.getElementById('saveSponsorEmailBtn');
-
-            // Load existing sponsor email
-            async function loadSponsorEmail() {
-                try {
-                    const data = await Admin.getData('sponsors.json');
-                    if (data && data.sponsorEmail) {
-                        if (emailInput) emailInput.value = data.sponsorEmail;
-                    }
-                } catch (e) {
-                    console.warn('Failed to load sponsor email', e);
-                }
-            }
-
-            // Save sponsor email
-            async function saveSponsorEmail() {
-                const email = emailInput?.value?.trim() || 'sponsors@construo.org';
-
-                try {
-                    if (Admin.config.useAPI) {
-                        await Admin.apiPut('sponsors/email', { email });
-                        Admin.showToast('success', 'Saved', 'Sponsor email updated');
-                    } else {
-                        const data = await Admin.getData('sponsors.json') || { tiers: [] };
-                        data.sponsorEmail = email;
-                        await Admin.saveData('sponsors.json', data);
-                        Admin.showToast('success', 'Saved', 'Sponsor email updated');
-                    }
-                } catch (e) {
-                    console.error('Failed to save sponsor email', e);
-                    Admin.showToast('error', 'Error', 'Failed to save sponsor email');
-                }
-            }
-
-            if (saveBtn) saveBtn.addEventListener('click', saveSponsorEmail);
-            // Wait a bit for Admin to initialize
-            setTimeout(loadSponsorEmail, 100);
-        });
-    </script>
+    <!-- Script merged with SponsorManager -->
     <script type="module" src="../js/supabase-config.js"></script>
     <script type="module" src="../js/auth.js"></script>
     <script type="module" src="../js/admin.js"></script>

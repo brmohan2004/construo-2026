@@ -264,11 +264,13 @@
 
         .modal {
             display: none;
-            position: absolute; /* make modal participate in page flow so page scroll handles overflow */
+            position: absolute;
+            /* make modal participate in page flow so page scroll handles overflow */
             top: 40px;
             left: 0;
             right: 0;
-            background: transparent; /* no dark overlay */
+            background: transparent;
+            /* no dark overlay */
             z-index: 1000;
             padding: 24px;
         }
@@ -283,8 +285,10 @@
             max-width: 900px;
             width: calc(100% - 48px);
             margin: 0 auto;
-            max-height: none; /* allow content to expand; page scroll will handle overflow */
-            overflow: visible; /* remove inner scrollbar */
+            max-height: none;
+            /* allow content to expand; page scroll will handle overflow */
+            overflow: visible;
+            /* remove inner scrollbar */
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
             padding: 0;
         }
@@ -296,7 +300,7 @@
             justify-content: space-between;
             align-items: center;
             gap: 1rem;
-            background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent);
         }
 
         .modal-title {
@@ -325,14 +329,17 @@
             align-items: start;
         }
 
-        .left-panel, .right-panel {
+        .left-panel,
+        .right-panel {
             display: block;
         }
 
         /* Section cards */
         .section-card {
-            background: transparent; /* remove block background */
-            border: none; /* remove border for flat look */
+            background: transparent;
+            /* remove block background */
+            border: none;
+            /* remove border for flat look */
             border-radius: 6px;
             padding: 0.75rem 0;
             margin-bottom: 1rem;
@@ -384,14 +391,29 @@
 
         /* Responsive adjustments */
         @media (max-width: 900px) {
-            .modal-grid { grid-template-columns: 1fr; }
-            .modal-content { max-width: 720px; }
+            .modal-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                max-width: 720px;
+            }
         }
 
         @media (max-width: 520px) {
-            .modal-content { max-width: 100%; height: 100vh; border-radius: 0; }
-            .modal-body { padding: 1rem; }
-            .modal-header { padding: 0.75rem 1rem; }
+            .modal-content {
+                max-width: 100%;
+                height: 100vh;
+                border-radius: 0;
+            }
+
+            .modal-body {
+                padding: 1rem;
+            }
+
+            .modal-header {
+                padding: 0.75rem 1rem;
+            }
         }
 
         .detail-section {
@@ -404,8 +426,8 @@
             color: var(--admin-text);
             margin-bottom: 0.75rem;
         }
-            border-bottom: 1px solid var(--border-color);
-        }
+
+
 
         .detail-grid {
             display: grid;
@@ -451,6 +473,7 @@
                 transform: translateX(100%);
                 opacity: 0;
             }
+
             to {
                 transform: translateX(0);
                 opacity: 1;
@@ -462,6 +485,7 @@
                 transform: translateX(0);
                 opacity: 1;
             }
+
             to {
                 transform: translateX(100%);
                 opacity: 0;
@@ -477,14 +501,16 @@
             <div class="admin-container">
                 <!-- Back Button -->
                 <div style="margin-bottom: 1.5rem;">
-                    <button class="btn btn-secondary" onclick="goBack()" style="display: inline-flex; align-items: center; gap: 0.5rem;">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px;">
+                    <button class="btn btn-secondary" onclick="goBack()"
+                        style="display: inline-flex; align-items: center; gap: 0.5rem;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            style="width: 20px; height: 20px;">
                             <polyline points="15 18 9 12 15 6" />
                         </svg>
                         <span>Back to Registrations</span>
                     </button>
                 </div>
-                
+
                 <!-- Page Header -->
                 <div class="page-header">
                     <div>
@@ -502,7 +528,8 @@
                                 <span>A+</span>
                             </button>
                             <button class="font-size-btn" onclick="resetFontSize()" title="Reset font size">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    style="width: 16px; height: 16px;">
                                     <polyline points="1 4 1 10 7 10" />
                                     <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
                                 </svg>
@@ -552,7 +579,7 @@
                     <div class="filters-row" style="grid-template-columns: 1fr 1fr auto;">
                         <div class="form-group">
                             <label class="form-label">Search</label>
-                            <input type="text" class="form-input" id="searchInput" 
+                            <input type="text" class="form-input" id="searchInput"
                                 placeholder="Search by name, email, reg number...">
                         </div>
                         <div class="form-group">
@@ -696,7 +723,7 @@
             table.style.fontSize = `${currentFontSize}%`;
             const displayText = isAutoFontSize ? `${currentFontSize}% (Auto)` : `${currentFontSize}%`;
             document.getElementById('fontSizeDisplay').textContent = displayText;
-            
+
             // Save to localStorage
             localStorage.setItem('tableFontSize', currentFontSize);
             localStorage.setItem('tableAutoFontSize', isAutoFontSize);
@@ -705,11 +732,11 @@
         function loadFontSize() {
             const savedSize = localStorage.getItem('tableFontSize');
             const savedAuto = localStorage.getItem('tableAutoFontSize');
-            
+
             if (savedAuto !== null) {
                 isAutoFontSize = savedAuto === 'true';
             }
-            
+
             if (savedSize && !isAutoFontSize) {
                 currentFontSize = parseInt(savedSize);
                 applyFontSize(false);
@@ -729,7 +756,7 @@
             // Get formId from URL if provided
             const urlParams = new URLSearchParams(window.location.search);
             currentFormId = urlParams.get('formId');
-            
+
             loadFontSize(); // Load saved font size
             loadRegistrations();
             setupEventListeners();
@@ -738,10 +765,10 @@
         function setupEventListeners() {
             document.getElementById('searchInput').addEventListener('input', applyFilters);
             document.getElementById('statusFilter').addEventListener('change', applyFilters);
-            
+
             // Event delegation for action buttons in table
             document.getElementById('submissionsTable').addEventListener('click', handleActionButtonClick);
-            
+
             // Global click handler for other data-action buttons (close, delete, print, export, confirm, cancel)
             document.addEventListener('click', (e) => {
                 const btn = e.target.closest('[data-action]');
@@ -792,7 +819,7 @@
                     URL.revokeObjectURL(url);
                 }
             });
-            
+
             // Close modal with Escape key
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
@@ -804,12 +831,12 @@
         function handleActionButtonClick(event) {
             const button = event.target.closest('.btn-icon');
             if (!button) return;
-            
+
             const action = button.getAttribute('data-action');
             if (!action) return;
-            
+
             event.preventDefault();
-            
+
             if (action === 'view') {
                 const regData = button.getAttribute('data-reg-data');
                 if (regData) {
@@ -831,88 +858,34 @@
 
         async function loadRegistrations() {
             try {
-                const token = localStorage.getItem('adminToken') || localStorage.getItem('token');
-                
-                if (!token) {
-                    console.error('No authentication token found');
-                    showNotification('Please login to view registrations', 'error');
-                    setTimeout(() => {
-                        window.location.href = '../index.html';
-                    }, 2000);
-                    return;
-                }
-                
                 // If formId is provided, fetch submissions for that specific form
-                const url = currentFormId 
-                    ? `/api/registrations/forms/${currentFormId}/submissions`
-                    : '/api/registrations';
-                
-                console.log('Fetching from:', url);
-                console.log('Using token:', token ? 'Token exists' : 'No token');
-                
-                const response = await fetch(url, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
-                }).catch(err => {
-                    console.error('Network error:', err);
-                    throw new Error(`Network error: Cannot connect to server. Please ensure the API server is running on port 3000.`);
-                });
+                const endpoint = currentFormId
+                    ? `registrations/forms/${currentFormId}/submissions`
+                    : 'registrations';
 
-                console.log('Response status:', response.status);
+                const data = await Admin.apiGet(endpoint);
 
-                if (!response.ok) {
-                    let errorText = '';
-                    try {
-                        errorText = await response.text();
-                    } catch (e) {
-                        errorText = 'Unable to read error response';
-                    }
-                    console.error('API Error:', response.status, errorText);
-                    
-                    if (response.status === 401) {
-                        showNotification('Session expired. Please login again.', 'error');
-                        setTimeout(() => {
-                            window.location.href = '../index.html';
-                        }, 2000);
-                        return;
-                    }
-                    
-                    throw new Error(`API returned ${response.status}: ${errorText || response.statusText}`);
-                }
-
-                const data = await response.json();
-                console.log('Received data:', data);
-                
-                // Handle response from both endpoints
                 if (currentFormId) {
-                    // Form-specific submissions endpoint
                     allRegistrations = data.submissions || [];
-                    currentFormFields = data.form?.fields || []; // Store form fields
+                    currentFormFields = data.form?.fields || [];
                     updateStats(data.stats || { total: 0, pending: 0, confirmed: 0, cancelled: 0 });
-                    // Update page title with form name
                     if (data.form) {
                         document.querySelector('.page-title').textContent = data.form.title || 'Registration Submissions';
                         document.querySelector('.page-description').textContent = data.form.description || 'View and manage all submitted registration details';
                     }
                 } else {
-                    // All registrations endpoint
                     allRegistrations = data.registrations || [];
-                    currentFormFields = []; // No specific form, use default columns
+                    currentFormFields = [];
                     updateStats(data.stats || { total: 0, pending: 0, confirmed: 0, cancelled: 0 });
                 }
-                
+
                 filteredRegistrations = [...allRegistrations];
-                renderTableHeaders(); // Render dynamic headers
+                renderTableHeaders();
                 renderTable();
+                if (typeof applyAutoFontSize === 'function') applyAutoFontSize();
             } catch (error) {
                 console.error('Error loading registrations:', error);
                 showNotification(`Failed to load registrations: ${error.message}`, 'error');
-                // Show empty state
-                document.getElementById('emptyState').style.display = 'block';
-                document.getElementById('tableBody').innerHTML = '';
             }
         }
 
@@ -928,7 +901,7 @@
             const statusFilter = document.getElementById('statusFilter').value;
 
             filteredRegistrations = allRegistrations.filter(reg => {
-                const matchesSearch = !searchTerm || 
+                const matchesSearch = !searchTerm ||
                     reg.registrationNumber.toLowerCase().includes(searchTerm) ||
                     reg.participant.name?.toLowerCase().includes(searchTerm) ||
                     reg.participant.email?.toLowerCase().includes(searchTerm) ||
@@ -951,19 +924,19 @@
 
         function renderTableHeaders() {
             const thead = document.querySelector('#submissionsTable thead tr');
-            
+
             if (currentFormFields.length > 0) {
                 // Dynamic headers based on form fields
                 let headers = '<th>Reg. Number</th>';
-                
+
                 // Add headers for each form field
                 currentFormFields.forEach(field => {
                     headers += `<th>${field.label}</th>`;
                 });
-                
+
                 headers += '<th>Status</th><th>Submitted</th><th>Actions</th>';
                 thead.innerHTML = headers;
-                
+
                 // Apply automatic font sizing based on column count
                 applyAutoFontSize();
             } else {
@@ -997,13 +970,13 @@
                 // Dynamic rendering based on form fields
                 tbody.innerHTML = filteredRegistrations.map(reg => {
                     let row = `<tr><td><strong>${reg.registrationNumber}</strong></td>`;
-                    
+
                     // Add data for each form field
                     currentFormFields.forEach(field => {
                         const value = reg.data?.[field.id] || 'N/A';
                         row += `<td>${value}</td>`;
                     });
-                    
+
                     row += `
                         <td>
                             <span class="status-badge ${reg.status}">
@@ -1034,7 +1007,7 @@
                             </div>
                         </td>
                     </tr>`;
-                    
+
                     return row;
                 }).join('');
             } else {
@@ -1155,7 +1128,7 @@
                 rightHtml += `
                     <div class="section-card">
                         <div class="section-title">Team Members</div>
-                        ${registration.teamMembers.map((m, idx) => `<div class="detail-item"><div class="detail-label">Member ${idx+1}</div><div class="detail-value">${m.name} — ${m.email}</div></div>`).join('')}
+                        ${registration.teamMembers.map((m, idx) => `<div class="detail-item"><div class="detail-label">Member ${idx + 1}</div><div class="detail-value">${m.name} — ${m.email}</div></div>`).join('')}
                     </div>
                 `;
             }
@@ -1192,18 +1165,7 @@
 
         async function updateStatus(id, newStatus) {
             try {
-                const token = localStorage.getItem('adminToken') || localStorage.getItem('token');
-                const response = await fetch(`/api/registrations/${id}/status`, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ status: newStatus })
-                });
-
-                if (!response.ok) throw new Error('Failed to update status');
-
+                await Admin.apiPut(`registrations/submissions/${id}/status`, { status: newStatus });
                 showNotification('Status updated successfully', 'success');
                 loadRegistrations();
             } catch (error) {
@@ -1218,27 +1180,9 @@
             }
 
             try {
-                const token = localStorage.getItem('adminToken') || localStorage.getItem('token');
-                
-                if (!token) {
-                    showNotification('Please login to delete registrations', 'error');
-                    return;
-                }
-                
-                const response = await fetch(`/api/registrations/${id}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.message || 'Failed to delete registration');
-                }
-
+                await Admin.apiDelete(`registrations/submissions/${id}`);
                 showNotification('Registration deleted successfully', 'success');
-                loadRegistrations(); // Reload the data
+                loadRegistrations();
             } catch (error) {
                 console.error('Error deleting registration:', error);
                 showNotification(error.message || 'Failed to delete registration', 'error');
@@ -1246,18 +1190,20 @@
         }
 
         function refreshData() {
+            console.log('Refreshing data...');
+            showNotification('Refreshing data...', 'info');
             loadRegistrations();
         }
 
         function exportToCSV() {
             let headers, rows;
-            
+
             if (currentFormFields.length > 0) {
                 // Dynamic CSV based on form fields
                 headers = ['Reg. Number'];
                 currentFormFields.forEach(field => headers.push(field.label));
                 headers.push('Status', 'Submitted');
-                
+
                 rows = filteredRegistrations.map(reg => {
                     const row = [reg.registrationNumber];
                     currentFormFields.forEach(field => {
@@ -1345,6 +1291,7 @@
     </script>
     <script type="module" src="../js/supabase-config.js"></script>
     <script type="module" src="../js/auth.js"></script>
+    <script type="module" src="../js/admin.js"></script>
 </body>
 
 </html>

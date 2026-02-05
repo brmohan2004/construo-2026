@@ -13,7 +13,7 @@ class ConstruoSupabaseData {
     async loadAll() {
         try {
             console.log('Loading website data from Supabase...');
-            
+
             const [siteConfig, events, timeline, speakers, sponsors, organizers] = await Promise.all([
                 this.getSiteConfig(),
                 this.getEvents(),
@@ -138,10 +138,35 @@ class ConstruoSupabaseData {
         }
     }
 
+    async getActiveForm() {
+        try {
+            const { data, error } = await supabase
+                .from('registration_forms')
+                .select('*')
+                .eq('is_active', true)
+                .order('updated_at', { ascending: false })
+                .limit(1)
+                .single();
+
+            if (error) {
+                if (error.code === 'PGRST116') return null; // No active form found
+                throw error;
+            }
+            return {
+                ...data,
+                isActive: data.is_active,
+                updatedAt: data.updated_at
+            };
+        } catch (error) {
+            console.error('Error fetching active form:', error);
+            return null;
+        }
+    }
+
     async createRegistration(regData) {
         try {
             const registrationId = `reg_${Date.now()}_${Math.random().toString(36).substring(7)}`;
-            
+
             const { data, error } = await supabase
                 .from('registrations')
                 .insert({

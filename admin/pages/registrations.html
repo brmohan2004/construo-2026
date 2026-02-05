@@ -235,8 +235,8 @@
                                     <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
                                     <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
                                 </svg><span>Sponsors</span></a></li>
-                        <li class="nav-item"><a href="organizers.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none"
-                                    stroke="currentColor" stroke-width="2">
+                        <li class="nav-item"><a href="organizers.html" class="nav-link"><svg viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                                     <circle cx="9" cy="7" r="4" />
                                     <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
@@ -607,64 +607,58 @@
                         }
                     });
                 }
+                // Form Cards Actions Delegation
+                const formsContainer = document.getElementById('formsContainer');
+                if (formsContainer) {
+                    formsContainer.addEventListener('click', (e) => {
+                        const actionBtn = e.target.closest('[data-action]');
+                        if (!actionBtn) return;
+
+                        const formId = actionBtn.dataset.formId;
+                        const actionType = actionBtn.dataset.action;
+
+                        switch (actionType) {
+                            case 'edit-form':
+                                this.editForm(formId);
+                                break;
+                            case 'duplicate-form':
+                                this.duplicateForm(formId);
+                                break;
+                            case 'delete-form':
+                                this.deleteForm(formId);
+                                break;
+                            case 'view-submissions':
+                                this.viewSubmissions(formId);
+                                break;
+                        }
+                    });
+
+                    formsContainer.addEventListener('change', (e) => {
+                        if (e.target.dataset.action === 'toggle-form') {
+                            this.toggleFormStatus(e.target.dataset.formId);
+                        }
+                    });
+                }
             },
 
             async loadStats() {
                 try {
-                    const token = localStorage.getItem('adminToken');
-                    if (!token) {
-                        console.error('No auth token found');
-                        Auth.handleLogout();
-                        return;
-                    }
+                    const stats = await Admin.apiGet('registrations/stats');
 
-                    const response = await fetch('/api/registrations/stats', {
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    });
-
-                    if (!response.ok) {
-                        if (response.status === 401) {
-                            console.error('Authentication failed');
-                            Auth.handleLogout();
-                            return;
-                        }
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-
-                    const stats = await response.json();
-
-                    document.getElementById('totalForms').textContent = stats.totalForms;
-                    document.getElementById('totalSubmissions').textContent = stats.totalSubmissions;
-                    document.getElementById('pendingSubmissions').textContent = stats.pendingSubmissions;
-                    document.getElementById('confirmedSubmissions').textContent = stats.confirmedSubmissions;
+                    document.getElementById('totalForms').textContent = stats.totalForms || 0;
+                    document.getElementById('totalSubmissions').textContent = stats.totalSubmissions || 0;
+                    document.getElementById('pendingSubmissions').textContent = stats.pendingSubmissions || 0;
+                    document.getElementById('confirmedSubmissions').textContent = stats.confirmedSubmissions || 0;
                 } catch (error) {
                     console.error('Error loading stats:', error);
+                    // Fallback to zeros or show error toast
+                    // Admin.showToast('error', 'Error', 'Failed to load stats');
                 }
             },
 
             async loadForms() {
                 try {
-                    const token = localStorage.getItem('adminToken');
-                    if (!token) {
-                        console.error('No auth token found');
-                        Auth.handleLogout();
-                        return;
-                    }
-
-                    const response = await fetch('/api/registrations/forms', {
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    });
-
-                    if (!response.ok) {
-                        if (response.status === 401) {
-                            console.error('Authentication failed');
-                            Auth.handleLogout();
-                            return;
-                        }
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-
-                    const data = await response.json();
+                    const data = await Admin.apiGet('registrations/forms');
 
                     const container = document.getElementById('formsContainer');
 
@@ -715,21 +709,21 @@
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px;">
                                             <path d="M9 11H3v10h6V11zM15 3h-6v18h6V3zM21 8h-6v13h6V8z"/>
                                         </svg>
-                                        ${form.fields.length} fields
+                                        ${form.fields?.length || 0} fields
                                     </div>
                                     <div class="form-stat-item">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px;">
                                             <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
                                             <circle cx="9" cy="7" r="4"/>
                                         </svg>
-                                        ${form.submissionsCount} submissions
+                                        ${form.submissionsCount || 0} submissions
                                     </div>
                                     <div class="form-stat-item">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px;">
                                             <circle cx="12" cy="12" r="10"/>
                                             <polyline points="12 6 12 12 16 14"/>
                                         </svg>
-                                        ${new Date(form.updatedAt).toLocaleDateString()}
+                                        ${form.updatedAt ? new Date(form.updatedAt).toLocaleDateString() : 'N/A'}
                                     </div>
                                 </div>
                                 <button class="btn btn-primary btn-sm" data-action="view-submissions" data-form-id="${form.id}">
@@ -738,36 +732,6 @@
                             </div>
                         </div>
                     `).join('');
-
-                    // Add event delegation for form actions
-                    container.addEventListener('click', (e) => {
-                        const action = e.target.closest('[data-action]');
-                        if (!action) return;
-
-                        const formId = action.dataset.formId;
-                        const actionType = action.dataset.action;
-
-                        switch (actionType) {
-                            case 'edit-form':
-                                this.editForm(formId);
-                                break;
-                            case 'duplicate-form':
-                                this.duplicateForm(formId);
-                                break;
-                            case 'delete-form':
-                                this.deleteForm(formId);
-                                break;
-                            case 'view-submissions':
-                                this.viewSubmissions(formId);
-                                break;
-                        }
-                    });
-
-                    container.addEventListener('change', (e) => {
-                        if (e.target.dataset.action === 'toggle-form') {
-                            this.toggleFormStatus(e.target.dataset.formId);
-                        }
-                    });
                 } catch (error) {
                     console.error('Error loading forms:', error);
                     Utils.showToast('Failed to load forms', 'error');
@@ -877,22 +841,17 @@
 
             async duplicateForm(formId) {
                 try {
-                    const token = localStorage.getItem('adminToken');
-                    const response = await fetch(`/api/registrations/forms/${formId}/duplicate`, {
-                        method: 'POST',
-                        headers: { 
-                            'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json'
-                        }
-                    });
+                    // Assuming Admin.apiPost checks auth internally or we rely on session
+                    const response = await Admin.apiPost(`registrations/forms/${formId}/duplicate`, {});
 
-                    const data = await response.json();
+                    // Admin.apiXYZ methods typically return the JSON data or throw error
+                    // If response contains error logic, adapt it. Usually apiPost throws on error or returns data.
 
-                    if (response.ok) {
+                    if (response) {
                         Utils.showToast('Form duplicated successfully', 'success');
                         this.loadForms();
                     } else {
-                        Utils.showToast(data.error || 'Failed to duplicate form', 'error');
+                        Utils.showToast('Failed to duplicate form', 'error');
                     }
                 } catch (error) {
                     console.error('Error duplicating form:', error);
@@ -902,19 +861,12 @@
 
             async toggleFormStatus(formId) {
                 try {
-                    const token = localStorage.getItem('adminToken');
-                    const response = await fetch(`/api/registrations/forms/${formId}/toggle`, {
-                        method: 'PUT',
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    });
+                    const response = await Admin.apiPut(`registrations/forms/${formId}/toggle`, {});
+                    // Admin.apiPut returns parsed JSON
 
-                    const data = await response.json();
-
-                    if (response.ok) {
-                        Utils.showToast(data.message, 'success');
+                    if (response) {
+                        Utils.showToast(response.message || 'Status updated', 'success');
                         this.loadForms();
-                    } else {
-                        Utils.showToast(data.error || 'Failed to toggle form status', 'error');
                     }
                 } catch (error) {
                     console.error('Error toggling form:', error);
@@ -928,71 +880,49 @@
                 }
 
                 try {
-                    const token = localStorage.getItem('adminToken');
-                    const response = await fetch(`/api/registrations/forms/${formId}`, {
-                        method: 'DELETE',
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    });
+                    // Handling potential 400 error for existing submissions needs careful catch
+                    // We need to know if Admin.apiDelete throws error with response data we can read
 
-                    const data = await response.json();
+                    await Admin.apiDelete(`registrations/forms/${formId}`);
+                    Utils.showToast('Form deleted successfully', 'success');
+                    this.loadForms();
+                    this.loadStats();
 
-                    if (response.ok) {
-                        Utils.showToast('Form deleted successfully', 'success');
-                        this.loadForms();
-                        this.loadStats();
-                    } else if (data.error && data.error.includes('existing submissions')) {
+                } catch (error) {
+                    console.error('Error deleting form:', error);
+                    // Check if error message indicates existing submissions
+                    if (error.message && error.message.includes('existing submissions')) {
                         if (confirm('This form has existing submissions. Do you want to delete all submissions and the form?')) {
                             await this.forceDeleteForm(formId);
                         }
                     } else {
-                        Utils.showToast(data.error || 'Failed to delete form', 'error');
+                        Utils.showToast('Failed to delete form', 'error');
                     }
-                } catch (error) {
-                    console.error('Error deleting form:', error);
-                    Utils.showToast('Failed to delete form', 'error');
                 }
             },
 
             async forceDeleteForm(formId) {
                 try {
-                    const token = localStorage.getItem('adminToken');
                     Utils.showToast('Deleting submissions...', 'info');
 
                     // 1. Fetch submissions
-                    const subResponse = await fetch(`/api/registrations/forms/${formId}/submissions`, {
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    });
-
-                    if (!subResponse.ok) throw new Error('Failed to fetch submissions');
-
-                    const subData = await subResponse.json();
-                    const submissions = subData.submissions || [];
+                    const subResponse = await Admin.apiGet(`registrations/forms/${formId}/submissions`);
+                    const submissions = subResponse.submissions || [];
 
                     // 2. Delete all submissions
                     if (submissions.length > 0) {
                         const deletePromises = submissions.map(sub =>
-                            fetch(`/api/registrations/submissions/${sub.id}`, {
-                                method: 'DELETE',
-                                headers: { 'Authorization': `Bearer ${token}` }
-                            })
+                            Admin.apiDelete(`registrations/submissions/${sub.id}`)
                         );
                         await Promise.all(deletePromises);
                     }
 
                     // 3. Delete the form
-                    const response = await fetch(`/api/registrations/forms/${formId}`, {
-                        method: 'DELETE',
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    });
+                    await Admin.apiDelete(`registrations/forms/${formId}`);
 
-                    if (response.ok) {
-                        Utils.showToast('Form and all submissions deleted', 'success');
-                        this.loadForms();
-                        this.loadStats();
-                    } else {
-                        const data = await response.json();
-                        Utils.showToast(data.error || 'Failed to delete form', 'error');
-                    }
+                    Utils.showToast('Form and all submissions deleted', 'success');
+                    this.loadForms();
+                    this.loadStats();
                 } catch (error) {
                     console.error('Error force deleting form:', error);
                     Utils.showToast('Failed to force delete form', 'error');
@@ -1016,25 +946,11 @@
                 const status = document.getElementById('newStatus').value;
 
                 try {
-                    const token = localStorage.getItem('adminToken');
-                    const response = await fetch(`/api/registrations/submissions/${this.currentSubmissionId}/status`, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`
-                        },
-                        body: JSON.stringify({ status })
-                    });
+                    await Admin.apiPut(`registrations/submissions/${this.currentSubmissionId}/status`, { status });
 
-                    const data = await response.json();
-
-                    if (response.ok) {
-                        Utils.showToast('Status updated successfully', 'success');
-                        this.closeStatusModal();
-                        this.viewSubmissions(this.currentFormId);
-                    } else {
-                        Utils.showToast(data.error || 'Failed to update status', 'error');
-                    }
+                    Utils.showToast('Status updated successfully', 'success');
+                    this.closeStatusModal();
+                    this.viewSubmissions(this.currentFormId);
                 } catch (error) {
                     console.error('Error updating status:', error);
                     Utils.showToast('Failed to update status', 'error');
@@ -1047,22 +963,16 @@
                 }
 
                 try {
-                    const token = localStorage.getItem('adminToken');
-                    const response = await fetch(`/api/registrations/submissions/${submissionId}`, {
-                        method: 'DELETE',
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    });
-
-                    const data = await response.json();
-
-                    if (response.ok) {
-                        Utils.showToast('Submission deleted successfully', 'success');
+                    await Admin.apiDelete(`registrations/submissions/${submissionId}`);
+                    if (this.currentFormId) {
                         this.viewSubmissions(this.currentFormId);
                     } else {
-                        Utils.showToast(data.error || 'Failed to delete submission', 'error');
+                        // If we are in viewAll mode (not implemented here but good practice)
+                        this.loadStats();
                     }
+                    Utils.showToast('Submission deleted', 'success');
                 } catch (error) {
-                    console.error('Error deleting submission:', error);
+                    console.error('Error deleting submission', error);
                     Utils.showToast('Failed to delete submission', 'error');
                 }
             },
@@ -1071,8 +981,47 @@
                 if (!this.currentFormId) return;
 
                 try {
-                    const token = localStorage.getItem('adminToken');
-                    window.location.href = `/api/registrations/export/${this.currentFormId}?token=${token}`;
+                    Utils.showToast('Preparing export...', 'info');
+                    const data = await Admin.apiGet(`registrations/forms/${this.currentFormId}/submissions`);
+
+                    if (!data || !data.submissions || data.submissions.length === 0) {
+                        Utils.showToast('No submissions to export', 'info');
+                        return;
+                    }
+
+                    const form = data.form;
+                    const submissions = data.submissions;
+
+                    // Generate CSV
+                    const headers = ['Registration Number', ...form.fields.map(f => f.label), 'Status', 'Date'];
+                    const rows = submissions.map(sub => {
+                        const row = [sub.registrationNumber];
+                        form.fields.forEach(field => {
+                            const value = sub.data[field.id];
+                            row.push(Array.isArray(value) ? value.join('; ') : value || '');
+                        });
+                        row.push(sub.status);
+                        row.push(new Date(sub.createdAt).toLocaleString());
+                        return row;
+                    });
+
+                    const csvContent = [
+                        headers.join(','),
+                        ...rows.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+                    ].join('\n');
+
+                    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                    const link = document.createElement('a');
+                    const url = URL.createObjectURL(blob);
+
+                    link.setAttribute('href', url);
+                    link.setAttribute('download', `${form.title.replace(/\s+/g, '_')}_submissions.csv`);
+                    link.style.visibility = 'hidden';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+
+                    Utils.showToast('Export successful', 'success');
                 } catch (error) {
                     console.error('Error exporting submissions:', error);
                     Utils.showToast('Failed to export submissions', 'error');

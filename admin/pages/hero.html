@@ -446,16 +446,9 @@
 
             async loadData() {
                 try {
-                    if (Admin.config.useAPI) {
-                        // Load directly from hero API endpoint
-                        this.data = await Admin.apiGet('hero');
-                        this.originalData = JSON.parse(JSON.stringify(this.data));
-                    } else {
-                        // Fallback to site-config.json for demo mode
-                        const config = await Admin.getData('site-config.json');
-                        this.data = config?.hero || {};
-                        this.originalData = JSON.parse(JSON.stringify(this.data));
-                    }
+                    const config = await Admin.getSiteConfig();
+                    this.data = config?.hero || {};
+                    this.originalData = JSON.parse(JSON.stringify(this.data));
                 } catch (error) {
                     console.error('Failed to load hero data:', error);
                     this.data = {};
@@ -566,18 +559,20 @@
             },
 
             addCtaButton() {
-                if (!this.data.hero.ctaButtons) {
-                    this.data.hero.ctaButtons = [];
+                if (!this.data.ctaButtons) {
+                    this.data.ctaButtons = [];
                 }
-                this.data.hero.ctaButtons.push({ text: 'New Button', link: '#', type: 'secondary', action: 'link' });
-                this.renderCtaButtons(this.data.hero.ctaButtons);
+                this.data.ctaButtons.push({ text: 'New Button', link: '#', type: 'secondary', action: 'link' });
+                this.renderCtaButtons(this.data.ctaButtons);
                 this.updatePreview();
             },
 
             removeCtaButton(index) {
-                this.data.hero.ctaButtons.splice(index, 1);
-                this.renderCtaButtons(this.data.hero.ctaButtons);
-                this.updatePreview();
+                if (this.data.ctaButtons) {
+                    this.data.ctaButtons.splice(index, 1);
+                    this.renderCtaButtons(this.data.ctaButtons);
+                    this.updatePreview();
+                }
             },
 
             updatePreview() {
@@ -637,23 +632,10 @@
                 };
 
                 try {
-                    if (Admin.config.useAPI) {
-                        // Save via PUT /api/hero
-                        const response = await Admin.apiPut('hero', heroData);
-                        this.data = response.data || heroData;
-                        this.originalData = JSON.parse(JSON.stringify(this.data));
-                        Admin.showToast('success', 'Saved', 'Hero section updated');
-                    } else {
-                        // Fallback to local mode
-                        const config = await Admin.getData('site-config.json');
-                        config.hero = heroData;
-                        const success = await Admin.saveData('site-config.json', config);
-                        if (success) {
-                            this.data = heroData;
-                            this.originalData = JSON.parse(JSON.stringify(heroData));
-                            Admin.logActivity('update', 'hero', 'Updated hero section');
-                        }
-                    }
+                    const updatedConfig = await Admin.updateSiteConfig('hero', heroData);
+                    this.data = updatedConfig.hero || heroData;
+                    this.originalData = JSON.parse(JSON.stringify(this.data));
+                    Admin.showToast('success', 'Saved', 'Hero section updated');
                 } catch (error) {
                     console.error('Save hero error:', error);
                     Admin.showToast('error', 'Error', error.message || 'Failed to save hero section');
@@ -662,7 +644,7 @@
 
             reset() {
                 if (this.originalData) {
-                    this.data.hero = JSON.parse(JSON.stringify(this.originalData));
+                    this.data = JSON.parse(JSON.stringify(this.originalData));
                     this.render();
                     Admin.showToast('info', 'Reset', 'Changes have been reverted');
                 }

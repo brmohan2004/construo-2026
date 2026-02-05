@@ -141,14 +141,21 @@ body:hover .cursor-follower {
     }
 
     .hero-fee {
-        position: static;
-        margin-bottom: 2rem;
-        display: flex;
-        justify-content: center;
+        position: absolute;
+        top: 80px;
+        right: 1rem;
+        margin-bottom: 0;
+        display: block;
+        width: auto;
+        z-index: 20;
     }
 
     .fee-item {
-        padding: 1rem 1.5rem;
+        padding: 0.5rem 1rem;
+    }
+
+    .fee-amount {
+        font-size: 1.5rem;
     }
 }
 
@@ -824,25 +831,26 @@ body:hover .cursor-follower {
 }
 
 .btn-primary {
-    background: var(--color-accent);
+    background: var(--color-blueprint);
     color: var(--color-text);
 }
 
 .btn-primary:hover {
-    background: var(--color-accent-dark);
-    box-shadow: var(--glow-accent);
+    background: #3a7bc0;
+    /* Slightly darker blue */
+    box-shadow: 0 0 30px rgba(74, 144, 217, 0.4);
     transform: translateY(-2px);
 }
 
 .btn-secondary {
     background: transparent;
     color: var(--color-text);
-    border: 1px solid var(--color-text);
+    border: 1px solid var(--color-accent);
 }
 
 .btn-secondary:hover {
-    background: var(--color-text);
-    color: var(--color-bg);
+    background: var(--color-accent);
+    color: var(--color-text);
 }
 
 .btn-sm {
@@ -3898,5 +3906,51 @@ body:hover .cursor-follower {
     .section {
         padding: 20px 0;
         page-break-inside: avoid;
+    }
+}
+
+/* Responsive Font Adjustments for Hero Section on Mobile */
+@media (max-width: 768px) {
+    .hero-badge {
+        font-size: 0.95rem;
+        /* Increased from 0.875rem */
+        padding: 0.5rem 1.25rem;
+        letter-spacing: 0.08em;
+    }
+
+    .title-line {
+        font-size: clamp(4.5rem, 18vw, 12rem);
+        /* Increased min from 4rem and rate from 15vw */
+    }
+
+    .title-line.outline {
+        font-size: clamp(3.5rem, 15vw, 9rem);
+        /* Increased min from 3rem and rate from 12vw */
+    }
+
+    .hero-tagline {
+        font-size: 1.2rem;
+        /* Adjusted for readability */
+        margin-bottom: 2.5rem;
+    }
+
+    /* Date adjustments */
+    .hero-date {
+        gap: 0.75rem;
+    }
+
+    .date-day {
+        font-size: 3.5rem;
+        /* Increased from 3rem */
+    }
+
+    .date-month {
+        font-size: 1.75rem;
+        /* Increased from 1.5rem */
+    }
+
+    .date-year {
+        font-size: 1.1rem;
+        /* Increased from 1rem */
     }
 }

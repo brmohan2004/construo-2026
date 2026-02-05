@@ -52,13 +52,14 @@ class ConstruoApp {
             // Update Events UI
             if (events) {
                 this.updateEventsUI(events);
-                
+
                 // Update prize pool banner if data available
-                if (siteConfig && siteConfig.events && siteConfig.events.prizePool) {
+                const prizePool = (siteConfig.events && siteConfig.events.prizePool) || siteConfig.prizePool;
+                if (prizePool) {
                     const prizeAmount = document.querySelector('.prize-amount');
                     const prizeSub = document.querySelector('.prize-sub');
-                    if (prizeAmount) prizeAmount.textContent = `₹${siteConfig.events.prizePool.amount || '50,000+'}`;
-                    if (prizeSub) prizeSub.textContent = siteConfig.events.prizePool.subtitle || 'Certificates for all participants';
+                    if (prizeAmount) prizeAmount.textContent = `₹${prizePool.amount || '50,000+'}`;
+                    if (prizeSub) prizeSub.textContent = prizePool.subtitle || 'Certificates for all participants';
                 }
             }
 
@@ -83,12 +84,13 @@ class ConstruoApp {
                     bronze: sponsors.filter(s => s.tier_id === 'bronze')
                 };
                 this.updateSponsorsUI(sponsorsObj);
-                
+
                 // Update Become a Sponsor button with configured email
-                if (siteConfig && siteConfig.sponsors && siteConfig.sponsors.contactEmail) {
+                if (siteConfig && siteConfig.sponsors && siteConfig.sponsors.email) {
                     const sponsorBtn = document.querySelector('.sponsor-contact-btn');
                     if (sponsorBtn) {
-                        sponsorBtn.href = `mailto:${siteConfig.sponsors.contactEmail}?subject=Sponsorship%20Inquiry%20for%20CONSTRUO%202026`;
+                        sponsorBtn.href = `mailto:${siteConfig.sponsors.email}?subject=Sponsorship%20Inquiry%20for%20CONSTRUO%202026`;
+                        sponsorBtn.target = '_self';
                     }
                 }
             }
@@ -597,16 +599,18 @@ class ConstruoApp {
         }
 
         // Update CTA Buttons
-        if (data.ctaButtons && data.ctaButtons.length >= 2) {
-            const ctaButtons = document.querySelectorAll('.hero-cta .btn');
-            data.ctaButtons.forEach((btn, i) => {
-                if (ctaButtons[i]) {
-                    ctaButtons[i].textContent = btn.text;
-                    ctaButtons[i].setAttribute('href', btn.link);
-                    // Force update class based on type if needed
-                    ctaButtons[i].className = `btn btn-${btn.type || (i === 0 ? 'primary' : 'secondary')}`;
+        if (data.ctaButtons && Array.isArray(data.ctaButtons)) {
+            const ctaContainer = document.querySelector('.hero-cta');
+            if (ctaContainer) {
+                ctaContainer.innerHTML = data.ctaButtons.map(btn => `
+                    <a href="${btn.link}" class="btn btn-${btn.type || 'primary'}">${btn.text}</a>
+                `).join('');
+
+                // Animate entrance of new buttons
+                if (window.construoAnimations) {
+                    window.construoAnimations.playHeroCtaEntrance();
                 }
-            });
+            }
         }
     }
 
@@ -700,11 +704,24 @@ class ConstruoApp {
             `;
             dayElement.appendChild(dayHeader);
 
-            if (day.sessions && day.sessions.length > 0) {
+            // Robust check for sessions
+            let sessions = day.sessions;
+            if (typeof sessions === 'string') {
+                try {
+                    sessions = JSON.parse(sessions);
+                } catch (e) {
+                    console.error('Failed to parse sessions JSON for day', index, e);
+                    sessions = [];
+                }
+            }
+
+            console.log(`Day ${index + 1} sessions:`, sessions);
+
+            if (sessions && Array.isArray(sessions) && sessions.length > 0) {
                 const sessionsContainer = document.createElement('div');
                 sessionsContainer.className = 'day-events';
 
-                day.sessions.forEach(session => {
+                sessions.forEach(session => {
                     const sessionElement = document.createElement('div');
                     sessionElement.className = 'event-block';
                     sessionElement.innerHTML = `
@@ -1137,20 +1154,20 @@ class ConstruoApp {
 
         // Fetch active form and render
         try {
-            const response = await fetch('/api/registrations/forms/active');
-            if (response.ok) {
-                const formData = await response.json();
+            const dataLoader = window.ConstruoSupabaseData;
+            if (!dataLoader) throw new Error('Supabase data loader not available');
+
+            const formData = await dataLoader.getActiveForm();
+
+            if (formData) {
                 this.renderRegistrationForm(form, formData);
             } else {
-                const errorData = await response.json().catch(() => ({}));
-                const errorMsg = errorData.error || 'Registration is currently closed.';
-                console.error('Form fetch failed:', response.status, errorMsg);
-                form.innerHTML = `<div class="alert alert-info" style="padding: 2rem; text-align: center; color: var(--text-light);">${errorMsg}</div>`;
+                console.log('No active registration form found');
+                form.innerHTML = `<div class="alert alert-info" style="padding: 2rem; text-align: center; color: var(--text-light);">Registration is currently closed.</div>`;
             }
         } catch (error) {
             console.error('Error fetching registration form:', error);
-            this.showNotification(error.message || 'Failed to load registration form', 'error');
-            form.innerHTML = `<div class="alert alert-danger" style="padding: 2rem; text-align: center; color: #ef4444;">Failed to load registration form. ${error.message || 'Please try again later.'}</div>`;
+            form.innerHTML = `<div class="alert alert-danger" style="padding: 2rem; text-align: center; color: #ef4444;">Failed to load registration form. Please try again later.</div>`;
         }
     }
 
@@ -1443,27 +1460,44 @@ class ConstruoApp {
             console.log('Submitting data:', data);
 
             try {
-                const response = await fetch('/api/registrations/submit', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                });
+                const dataLoader = window.ConstruoSupabaseData;
+                if (!dataLoader) throw new Error('Supabase data loader not available');
 
-                const result = await response.json();
-                console.log('Submit response:', result);
+                // Map form fields to participant object if possible
+                const participant = {};
+                const nameField = formData.fields.find(f => f.label.toLowerCase().includes('name'));
+                const emailField = formData.fields.find(f => f.label.toLowerCase().includes('email'));
+                const phoneField = formData.fields.find(f => f.label.toLowerCase().includes('phone') || f.label.toLowerCase().includes('mobile') || f.label.toLowerCase().includes('contact'));
+                const collegeField = formData.fields.find(f => f.label.toLowerCase().includes('college') || f.label.toLowerCase().includes('institution') || f.label.toLowerCase().includes('university'));
+                const yearField = formData.fields.find(f => f.label.toLowerCase().includes('year'));
+                const deptField = formData.fields.find(f => f.label.toLowerCase().includes('dept') || f.label.toLowerCase().includes('department'));
 
-                if (response.ok) {
-                    // Close modal and show success
-                    self.closeModal('modal-register');
-                    self.showNotification(`Registration successful! Your ID: ${result.registrationNumber}`, 'success');
+                if (nameField) participant.name = data[nameField.id];
+                if (emailField) participant.email = data[emailField.id];
+                if (phoneField) participant.phone = data[phoneField.id];
+                if (collegeField) participant.college = data[collegeField.id];
+                if (yearField) participant.year = data[yearField.id];
+                if (deptField) participant.department = data[deptField.id];
 
-                    // Reset form
-                    form.reset();
-                } else {
-                    throw new Error(result.error || 'Registration failed');
-                }
+                const payload = {
+                    formId: formData.id,
+                    participant: participant,
+                    data: data,
+                    events: data.events || [],
+                    teamMembers: data.teamMembers || [],
+                    payment: { amount: 0, status: 'pending' }
+                };
+
+                const result = await dataLoader.createRegistration(payload);
+                console.log('Registration successful:', result);
+
+                // Close modal and show success
+                self.closeModal('modal-register');
+                const regNum = result.registration_number || result.registrationNumber || 'Success';
+                self.showNotification(`Registration successful! Your ID: ${regNum}`, 'success');
+
+                // Reset form
+                form.reset();
             } catch (error) {
                 console.error('Registration error:', error);
                 self.showNotification(error.message || 'Registration failed. Please try again.', 'error');
