@@ -28,6 +28,20 @@ class ConstruoAnimations {
     initPreloader() {
         const preloader = document.getElementById('preloader');
         const progress = document.querySelector('.loader-progress');
+        const loaderText = document.querySelector('.loader-text');
+
+        // Settings from Supabase if available
+        const s = (window.construoApp && window.construoApp.siteConfig && window.construoApp.siteConfig.settings) || {};
+
+        if (loaderText && s.loaderText) {
+            loaderText.innerHTML = `${s.loaderText}<span class="dots">...</span>`;
+        }
+
+        if (progress && s.loaderColor) {
+            progress.style.background = s.loaderColor;
+        }
+
+        const speed = s.loaderSpeed || 100;
 
         // Simulate loading progress
         let loadProgress = 0;
@@ -49,57 +63,62 @@ class ConstruoAnimations {
                     });
                 }, 500);
             }
-            progress.style.width = `${loadProgress}%`;
-        }, 100);
+            if (progress) progress.style.width = `${loadProgress}%`;
+        }, speed);
     }
 
     playHeroEntrance() {
         const tl = gsap.timeline();
+        const s = (window.construoApp && window.construoApp.siteConfig && window.construoApp.siteConfig.settings) || {};
+
+        const duration = s.animDuration || 0.8;
+        const stagger = s.animStagger || 0.2;
+        const ease = s.animEase || 'power3.out';
 
         tl.from('.hero-badge', {
             y: 30,
             opacity: 0,
-            duration: 0.8,
-            ease: 'power3.out'
+            duration: duration,
+            ease: ease
         })
             .from('.title-line', {
                 y: 100,
                 opacity: 0,
-                duration: 1,
-                stagger: 0.2,
-                ease: 'power3.out'
+                duration: duration + 0.2,
+                stagger: stagger,
+                ease: ease
             }, '-=0.4')
             .from('.hero-tagline', {
                 y: 20,
                 opacity: 0,
-                duration: 0.6,
-                ease: 'power3.out'
+                duration: duration - 0.2,
+                ease: ease
             }, '-=0.4')
             .from('.hero-date > span', {
                 y: 20,
                 opacity: 0,
-                duration: 0.6,
-                stagger: 0.1,
-                ease: 'power3.out'
+                duration: duration - 0.2,
+                stagger: stagger / 2,
+                ease: ease
             }, '-=0.3')
             .from('.hero-fee', {
                 y: 20,
                 opacity: 0,
-                duration: 0.5,
-                ease: 'power3.out'
+                duration: duration - 0.3,
+                ease: ease
             }, '-=0.2')
             .from('.hero-cta .btn', {
                 y: 20,
                 opacity: 0,
-                duration: 0.6,
-                stagger: 0.15,
-                ease: 'power3.out'
+                duration: duration - 0.2,
+                stagger: stagger * 0.75,
+                ease: ease
             }, '-=0.3')
             .from('.scroll-indicator', {
                 y: 20,
                 opacity: 0,
-                duration: 0.6,
-                ease: 'power3.out'
+                duration: duration - 0.2,
+                ease: ease
             }, '-=0.2');
     }
 

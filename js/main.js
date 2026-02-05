@@ -21,6 +21,17 @@ class ConstruoApp {
         this.initDataSync();
     }
 
+    sanitizeUrl(url) {
+        if (!url || typeof url !== 'string') return '';
+        const trimmed = url.trim();
+        // If it looks like an HTML tag (specifically iframe or img), extract the src
+        if (trimmed.startsWith('<') && (trimmed.includes('src=')) || trimmed.includes('src=')) {
+            const match = trimmed.match(/src=["']([^"']+)["']/i);
+            if (match && match[1]) return match[1];
+        }
+        return trimmed;
+    }
+
     async initDataSync() {
         console.log('Loading website data from Supabase...');
         this.loadInitialData();
@@ -149,7 +160,7 @@ class ConstruoApp {
             const designation = speaker.designation || '';
             const organization = speaker.organization || '';
             const topic = speaker.topic || '';
-            const image = speaker.image || speaker.photo || '';
+            const image = this.sanitizeUrl(speaker.image || speaker.photo || '');
             const roleText = designation + (organization ? ` at ${organization}` : '');
 
             console.log(`Rendering speaker ${i + 1}:`, name);
@@ -336,14 +347,16 @@ class ConstruoApp {
         // Update Google Maps iframe
         const mapContainer = document.querySelector('#venue-map');
         if (mapContainer && venue.mapEmbedUrl) {
+            const mapUrl = this.sanitizeUrl(venue.mapEmbedUrl);
+
             const iframe = mapContainer.querySelector('iframe');
             if (iframe) {
-                iframe.src = venue.mapEmbedUrl;
+                iframe.src = mapUrl;
             } else {
                 // Create iframe if it doesn't exist
                 mapContainer.innerHTML = `
                     <iframe 
-                        src="${venue.mapEmbedUrl}"
+                        src="${mapUrl}"
                         width="100%" 
                         height="100%" 
                         style="border:0; border-radius: 12px;" 
@@ -540,7 +553,7 @@ class ConstruoApp {
                         <div class="sponsor-billboard ${tierClasses[tier]}">
                             <div class="billboard-content">
                                 ${sponsor.logo ?
-                    `<img src="${sponsor.logo}" alt="${sponsor.name}" style="max-width: 100%; max-height: 100%; object-fit: contain;">` :
+                    `<img src="${this.sanitizeUrl(sponsor.logo)}" alt="${sponsor.name}" style="max-width: 100%; max-height: 100%; object-fit: contain;">` :
                     `<span style="font-size: 1.2rem; font-weight: 600;">${sponsor.name}</span>`
                 }
                             </div>
@@ -1155,7 +1168,13 @@ class ConstruoApp {
         // Fetch active form and render
         try {
             const dataLoader = window.ConstruoSupabaseData;
-            if (!dataLoader) throw new Error('Supabase data loader not available');
+            if (!dataLoader) {
+                throw new Error('Supabase data loader (window.ConstruoSupabaseData) not available');
+            }
+            if (typeof dataLoader.getActiveForm !== 'function') {
+                console.warn('getActiveForm method not found on dataLoader. Available methods:', Object.getOwnPropertyNames(Object.getPrototypeOf(dataLoader)));
+                throw new Error('dataLoader.getActiveForm is not a function. Possible version mismatch or script load error.');
+            }
 
             const formData = await dataLoader.getActiveForm();
 
@@ -1307,17 +1326,26 @@ class ConstruoApp {
                     input.name = field.id;
                     if (field.required) input.required = true;
                     if (field.placeholder) input.placeholder = field.placeholder;
+                    // Strict email pattern
+                    input.pattern = '[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$';
+                    input.title = 'Please enter a valid email address';
                     formGroup.appendChild(input);
                     break;
 
                 case 'tel':
                 case 'phone':
+                case 'mobile':
                     input = document.createElement('input');
                     input.type = 'tel';
                     input.id = field.id;
                     input.name = field.id;
                     if (field.required) input.required = true;
-                    if (field.placeholder) input.placeholder = field.placeholder;
+                    if (field.placeholder) input.placeholder = field.placeholder || 'e.g. 9876543210';
+                    // 10 digit phone pattern
+                    input.pattern = '[0-9]{10}';
+                    input.title = 'Please enter a 10-digit mobile number';
+                    input.maxLength = 10;
+                    input.minLength = 10;
                     formGroup.appendChild(input);
                     break;
 
@@ -1328,6 +1356,7 @@ class ConstruoApp {
                     input.name = field.id;
                     if (field.required) input.required = true;
                     if (field.placeholder) input.placeholder = field.placeholder;
+                    input.title = 'Please enter a numeric value';
                     formGroup.appendChild(input);
                     break;
 
@@ -1433,9 +1462,17 @@ class ConstruoApp {
                 } else {
                     // Regular inputs (text, email, select, etc.)
                     const inp = firstInput;
-                    if (inp.required && !inp.value) {
+
+                    // Use native HTML5 validation
+                    if (!inp.checkValidity()) {
                         isValid = false;
                         inp.style.borderColor = '#ef4444';
+
+                        // Show specific validation message if possible
+                        if (inp.validationMessage) {
+                            console.warn(`Validation failed for ${fieldName}: ${inp.validationMessage}`);
+                            // We could show this message to the user next to the field
+                        }
                     } else {
                         inp.style.borderColor = '';
                         if (inp.value) {
@@ -1450,7 +1487,15 @@ class ConstruoApp {
             });
 
             if (!isValid) {
-                self.showNotification('Please fill in all required fields', 'error');
+                // Find first invalid input and focus it
+                const firstInvalid = form.querySelector(':invalid');
+                if (firstInvalid) {
+                    firstInvalid.focus();
+                    self.showNotification(firstInvalid.title || firstInvalid.validationMessage || 'Please correct the highlighted fields', 'error');
+                } else {
+                    self.showNotification('Please fill in all required fields correctly', 'error');
+                }
+
                 submitBtn.classList.remove('loading');
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Register Now';

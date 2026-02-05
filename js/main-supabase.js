@@ -193,4 +193,5 @@ class ConstruoSupabaseData {
 }
 
 window.ConstruoSupabaseData = new ConstruoSupabaseData();
+console.log('ConstruoSupabaseData initialized with methods:', Object.getOwnPropertyNames(ConstruoSupabaseData.prototype));
 export default ConstruoSupabaseData;

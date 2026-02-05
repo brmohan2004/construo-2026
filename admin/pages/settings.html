@@ -132,6 +132,7 @@
                     <button class="tab-btn" data-tab="registration">Registration</button>
                     <button class="tab-btn" data-tab="email">Email</button>
                     <button class="tab-btn" data-tab="seo">SEO</button>
+                    <button class="tab-btn" data-tab="animations">Animations</button>
                     <button class="tab-btn" data-tab="maintenance">Maintenance</button>
                 </div>
 
@@ -309,46 +310,56 @@
 
                 <!-- SEO Settings -->
                 <div class="tab-content" id="tab-seo">
+                    <!-- ... -->
+                </div>
+
+                <!-- Animation Settings -->
+                <div class="tab-content" id="tab-animations">
                     <div class="settings-grid">
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="card-title">Meta Tags</h3>
+                                <h3 class="card-title">Initial Loader</h3>
                             </div>
                             <div class="card-body">
                                 <div class="form-group">
-                                    <label class="form-label">Meta Title</label>
-                                    <input type="text" class="form-input" id="metaTitle" maxlength="60">
-                                    <span class="form-hint">Recommended: 50-60 characters</span>
+                                    <label class="form-label">Loading Text</label>
+                                    <input type="text" class="form-input" id="loaderText"
+                                        placeholder="Constructing....">
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-label">Meta Description</label>
-                                    <textarea class="form-textarea" id="metaDescription" rows="3"
-                                        maxlength="160"></textarea>
-                                    <span class="form-hint">Recommended: 150-160 characters</span>
+                                    <label class="form-label">Loader Speed (ms per %)</label>
+                                    <input type="number" class="form-input" id="loaderSpeed" value="100" min="20"
+                                        max="1000">
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-label">Meta Keywords</label>
-                                    <input type="text" class="form-input" id="metaKeywords"
-                                        placeholder="symposium, civil engineering, technical fest">
+                                    <label class="form-label">Loader Accent Color</label>
+                                    <input type="color" class="form-input form-input-color" id="loaderColor">
                                 </div>
                             </div>
                         </div>
 
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="card-title">Social Media</h3>
+                                <h3 class="card-title">Sequence Order</h3>
                             </div>
                             <div class="card-body">
                                 <div class="form-group">
-                                    <label class="form-label">OG Image URL</label>
-                                    <input type="text" class="form-input" id="ogImage">
-                                    <span class="form-hint">Recommended: 1200x630 pixels</span>
+                                    <label class="form-label">Entrance Animation Duration (sec)</label>
+                                    <input type="number" class="form-input" id="animDuration" value="0.8" step="0.1"
+                                        min="0.1">
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-label">Twitter Card Type</label>
-                                    <select class="form-select" id="twitterCard">
-                                        <option value="summary">Summary</option>
-                                        <option value="summary_large_image">Summary with Large Image</option>
+                                    <label class="form-label">Stagger Delay (sec)</label>
+                                    <input type="number" class="form-input" id="animStagger" value="0.2" step="0.05"
+                                        min="0">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Reveal Effect</label>
+                                    <select class="form-select" id="animEase">
+                                        <option value="power3.out">Smooth Ease Out</option>
+                                        <option value="back.out(1.7)">Overshoot (Back)</option>
+                                        <option value="elastic.out(1, 0.3)">Elastic</option>
+                                        <option value="none">Linear (No Ease)</option>
                                     </select>
                                 </div>
                             </div>
@@ -494,6 +505,14 @@
                 document.getElementById('ogImage').value = s.ogImage || '';
                 document.getElementById('twitterCard').value = s.twitterCard || 'summary_large_image';
 
+                // Animations
+                document.getElementById('loaderText').value = s.loaderText || 'Constructing....';
+                document.getElementById('loaderSpeed').value = s.loaderSpeed || 100;
+                document.getElementById('loaderColor').value = s.loaderColor || '#ff6b35';
+                document.getElementById('animDuration').value = s.animDuration || 0.8;
+                document.getElementById('animStagger').value = s.animStagger || 0.2;
+                document.getElementById('animEase').value = s.animEase || 'power3.out';
+
                 // Maintenance
                 document.getElementById('maintenanceMode').checked = s.maintenanceMode === true;
                 document.getElementById('maintenanceMessage').value = s.maintenanceMessage || '';
@@ -538,6 +557,14 @@
                     metaKeywords: document.getElementById('metaKeywords').value,
                     ogImage: document.getElementById('ogImage').value,
                     twitterCard: document.getElementById('twitterCard').value,
+
+                    // Animations
+                    loaderText: document.getElementById('loaderText').value,
+                    loaderSpeed: parseInt(document.getElementById('loaderSpeed').value) || 100,
+                    loaderColor: document.getElementById('loaderColor').value,
+                    animDuration: parseFloat(document.getElementById('animDuration').value) || 0.8,
+                    animStagger: parseFloat(document.getElementById('animStagger').value) || 0.2,
+                    animEase: document.getElementById('animEase').value,
 
                     // Maintenance
                     maintenanceMode: document.getElementById('maintenanceMode').checked,
