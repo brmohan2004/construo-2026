@@ -30,6 +30,17 @@ logs/
 dist/
 build/
 
+# Test files
+tests/node_modules/
+tests/test-results/
+tests/screenshots/*.png
+tests/playwright-report/
+tests/.env
+
+# Test coverage
+coverage/
+.nyc_output/
+
 # Legacy backend (removed in Supabase migration)
 # api/ - already removed
 # Dockerfile - already removed
