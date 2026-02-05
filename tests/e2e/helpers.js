@@ -15,10 +15,10 @@ const CONFIG = {
   // Timeouts
   defaultTimeout: 10000,
   navigationTimeout: 30000,
-  
+
   // URLs
   adminBasePath: '/admin',
-  
+
   // Test Data
   testData: {
     siteTitle: 'CONSTRUO 2026 Test',
@@ -38,11 +38,11 @@ const SELECTORS = {
   // Login Page
   login: {
     username: '#username',
-    password: '#password', 
+    password: '#password',
     submitButton: 'button[type="submit"]',
-    errorMessage: '.error-message, .alert-error'
+    errorMessage: '.login-error, #loginError, .error-message, .alert-error'
   },
-  
+
   // Dashboard / Layout
   dashboard: {
     sidebar: '#admin-sidebar',
@@ -51,7 +51,7 @@ const SELECTORS = {
     contentArea: '#main-content, .admin-content',
     loader: '.loading, .spinner'
   },
-  
+
   // Step 2: Hero Section
   hero: {
     form: '#hero-form, .hero-form',
@@ -63,7 +63,7 @@ const SELECTORS = {
     ctaText: '#cta-text, input[name="cta_text"]',
     saveButton: 'button:has-text("Save"), button[type="submit"]'
   },
-  
+
   // Step 3: About Section
   about: {
     form: '#about-form, .about-form',
@@ -72,7 +72,7 @@ const SELECTORS = {
     featuresList: '.features-list, #features-container',
     addFeatureButton: 'button:has-text("Add Feature")'
   },
-  
+
   // Step 4: Stats Section
   stats: {
     form: '#stats-form, .stats-form',
@@ -80,7 +80,7 @@ const SELECTORS = {
     counterValue: 'input[name*="value"], input[name*="count"]',
     counterLabel: 'input[name*="label"], input[name*="title"]'
   },
-  
+
   // Step 5: Timeline
   timeline: {
     container: '#timeline-container, .timeline-days',
@@ -89,7 +89,7 @@ const SELECTORS = {
     dayDate: 'input[type="date"]',
     dayTitle: 'input[name*="day_title"]'
   },
-  
+
   // Step 6: Events
   events: {
     container: '#events-container, .events-list',
@@ -100,7 +100,7 @@ const SELECTORS = {
     time: 'input[type="time"]',
     speakerSelect: 'select[name*="speaker"]'
   },
-  
+
   // Step 7: Speakers
   speakers: {
     container: '#speakers-container, .speakers-list',
@@ -111,7 +111,7 @@ const SELECTORS = {
     title: 'input[name*="title"], input[name*="role"]',
     photoUpload: 'input[type="file"][accept*="image"]'
   },
-  
+
   // Step 8: Sponsors
   sponsors: {
     container: '#sponsors-container, .sponsors-list',
@@ -122,7 +122,7 @@ const SELECTORS = {
     website: 'input[type="url"]',
     logoUpload: 'input[type="file"][accept*="image"]'
   },
-  
+
   // Step 9: Venue
   venue: {
     form: '#venue-form, .venue-form',
@@ -131,7 +131,7 @@ const SELECTORS = {
     description: 'textarea[name*="venue_description"]',
     facilities: '.facilities-list, #facilities-container'
   },
-  
+
   // Step 10: Organizers
   organizers: {
     container: '#organizers-container, .organizers-list',
@@ -141,7 +141,7 @@ const SELECTORS = {
     role: 'select[name*="role"], input[name*="role"]',
     email: 'input[type="email"]'
   },
-  
+
   // Step 11: Footer & Settings
   footer: {
     form: '#footer-form, .footer-form',
@@ -155,7 +155,7 @@ const SELECTORS = {
     seoDescription: 'textarea[name*="seo_description"], textarea[name*="meta_description"]',
     faviconUpload: 'input[type="file"][name*="favicon"]'
   },
-  
+
   // Step 12: Registrations
   registrations: {
     container: '#registrations-container, .registrations-list',
@@ -185,14 +185,14 @@ async function waitForPageLoad(page) {
 async function login(page, username, password) {
   await page.goto(`${CONFIG.adminBasePath}/`);
   await waitForPageLoad(page);
-  
+
   // Fill in login form
   await page.fill(SELECTORS.login.username, username);
   await page.fill(SELECTORS.login.password, password);
-  
+
   // Click submit
   await page.click(SELECTORS.login.submitButton);
-  
+
   // Wait for navigation to dashboard
   await page.waitForURL(/.*dashboard.*/);
   await waitForPageLoad(page);
@@ -224,7 +224,7 @@ async function navigateToSection(page, sectionName) {
  */
 async function waitForLoading(page) {
   const loader = page.locator(SELECTORS.dashboard.loader);
-  await loader.waitFor({ state: 'hidden', timeout: CONFIG.defaultTimeout }).catch(() => {});
+  await loader.waitFor({ state: 'hidden', timeout: CONFIG.defaultTimeout }).catch(() => { });
 }
 
 /**
@@ -248,9 +248,9 @@ async function fillField(page, selector, value, retries = 3) {
  * Take screenshot with descriptive name
  */
 async function takeScreenshot(page, name) {
-  await page.screenshot({ 
+  await page.screenshot({
     path: `screenshots/${name}-${Date.now()}.png`,
-    fullPage: true 
+    fullPage: true
   });
 }
 
@@ -281,12 +281,12 @@ function createSupabaseClient() {
     const { createClient } = require('@supabase/supabase-js');
     const supabaseUrl = process.env.SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
-    
+
     if (!supabaseUrl || !supabaseKey) {
       console.warn('Supabase credentials not configured, skipping DB validation');
       return null;
     }
-    
+
     return createClient(supabaseUrl, supabaseKey);
   } catch (e) {
     console.warn('Supabase client not available:', e.message);
@@ -300,13 +300,13 @@ function createSupabaseClient() {
 async function verifyDatabaseRecord(table, filter) {
   const supabase = createSupabaseClient();
   if (!supabase) return null;
-  
+
   const { data, error } = await supabase
     .from(table)
     .select('*')
     .match(filter)
     .single();
-    
+
   if (error) throw error;
   return data;
 }
@@ -325,7 +325,7 @@ const SECURITY_PAYLOADS = {
     "<body onload=alert('xss')>",
     '<iframe src="javascript:alert(\'xss\')"></iframe>'
   ],
-  
+
   sqlInjection: [
     "' OR '1'='1",
     "'; DROP TABLE users; --",
@@ -335,21 +335,21 @@ const SECURITY_PAYLOADS = {
     "1'; WAITFOR DELAY '0:0:5' --",
     "' OR '1'='1' /*"
   ],
-  
+
   nosqlInjection: [
     '{"$gt": ""}',
     '{"$ne": null}',
     '{"$regex": ".*"}',
     '{"$where": "this.password.length > 0"}'
   ],
-  
+
   pathTraversal: [
     '../../../etc/passwd',
     '..\\..\\..\\windows\\system32\\config\\sam',
     '....//....//etc/passwd',
     '%2e%2e%2f%2e%2e%2f%2e%2e%2fetc%2fpasswd'
   ],
-  
+
   commandInjection: [
     '; cat /etc/passwd',
     '| whoami',
@@ -365,16 +365,16 @@ const SECURITY_PAYLOADS = {
 async function testXSSInput(page, selector, payload) {
   await page.fill(selector, payload);
   await page.blur(selector);
-  
+
   // Check if script was executed (it shouldn't be)
   const hasAlert = await page.evaluate(() => {
     return window.alert.toString().includes('native') === false;
   });
-  
+
   // Check if payload is rendered as text (safe) or HTML (unsafe)
   const element = page.locator(selector);
   const value = await element.inputValue();
-  
+
   return {
     payload,
     sanitized: value !== payload || !hasAlert,
@@ -394,7 +394,7 @@ async function checkSecurityHeaders(response) {
     'Content-Security-Policy': headers['content-security-policy'],
     'Strict-Transport-Security': headers['strict-transport-security']
   };
-  
+
   return securityHeaders;
 }
 

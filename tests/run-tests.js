@@ -34,7 +34,7 @@ function runTestFile(testFile) {
   log(`\n${'='.repeat(60)}`, 'blue');
   log(`Running: ${testFile}`, 'bright');
   log('='.repeat(60), 'blue');
-  
+
   try {
     execSync(`npx playwright test "${testPath}" --reporter=list`, {
       stdio: 'inherit',
