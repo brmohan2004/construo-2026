@@ -551,6 +551,32 @@
                             </svg>
                             <span>Refresh</span>
                         </button>
+                        <button class="btn btn-success" onclick="toggleWhatsAppMode()" id="waGroupBtn"
+                            style="background-color: #25D366; border-color: #25D366; color: white;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path
+                                    d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+                            </svg>
+                            <span>WA Group</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Group Creation Toolbar (Hidden by default) -->
+                <div id="groupCreationToolbar" class="filters-section"
+                    style="display: none; background: #e6fffa; border-color: #25D366;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <span style="font-weight: 600; color: #008000;">Select participants</span>
+                            <span class="badge badge-success" id="selectedCount"
+                                style="background-color: #28a745; color: white;">0 selected</span>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn btn-secondary" onclick="selectAllVisible()">Select All Visible</button>
+                            <button class="btn btn-primary" onclick="openGroupConfigModal()"
+                                style="background-color: #008000; border-color: #008000;">Configure Group</button>
+                            <button class="btn btn-danger" onclick="toggleWhatsAppMode()">Cancel</button>
+                        </div>
                     </div>
                 </div>
 
@@ -661,6 +687,108 @@
                 </div>
             </div>
         </div>
+        <!-- WhatsApp Group Modal -->
+        <div class="modal" id="whatsappModal">
+            <div class="modal-content modal-sm" style="max-width: 500px;">
+                <div class="modal-header">
+                    <h2 class="modal-title">Create WhatsApp Group</h2>
+                    <button class="modal-close" onclick="closeWhatsAppModal()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label class="form-label">Group Name</label>
+                        <input type="text" class="form-input" id="waGroupName" placeholder="e.g. Construo Event 2026">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-input" id="waGroupDesc" rows="3"
+                            placeholder="Group description..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Participants</label>
+                        <div
+                            style="padding: 0.5rem; background: var(--bg-secondary); border-radius: 4px; font-size: 0.9rem;">
+                            <span id="waParticipantCount">0</span> participants selected
+                        </div>
+                    </div>
+
+                    <div id="waResultArea" style="display: none; margin-top: 1rem;">
+                        <div class="alert alert-success"
+                            style="padding: 1rem; background: #d4edda; color: #155724; border-radius: 4px; margin-bottom: 1rem;">
+                            <strong>Ready to Create!</strong><br>
+                            Since browser automation is limited, click below to open WhatsApp with the contacts.
+                        </div>
+                        <textarea id="waPhoneList" class="form-input" rows="4" readonly
+                            style="font-family: monospace; font-size: 0.8rem;"></textarea>
+                        <p style="font-size: 0.8rem; color: var(--text-secondary);">Copy these numbers if needed.</p>
+                    </div>
+                </div>
+                <div class="modal-footer"
+                    style="padding: 1.25rem; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 0.5rem;"
+                    id="waModalFooter">
+                    <button class="btn btn-secondary" onclick="closeWhatsAppModal()">Cancel</button>
+                    <button class="btn btn-primary" onclick="generateWhatsAppGroup()">Create Group</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- WhatsApp Group Modal -->
+    <div class="modal" id="whatsappModal">
+        <div class="modal-overlay" onclick="closeWhatsAppModal()"></div>
+        <div class="modal-content modal-sm" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2 class="modal-title">Create WhatsApp Group</h2>
+                <button class="modal-close" onclick="closeWhatsAppModal()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label class="form-label">Group Name</label>
+                    <input type="text" class="form-input" id="waGroupName" placeholder="e.g. Construo Event 2026">
+                </div>
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-input" id="waGroupDesc" rows="3"
+                        placeholder="Group description..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Participants</label>
+                    <div
+                        style="padding: 0.5rem; background: var(--bg-secondary); border-radius: 4px; font-size: 0.9rem;">
+                        <span id="waParticipantCount">0</span> participants selected
+                    </div>
+                </div>
+
+                <div id="waResultArea" style="display: none; margin-top: 1rem;">
+                    <div class="alert alert-success"
+                        style="padding: 1rem; background: #d4edda; color: #155724; border-radius: 4px; margin-bottom: 1rem;">
+                        <strong>Ready to Create!</strong><br>
+                        Click below to open WhatsApp with the contacts (requires WhatsApp Web/App).
+                    </div>
+                    <textarea id="waPhoneList" class="form-input" rows="4" readonly
+                        style="font-family: monospace; font-size: 0.8rem;"></textarea>
+                    <p style="font-size: 0.8rem; color: var(--text-secondary);">Copy these numbers if needed.</p>
+                </div>
+            </div>
+            <div class="modal-footer"
+                style="padding: 1.25rem; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 0.5rem;"
+                id="waModalFooter">
+                <button class="btn btn-secondary" onclick="closeWhatsAppModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="generateWhatsAppGroup()">Create Group</button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -677,6 +805,8 @@
         let lastActiveElement = null; // store last focused element before opening modal
         let currentFontSize = 100; // Default font size percentage
         let isAutoFontSize = true; // Auto font size based on columns
+        let isSelectionMode = false; // WhatsApp Group selection mode
+        let selectedRegistrations = new Set(); // Set of selected Registration IDs
 
         // Auto-calculate font size based on number of columns
         function calculateAutoFontSize(columnCount) {
@@ -872,11 +1002,17 @@
                     if (data.form) {
                         document.querySelector('.page-title').textContent = data.form.title || 'Registration Submissions';
                         document.querySelector('.page-description').textContent = data.form.description || 'View and manage all submitted registration details';
+
+                        // Update Search Placeholder
+                        const fieldNames = currentFormFields.slice(0, 3).map(f => f.label).join(', ');
+                        const placeholder = fieldNames ? `Search by Reg No., Name, ${fieldNames}...` : 'Search inputs...';
+                        document.getElementById('searchInput').placeholder = placeholder;
                     }
                 } else {
                     allRegistrations = data.registrations || [];
                     currentFormFields = [];
                     updateStats(data.stats || { total: 0, pending: 0, confirmed: 0, cancelled: 0 });
+                    document.getElementById('searchInput').placeholder = "Search by name, email, reg number...";
                 }
 
                 filteredRegistrations = [...allRegistrations];
@@ -901,17 +1037,36 @@
             const statusFilter = document.getElementById('statusFilter').value;
 
             filteredRegistrations = allRegistrations.filter(reg => {
-                const matchesSearch = !searchTerm ||
-                    reg.registrationNumber.toLowerCase().includes(searchTerm) ||
-                    reg.participant.name?.toLowerCase().includes(searchTerm) ||
-                    reg.participant.email?.toLowerCase().includes(searchTerm) ||
-                    reg.participant.phone?.toLowerCase().includes(searchTerm) ||
-                    reg.participant.college?.toLowerCase().includes(searchTerm);
+                let matchesSearch = !searchTerm;
+
+                if (!matchesSearch) {
+                    // Check standard fields
+                    const standardMatch =
+                        reg.registrationNumber.toLowerCase().includes(searchTerm) ||
+                        reg.participant.name?.toLowerCase().includes(searchTerm) ||
+                        reg.participant.email?.toLowerCase().includes(searchTerm) ||
+                        reg.participant.phone?.toLowerCase().includes(searchTerm) ||
+                        reg.participant.college?.toLowerCase().includes(searchTerm);
+
+                    if (standardMatch) {
+                        matchesSearch = true;
+                    } else if (currentFormFields && currentFormFields.length > 0) {
+                        // Check dynamic fields
+                        matchesSearch = currentFormFields.some(field => {
+                            const val = reg.data?.[field.id];
+                            return val && String(val).toLowerCase().includes(searchTerm);
+                        });
+                    }
+                }
 
                 const matchesStatus = !statusFilter || reg.status === statusFilter;
 
                 return matchesSearch && matchesStatus;
             });
+
+            // Clear selection if filter changes to avoid confusion
+            // selectedRegistrations.clear(); // Optional: decided not to clear to allow multi-select across pages/filters
+            // updateSelectionUI();
 
             renderTable();
         }
@@ -925,9 +1080,11 @@
         function renderTableHeaders() {
             const thead = document.querySelector('#submissionsTable thead tr');
 
+            const selectionHeader = isSelectionMode ? '<th style="width: 40px"><input type="checkbox" id="masterCheckbox" onchange="toggleSelectAll(this)"></th>' : '';
+
             if (currentFormFields.length > 0) {
                 // Dynamic headers based on form fields
-                let headers = '<th>Reg. Number</th>';
+                let headers = selectionHeader + '<th>Reg. Number</th>';
 
                 // Add headers for each form field
                 currentFormFields.forEach(field => {
@@ -941,7 +1098,7 @@
                 applyAutoFontSize();
             } else {
                 // Default headers when no specific form
-                thead.innerHTML = `
+                thead.innerHTML = selectionHeader + `
                     <th>Reg. Number</th>
                     <th>Name</th>
                     <th>Email</th>
@@ -951,6 +1108,12 @@
                     <th>Submitted</th>
                     <th>Actions</th>
                 `;
+            }
+
+            // Restore master checkbox state
+            if (isSelectionMode && document.getElementById('masterCheckbox')) {
+                const allVisibleSelected = filteredRegistrations.length > 0 && filteredRegistrations.every(r => selectedRegistrations.has(r.id));
+                document.getElementById('masterCheckbox').checked = allVisibleSelected;
             }
         }
 
@@ -966,18 +1129,36 @@
 
             emptyState.style.display = 'none';
 
-            if (currentFormFields.length > 0) {
-                // Dynamic rendering based on form fields
-                tbody.innerHTML = filteredRegistrations.map(reg => {
-                    let row = `<tr><td><strong>${reg.registrationNumber}</strong></td>`;
+            tbody.innerHTML = filteredRegistrations.map(reg => {
+                const isSelected = selectedRegistrations.has(reg.id);
+                const selectionCell = isSelectionMode
+                    ? `<td><input type="checkbox" class="participant-checkbox" ${isSelected ? 'checked' : ''} onchange="toggleRowSelection('${reg.id}')"></td>`
+                    : '';
 
-                    // Add data for each form field
+                let rowContent = '';
+
+                if (currentFormFields.length > 0) {
+                    // Dynamic rendering
+                    rowContent += `<td><strong>${reg.registrationNumber}</strong></td>`;
                     currentFormFields.forEach(field => {
                         const value = reg.data?.[field.id] || 'N/A';
-                        row += `<td>${value}</td>`;
+                        rowContent += `<td>${value}</td>`;
                     });
+                } else {
+                    // Default rendering
+                    rowContent += `
+                        <td><strong>${reg.registrationNumber}</strong></td>
+                        <td>${reg.participant.name || 'N/A'}</td>
+                        <td>${reg.participant.email || 'N/A'}</td>
+                        <td>${reg.participant.phone || 'N/A'}</td>
+                        <td>${reg.participant.college || 'N/A'}</td>
+                    `;
+                }
 
-                    row += `
+                return `
+                    <tr class="${isSelected ? 'selected-row' : ''}">
+                        ${selectionCell}
+                        ${rowContent}
                         <td>
                             <span class="status-badge ${reg.status}">
                                 ${reg.status}
@@ -1007,49 +1188,7 @@
                             </div>
                         </td>
                     </tr>`;
-
-                    return row;
-                }).join('');
-            } else {
-                // Default rendering with standard columns
-                tbody.innerHTML = filteredRegistrations.map(reg => `
-                    <tr>
-                        <td><strong>${reg.registrationNumber}</strong></td>
-                        <td>${reg.participant.name || 'N/A'}</td>
-                        <td>${reg.participant.email || 'N/A'}</td>
-                        <td>${reg.participant.phone || 'N/A'}</td>
-                        <td>${reg.participant.college || 'N/A'}</td>
-                        <td>
-                            <span class="status-badge ${reg.status}">
-                                ${reg.status}
-                            </span>
-                        </td>
-                        <td>${formatDate(reg.createdAt)}</td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn-icon" data-action="view" data-reg-data='${JSON.stringify(reg).replace(/'/g, "&#39;")}' title="View Details">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <circle cx="12" cy="12" r="10" />
-                                        <line x1="12" y1="16" x2="12" y2="12" />
-                                        <line x1="12" y1="8" x2="12.01" y2="8" />
-                                    </svg>
-                                </button>
-                                <button class="btn-icon" data-action="confirm" data-reg-id="${reg.id}" title="Confirm">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <polyline points="20 6 9 17 4 12" />
-                                    </svg>
-                                </button>
-                                <button class="btn-icon" data-action="delete" data-reg-id="${reg.id}" title="Delete">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <polyline points="3 6 5 6 21 6" />
-                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                                    </svg>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                `).join('');
-            }
+            }).join('');
         }
 
         function viewDetails(registration) {
@@ -1282,11 +1421,168 @@
             }, 5000);
         }
 
-        // Close modal on outside click
+        // WhatsApp Mode Functions
+        function toggleWhatsAppMode() {
+            isSelectionMode = !isSelectionMode;
+            const toolbar = document.getElementById('groupCreationToolbar');
+            const waGroupBtn = document.getElementById('waGroupBtn');
+
+            if (isSelectionMode) {
+                toolbar.style.display = 'block';
+                waGroupBtn.style.display = 'none';
+                selectedRegistrations.clear();
+                updateSelectionUI();
+            } else {
+                toolbar.style.display = 'none';
+                waGroupBtn.style.display = 'inline-flex';
+                selectedRegistrations.clear();
+            }
+            renderTableHeaders();
+            renderTable();
+        }
+
+        function toggleRowSelection(id) {
+            if (selectedRegistrations.has(id)) {
+                selectedRegistrations.delete(id);
+            } else {
+                selectedRegistrations.add(id);
+            }
+            updateSelectionUI();
+
+            // Update UI for this specific row without full re-render if needed
+            const checkbox = document.querySelector(`input[onchange="toggleRowSelection('${id}')"]`);
+            if (checkbox) checkbox.checked = selectedRegistrations.has(id);
+            const tr = checkbox?.closest('tr');
+            if (tr) {
+                if (selectedRegistrations.has(id)) tr.classList.add('selected-row');
+                else tr.classList.remove('selected-row');
+            }
+        }
+
+        function toggleSelectAll(masterCheckbox) {
+            const isChecked = masterCheckbox.checked;
+            filteredRegistrations.forEach(reg => {
+                if (isChecked) selectedRegistrations.add(reg.id);
+                else selectedRegistrations.delete(reg.id);
+            });
+            updateSelectionUI();
+            renderTable();
+        }
+
+        function selectAllVisible() {
+            filteredRegistrations.forEach(reg => selectedRegistrations.add(reg.id));
+            updateSelectionUI();
+            renderTable();
+        }
+
+        function updateSelectionUI() {
+            document.getElementById('selectedCount').textContent = `${selectedRegistrations.size} selected`;
+            document.getElementById('waParticipantCount').textContent = selectedRegistrations.size;
+        }
+
+        function openGroupConfigModal() {
+            try {
+                console.log('Opening Group Config Modal. Selected count:', selectedRegistrations.size);
+
+                if (selectedRegistrations.size === 0) {
+                    showNotification('Please select at least one participant first.', 'error');
+                    return;
+                }
+
+                const modal = document.getElementById('whatsappModal');
+                if (!modal) {
+                    console.error('WhatsApp Modal element not found!');
+                    showNotification('Error: Modal template missing.', 'error');
+                    return;
+                }
+
+                modal.classList.add('active');
+
+                // Reset fields
+                const resultArea = document.getElementById('waResultArea');
+                if (resultArea) resultArea.style.display = 'none';
+
+                const phoneList = document.getElementById('waPhoneList');
+                if (phoneList) phoneList.value = '';
+
+                const footer = document.getElementById('waModalFooter');
+                if (footer) footer.style.display = 'flex';
+
+                // Focus name input
+                setTimeout(() => {
+                    const nameInput = document.getElementById('waGroupName');
+                    if (nameInput) nameInput.focus();
+                }, 100);
+
+            } catch (e) {
+                console.error('Error opening modal:', e);
+                alert('Error opening modal: ' + e.message);
+            }
+        }
+
+        function closeWhatsAppModal() {
+            document.getElementById('whatsappModal').classList.remove('active');
+        }
+
+        function generateWhatsAppGroup() {
+            const groupName = document.getElementById('waGroupName').value;
+            if (!groupName) {
+                showNotification('Please enter a group name', 'error');
+                return;
+            }
+
+            // Collect Phone Numbers
+            const phones = [];
+            selectedRegistrations.forEach(id => {
+                const reg = allRegistrations.find(r => r.id === id);
+                if (reg) {
+                    // Try to find phone in standard field or dynamic fields
+                    let phone = reg.participant?.phone;
+                    if (!phone && reg.data) {
+                        // Search in data for keys containing 'phone' or 'mobile'
+                        const key = Object.keys(reg.data).find(k => k.toLowerCase().includes('phone') || k.toLowerCase().includes('mobile'));
+                        if (key) phone = reg.data[key];
+                    }
+                    if (phone) phones.push(phone);
+                }
+            });
+
+            if (phones.length === 0) {
+                showNotification('No phone numbers found for selected participants', 'error');
+                return;
+            }
+
+            // Show Result
+            document.getElementById('waResultArea').style.display = 'block';
+            document.getElementById('waPhoneList').value = phones.join(',\n');
+            document.getElementById('waModalFooter').style.display = 'none'; // Hide create button to prevent re-click
+
+            showNotification(`Ready! Found ${phones.length} contacts.`, 'success');
+        }
+
+        // Close details modal on outside click
         document.getElementById('detailsModal').addEventListener('click', (e) => {
             if (e.target.id === 'detailsModal') {
                 closeModal();
             }
+        });
+
+        // Close WhatsApp modal on outside click
+        document.getElementById('whatsappModal').addEventListener('click', (e) => {
+            if (e.target.id === 'whatsappModal') {
+                closeWhatsAppModal();
+            }
+        });
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Get formId from URL if provided
+            const urlParams = new URLSearchParams(window.location.search);
+            currentFormId = urlParams.get('formId');
+
+            loadFontSize(); // Load saved font size
+            loadRegistrations();
+            setupEventListeners();
         });
     </script>
     <script type="module" src="../js/supabase-config.js"></script>

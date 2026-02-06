@@ -1260,7 +1260,14 @@ const Admin = {
             const formId = endpoint.split('/')[2];
             if (endpoint.endsWith('/toggle')) {
                 const { data: original } = await supabase.from('registration_forms').select('is_active').eq('id', formId).single();
-                const { error } = await supabase.from('registration_forms').update({ is_active: !original.is_active }).eq('id', formId);
+                const newStatus = !original.is_active;
+
+                if (newStatus) {
+                    // Activate this form: First deactivate all others
+                    await supabase.from('registration_forms').update({ is_active: false }).neq('id', formId);
+                }
+
+                const { error } = await supabase.from('registration_forms').update({ is_active: newStatus }).eq('id', formId);
                 if (error) throw error;
                 return { message: 'Status updated' };
             }
