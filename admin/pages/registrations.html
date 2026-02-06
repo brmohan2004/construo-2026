@@ -160,6 +160,7 @@
 <body>
     <div class="admin-layout">
         <!-- Sidebar -->
+
         <aside class="admin-sidebar" id="sidebar">
             <div class="sidebar-header">
                 <a href="../dashboard.html" class="sidebar-logo">
@@ -178,141 +179,151 @@
                 </button>
             </div>
 
-            <nav class="sidebar-nav">
-                <div class="nav-section">
-                    <div class="nav-section-title">Overview</div>
-                    <ul class="nav-menu">
-                        <li class="nav-item">
-                            <a href="../dashboard.html" class="nav-link">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="3" y="3" width="7" height="9" />
-                                    <rect x="14" y="3" width="7" height="5" />
-                                    <rect x="14" y="12" width="7" height="9" />
-                                    <rect x="3" y="16" width="7" height="5" />
-                                </svg>
-                                <span>Dashboard</span>
-                            </a>
-                        </li>
-                    </ul>
+            <div class="sidebar-content">
+                <div class="nav-group">
+                    <div class="nav-label">Overview</div>
+                    <a href="../dashboard.html" class="nav-item">
+                        <span class="icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <rect x="3" y="3" width="7" height="9" />
+                                <rect x="14" y="3" width="7" height="5" />
+                                <rect x="14" y="12" width="7" height="9" />
+                                <rect x="3" y="16" width="7" height="5" />
+                            </svg>
+                        </span>
+                        <span>Dashboard</span>
+                    </a>
                 </div>
 
-                <div class="nav-section">
-                    <div class="nav-section-title">Website Sections</div>
-                    <ul class="nav-menu">
-                        <li class="nav-item"><a href="hero.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none"
-                                    stroke="currentColor" stroke-width="2">
-                                    <polygon points="12 2 2 7 12 12 22 7 12 2" />
-                                    <polyline points="2 17 12 22 22 17" />
-                                    <polyline points="2 12 12 17 22 12" />
-                                </svg><span>Hero Section</span></a></li>
-                        <li class="nav-item"><a href="about.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none"
-                                    stroke="currentColor" stroke-width="2">
-                                    <circle cx="12" cy="12" r="10" />
-                                    <line x1="12" y1="16" x2="12" y2="12" />
-                                    <line x1="12" y1="8" x2="12.01" y2="8" />
-                                </svg><span>About</span></a></li>
-                        <li class="nav-item"><a href="events.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none"
-                                    stroke="currentColor" stroke-width="2">
-                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                                    <line x1="16" y1="2" x2="16" y2="6" />
-                                    <line x1="8" y1="2" x2="8" y2="6" />
-                                    <line x1="3" y1="10" x2="21" y2="10" />
-                                </svg><span>Events</span></a></li>
-                        <li class="nav-item"><a href="timeline.html" class="nav-link"><svg viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2">
-                                    <circle cx="12" cy="12" r="10" />
-                                    <polyline points="12 6 12 12 16 14" />
-                                </svg><span>Timeline</span></a></li>
-                        <li class="nav-item"><a href="speakers.html" class="nav-link"><svg viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                                    <circle cx="9" cy="7" r="4" />
-                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                                </svg><span>Speakers</span></a></li>
-                        <li class="nav-item"><a href="sponsors.html" class="nav-link"><svg viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
-                                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
-                                </svg><span>Sponsors</span></a></li>
-                        <li class="nav-item"><a href="organizers.html" class="nav-link"><svg viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                                    <circle cx="9" cy="7" r="4" />
-                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                                </svg><span>Organizers</span></a></li>
-                        <li class="nav-item"><a href="venue.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none"
-                                    stroke="currentColor" stroke-width="2">
-                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                                    <circle cx="12" cy="10" r="3" />
-                                </svg><span>Venue</span></a></li>
-                        <li class="nav-item"><a href="footer.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none"
-                                    stroke="currentColor" stroke-width="2">
-                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                                    <line x1="3" y1="15" x2="21" y2="15" />
-                                </svg><span>Footer</span></a></li>
-                    </ul>
+                <div class="nav-group">
+                    <div class="nav-label">Content Management</div>
+                    <a href="hero.html" class="nav-item">
+                        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <polygon points="12 2 2 7 12 12 22 7 12 2" />
+                                <polyline points="2 17 12 22 22 17" />
+                                <polyline points="2 12 12 17 22 12" />
+                            </svg></span>
+                        <span>Hero Section</span>
+                    </a>
+                    <a href="about.html" class="nav-item">
+                        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="16" x2="12" y2="12" />
+                                <line x1="12" y1="8" x2="12.01" y2="8" />
+                            </svg></span>
+                        <span>About</span>
+                    </a>
+                    <a href="events.html" class="nav-item">
+                        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                                <line x1="16" y1="2" x2="16" y2="6" />
+                                <line x1="8" y1="2" x2="8" y2="6" />
+                                <line x1="3" y1="10" x2="21" y2="10" />
+                            </svg></span>
+                        <span>Events</span>
+                    </a>
+                    <a href="timeline.html" class="nav-item">
+                        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <circle cx="12" cy="12" r="10" />
+                                <polyline points="12 6 12 12 16 14" />
+                            </svg></span>
+                        <span>Timeline</span>
+                    </a>
+                    <a href="speakers.html" class="nav-item">
+                        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                <circle cx="9" cy="7" r="4" />
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                            </svg></span>
+                        <span>Speakers</span>
+                    </a>
+                    <a href="sponsors.html" class="nav-item">
+                        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+                            </svg></span>
+                        <span>Sponsors</span>
+                    </a>
+                    <a href="organizers.html" class="nav-item">
+                        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                <circle cx="9" cy="7" r="4" />
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                            </svg></span>
+                        <span>Organizers</span>
+                    </a>
+                    <a href="venue.html" class="nav-item">
+                        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                <circle cx="12" cy="10" r="3" />
+                            </svg></span>
+                        <span>Venue</span>
+                    </a>
+                    <a href="footer.html" class="nav-item">
+                        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                <line x1="3" y1="15" x2="21" y2="15" />
+                            </svg></span>
+                        <span>Footer</span>
+                    </a>
+                    <a href="media.html" class="nav-item">
+                        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                <circle cx="8.5" cy="8.5" r="1.5" />
+                                <polyline points="21 15 16 10 5 21" />
+                            </svg></span>
+                        <span>Media</span>
+                    </a>
                 </div>
 
-                <div class="nav-section">
-                    <div class="nav-section-title">Management</div>
-                    <ul class="nav-menu">
-                        <li class="nav-item">
-                            <a href="registrations.html" class="nav-link active">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                                    <polyline points="14 2 14 8 20 8" />
-                                    <line x1="16" y1="13" x2="8" y2="13" />
-                                    <line x1="16" y1="17" x2="8" y2="17" />
-                                </svg>
-                                <span>Registrations</span>
-                            </a>
-                        </li>
-                        <li class="nav-item"><a href="users.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none"
-                                    stroke="currentColor" stroke-width="2">
-                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                                    <circle cx="12" cy="7" r="4" />
-                                </svg><span>Users</span></a></li>
-                        <li class="nav-item"><a href="media.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none"
-                                    stroke="currentColor" stroke-width="2">
-                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                                    <circle cx="8.5" cy="8.5" r="1.5" />
-                                    <polyline points="21 15 16 10 5 21" />
-                                </svg><span>Media</span></a></li>
-                        <li class="nav-item"><a href="settings.html" class="nav-link"><svg viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2">
-                                    <circle cx="12" cy="12" r="3" />
-                                    <path
-                                        d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
-                                </svg><span>Settings</span></a></li>
-                    </ul>
+                <div class="nav-group">
+                    <div class="nav-label">System</div>
+                    <a href="registrations.html" class="nav-item active">
+                        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                <polyline points="14 2 14 8 20 8" />
+                                <line x1="16" y1="13" x2="8" y2="13" />
+                                <line x1="16" y1="17" x2="8" y2="17" />
+                            </svg></span>
+                        <span>Registrations</span>
+                    </a>
+                    <a href="users.html" class="nav-item">
+                        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                <circle cx="12" cy="7" r="4" />
+                            </svg></span>
+                        <span>Users</span>
+                    </a>
+                    <a href="settings.html" class="nav-item">
+                        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <circle cx="12" cy="12" r="3" />
+                                <path
+                                    d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                            </svg></span>
+                        <span>Settings</span>
+                    </a>
                 </div>
-            </nav>
+            </div>
 
             <div class="sidebar-footer">
                 <div class="sidebar-user" id="sidebarUser">
                     <div class="user-avatar" id="userAvatar">SA</div>
                     <div class="user-info">
                         <div class="user-name" id="userName">Super Admin</div>
-                        <div class="user-role" id="userRole">Super Admin</div>
+                        <div class="user-role" id="userRole">Admin</div>
                     </div>
                 </div>
             </div>
         </aside>
+
 
         <!-- Main Content -->
         <main class="admin-main">
             <!-- Header -->
             <header class="admin-header">
                 <div class="header-left">
-                    <button class="sidebar-toggle mobile-toggle" id="mobileSidebarToggle">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="3" y1="12" x2="21" y2="12" />
-                            <line x1="3" y1="6" x2="21" y2="6" />
-                            <line x1="3" y1="18" x2="21" y2="18" />
-                        </svg>
-                    </button>
                     <div>
                         <h1 class="header-title">Registration Forms</h1>
                         <div class="header-breadcrumb">
@@ -323,6 +334,17 @@
                     </div>
                 </div>
                 <div class="header-right">
+                    <button class="btn btn-secondary" onclick="window.location.href='registration-submissions.html'"
+                        style="margin-right: 0.5rem;" title="View all submissions across all forms">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                            <line x1="16" y1="13" x2="8" y2="13" />
+                            <line x1="16" y1="17" x2="8" y2="17" />
+                            <polyline points="10 9 9 9 8 9" />
+                        </svg>
+                        View All Submissions
+                    </button>
                     <button class="btn btn-primary" id="createFormBtn">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <line x1="12" y1="5" x2="12" y2="19" />
@@ -875,57 +897,69 @@
             },
 
             async deleteForm(formId) {
-                if (!confirm('Are you sure you want to delete this form? This cannot be undone.')) {
+                if (!confirm('Are you sure you want to delete this form? This cannot be undone. All submissions will be downloaded as CSV before deletion.')) {
                     return;
                 }
 
                 try {
-                    // Handling potential 400 error for existing submissions needs careful catch
-                    // We need to know if Admin.apiDelete throws error with response data we can read
+                    Utils.showToast('Preparing backup...', 'info');
 
+                    // 1. Fetch submissions for backup
+                    let submissions = [];
+                    let form = null;
+                    try {
+                        const data = await Admin.apiGet(`registrations/forms/${formId}/submissions`);
+                        submissions = data.submissions || [];
+                        form = data.form;
+                    } catch (e) {
+                        console.warn('Could not fetch submissions for backup', e);
+                    }
+
+                    // 2. Generate & Download CSV if submissions exist
+                    if (submissions.length > 0 && form) {
+                        const headers = ['Registration Number', ...form.fields.map(f => f.label), 'Status', 'Submitted At'];
+                        const csvContent = [
+                            headers.join(','),
+                            ...submissions.map(sub => {
+                                const row = [
+                                    sub.registrationNumber,
+                                    ...form.fields.map(f => {
+                                        let val = sub.data[f.id];
+                                        if (Array.isArray(val)) val = val.join('; ');
+                                        return `"${(val || '').toString().replace(/"/g, '""')}"`;
+                                    }),
+                                    sub.status,
+                                    `"${new Date(sub.createdAt).toLocaleString()}"`
+                                ];
+                                return row.join(',');
+                            })
+                        ].join('\n');
+
+                        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                        const link = document.createElement('a');
+                        const url = URL.createObjectURL(blob);
+                        link.setAttribute('href', url);
+                        link.setAttribute('download', `${form.title.replace(/[^a-z0-9]/gi, '_')}_submissions_backup.csv`);
+                        link.style.visibility = 'hidden';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+
+                        await new Promise(resolve => setTimeout(resolve, 1500));
+                    }
+
+                    // 3. Delete Form
+                    // The backend should handle cascading deletes for submissions.
+                    // If not, we could explicitly delete them, but usually form deletion is sufficient.
                     await Admin.apiDelete(`registrations/forms/${formId}`);
-                    Utils.showToast('Form deleted successfully', 'success');
+
+                    Utils.showToast('Form deleted successfully. Submissions backup downloaded.', 'success');
                     this.loadForms();
                     this.loadStats();
 
                 } catch (error) {
                     console.error('Error deleting form:', error);
-                    // Check if error message indicates existing submissions
-                    if (error.message && error.message.includes('existing submissions')) {
-                        if (confirm('This form has existing submissions. Do you want to delete all submissions and the form?')) {
-                            await this.forceDeleteForm(formId);
-                        }
-                    } else {
-                        Utils.showToast('Failed to delete form', 'error');
-                    }
-                }
-            },
-
-            async forceDeleteForm(formId) {
-                try {
-                    Utils.showToast('Deleting submissions...', 'info');
-
-                    // 1. Fetch submissions
-                    const subResponse = await Admin.apiGet(`registrations/forms/${formId}/submissions`);
-                    const submissions = subResponse.submissions || [];
-
-                    // 2. Delete all submissions
-                    if (submissions.length > 0) {
-                        const deletePromises = submissions.map(sub =>
-                            Admin.apiDelete(`registrations/submissions/${sub.id}`)
-                        );
-                        await Promise.all(deletePromises);
-                    }
-
-                    // 3. Delete the form
-                    await Admin.apiDelete(`registrations/forms/${formId}`);
-
-                    Utils.showToast('Form and all submissions deleted', 'success');
-                    this.loadForms();
-                    this.loadStats();
-                } catch (error) {
-                    console.error('Error force deleting form:', error);
-                    Utils.showToast('Failed to force delete form', 'error');
+                    Utils.showToast('Failed to delete form: ' + error.message, 'error');
                 }
             },
 

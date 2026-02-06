@@ -151,12 +151,12 @@ const Admin = {
         const totalRegEl = document.getElementById('totalRegistrations');
         const totalEventsEl = document.getElementById('totalEvents');
         const recentRegTbody = document.getElementById('recentRegistrations');
-        const activityFeedEl = document.getElementById('activityFeed');
 
         if (!totalRegEl) return; // Not on dashboard
 
         try {
             // 1. Fetch Registrations (Total count + Recent 5)
+            // We need created_at for sorting and date display, registration_number/id, and status
             const { data: recentRegs, count: regCount, error: regErr } = await supabase
                 .from('registrations')
                 .select('*', { count: 'exact' })
@@ -172,13 +172,6 @@ const Admin = {
 
             if (evtErr) throw evtErr;
 
-            // 3. Fetch Recent Activity
-            const { data: activities, error: actErr } = await supabase
-                .from('activity_logs')
-                .select('*')
-                .order('timestamp', { ascending: false })
-                .limit(5);
-
             // Update Stats Cards
             if (totalRegEl) totalRegEl.textContent = regCount || 0;
             if (totalEventsEl) totalEventsEl.textContent = eventsCount || 0;
@@ -186,36 +179,19 @@ const Admin = {
             // Update Recent Registrations Table
             if (recentRegTbody && recentRegs) {
                 if (recentRegs.length === 0) {
-                    recentRegTbody.innerHTML = '<tr><td colspan="5" class="text-center">No registrations yet</td></tr>';
+                    recentRegTbody.innerHTML = '<tr><td colspan="3" class="text-center">No registrations yet</td></tr>';
                 } else {
-                    recentRegTbody.innerHTML = recentRegs.map(reg => `
+                    recentRegTbody.innerHTML = recentRegs.map(reg => {
+                        const date = new Date(reg.created_at);
+                        const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                        return `
                         <tr>
                             <td><code>${reg.registration_number || 'N/A'}</code></td>
-                            <td>${reg.full_name || 'Unknown'}</td>
-                            <td>${(reg.events || []).length} events</td>
+                            <td>${formattedDate}</td>
                             <td><span class="badge badge-${this.getStatusBadgeColor(reg.status)}">${reg.status}</span></td>
-                            <td>₹${reg.amount || 0}</td>
                         </tr>
-                    `).join('');
-                }
-            }
-
-            // Update Activity Feed
-            if (activityFeedEl && activities) {
-                if (activities.length === 0) {
-                    activityFeedEl.innerHTML = '<div class="text-center text-muted">No recent activity</div>';
-                } else {
-                    activityFeedEl.innerHTML = activities.map(log => `
-                        <div class="activity-item">
-                            <div class="activity-icon ${this.getActivityIconColor(log.action)}">
-                                ${this.getActivityIcon(log.action)}
-                            </div>
-                            <div class="activity-content">
-                                <p><strong>${this.formatActivityTitle(log.action, log.section)}</strong> - ${log.description}</p>
-                                <span class="activity-time">${this.timeAgo(new Date(log.timestamp))}</span>
-                            </div>
-                        </div>
-                    `).join('');
+                    `}).join('');
                 }
             }
 
