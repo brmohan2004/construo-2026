@@ -737,11 +737,30 @@ class ConstruoApp {
                 sessions.forEach(session => {
                     const sessionElement = document.createElement('div');
                     sessionElement.className = 'event-block';
+
+                    // Clean debug logs from title and description
+                    const cleanTitle = (title) => {
+                        if (!title) return '';
+                        if (title.includes('initializing TimelineManager') || title.includes('auth.js')) return 'Session';
+                        return title;
+                    };
+
+                    const cleanDesc = (desc) => {
+                        if (!desc) return '';
+                        if (desc.includes('checkSession') || desc.includes('[Auth]')) return '';
+                        return desc;
+                    };
+
+                    const title = cleanTitle(session.title);
+                    const description = cleanDesc(session.description);
+
                     sessionElement.innerHTML = `
                         <span class="event-time">${session.start} - ${session.end}</span>
-                        <span class="event-name">${session.title}</span>
-                        ${session.description ? `<span class="event-description">${session.description}</span>` : ''}
-                        ${session.venue ? `<span class="event-venue">📍 ${session.venue}</span>` : ''}
+                        <div class="event-details">
+                            <span class="event-name">${title}</span>
+                            ${description ? `<span class="event-description">${description}</span>` : ''}
+                            ${session.venue ? `<span class="event-venue">📍 ${session.venue}</span>` : ''}
+                        </div>
                     `;
                     sessionsContainer.appendChild(sessionElement);
                 });
