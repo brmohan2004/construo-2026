@@ -2798,6 +2798,12 @@ body:hover .cursor-follower {
     .section {
         min-height: auto;
         padding: var(--section-padding) 0;
+        width: 100%;
+        position: relative;
+        z-index: 1;
+        overflow-x: hidden;
+        background-color: var(--color-bg);
+        /* ensure solid base */
     }
 
     .section-container {
