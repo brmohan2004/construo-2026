@@ -10,7 +10,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="../css/admin.css?v=1.1">
 </head>
 
 <body>
@@ -169,43 +169,6 @@
                     </div>
                 </div>
 
-                <!-- Users Table -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Admin Users</h3>
-                        <div class="table-filters">
-                            <select class="form-select form-select-sm" id="roleFilter">
-                                <option value="">All Roles</option>
-                                <option value="superadmin">Super Admin</option>
-                                <option value="admin">Admin</option>
-                                <option value="moderator">Moderator</option>
-                            </select>
-                            <select class="form-select form-select-sm" id="statusFilter">
-                                <option value="">All Status</option>
-                                <option value="active">Active</option>
-                                <option value="inactive">Inactive</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="table-responsive">
-                            <table class="data-table">
-                                <thead>
-                                    <tr>
-                                        <th>User</th>
-                                        <th>Username</th>
-                                        <th>Role</th>
-                                        <th>Status</th>
-                                        <th>Last Login</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="usersTableBody"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Role Permissions Card -->
                 <div class="card">
                     <div class="card-header">
@@ -243,68 +206,186 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Users Table -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Admin Users</h3>
+                        <div class="table-filters">
+                            <select class="form-select form-select-sm" id="roleFilter">
+                                <option value="">All Roles</option>
+                                <option value="superadmin">Super Admin</option>
+                                <option value="admin">Admin</option>
+                                <option value="moderator">Moderator</option>
+                            </select>
+                            <select class="form-select form-select-sm" id="statusFilter">
+                                <option value="">All Status</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>User</th>
+                                        <th>Username</th>
+                                        <th>Role</th>
+                                        <th>Status</th>
+                                        <th>Last Login</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="usersTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
 
     <!-- User Modal -->
     <div class="modal-backdrop" id="userModal">
-        <div class="modal modal-md">
+        <div class="modal modal-md premium-modal">
             <div class="modal-header">
-                <h2 class="modal-title" id="userModalTitle">Add User</h2>
-                <button class="modal-close" id="userModalClose"><svg viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2">
+                <div class="modal-title-group">
+                    <div class="modal-icon-glow">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                            <polyline points="16 11 18 13 22 9" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="modal-title" id="userModalTitle">Add New User</h2>
+                        <p class="modal-subtitle">Configure administrative access and permissions</p>
+                    </div>
+                </div>
+                <button class="modal-close-btn" id="userModalClose">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="18" y1="6" x2="6" y2="18" />
                         <line x1="6" y1="6" x2="18" y2="18" />
-                    </svg></button>
+                    </svg>
+                </button>
             </div>
             <div class="modal-body">
-                <form id="userForm">
+                <form id="userForm" class="premium-form">
                     <input type="hidden" id="userId">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">Full Name *</label>
-                            <input type="text" class="form-input" id="userName" required>
+
+                    <div class="form-section">
+                        <h3 class="section-title">Identity</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="premium-label">Full Name <span class="required">*</span></label>
+                                <div class="input-wrapper">
+                                    <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                        <circle cx="12" cy="7" r="4" />
+                                    </svg>
+                                    <input type="text" class="premium-input" id="userName" placeholder="e.g. John Doe"
+                                        required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="premium-label">Username <span class="required">*</span></label>
+                                <div class="input-wrapper">
+                                    <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <circle cx="12" cy="12" r="4" />
+                                        <path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94" />
+                                    </svg>
+                                    <input type="text" class="premium-input" id="userUsername" placeholder="johndoe26"
+                                        required>
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label">Username *</label>
-                            <input type="text" class="form-input" id="userUsername" required>
+                        <div class="form-group mt-3">
+                            <label class="premium-label">Email Address <span class="required">*</span></label>
+                            <div class="input-wrapper">
+                                <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path
+                                        d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                    <polyline points="22,6 12,13 2,6" />
+                                </svg>
+                                <input type="email" class="premium-input" id="userEmail" placeholder="john@example.com"
+                                    required>
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">Email</label>
-                        <input type="email" class="form-input" id="userEmail">
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">Password <span id="pwdHint">(required for new
-                                    users)</span></label>
-                            <input type="password" class="form-input" id="userPassword">
+
+                    <div class="form-section mt-4">
+                        <h3 class="section-title">Security & Access</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="premium-label">Password <span id="pwdHint"
+                                        class="hint-text">(Required)</span></label>
+                                <div class="input-wrapper">
+                                    <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                                    </svg>
+                                    <input type="password" class="premium-input" id="userPassword"
+                                        placeholder="••••••••">
+                                </div>
+                            </div>
+                            <div class="form-group full-width">
+                                <label class="premium-label">System Role <span class="required">*</span></label>
+                                <div class="role-radio-group">
+                                    <label class="role-radio-card">
+                                        <input type="radio" name="userRole" value="moderator" checked>
+                                        <div class="role-radio-content">
+                                            <span class="role-radio-title">Moderator</span>
+                                            <span class="role-radio-desc">Limited access</span>
+                                        </div>
+                                    </label>
+                                    <label class="role-radio-card">
+                                        <input type="radio" name="userRole" value="admin">
+                                        <div class="role-radio-content">
+                                            <span class="role-radio-title">Admin</span>
+                                            <span class="role-radio-desc">Full content management</span>
+                                        </div>
+                                    </label>
+                                    <label class="role-radio-card">
+                                        <input type="radio" name="userRole" value="superadmin">
+                                        <div class="role-radio-content">
+                                            <span class="role-radio-title">Super Admin</span>
+                                            <span class="role-radio-desc">All system controls</span>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label">Role *</label>
-                            <select class="form-select" id="userRole" required>
-                                <option value="moderator">Moderator</option>
-                                <option value="admin">Admin</option>
-                                <option value="superadmin">Super Admin</option>
-                            </select>
-                        </div>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">Status</label>
-                        <div class="toggle-group">
-                            <label class="toggle">
+
+                    <div class="form-footer-actions mt-4">
+                        <div class="status-toggle-container">
+                            <div class="status-info">
+                                <span class="status-label">Account Status</span>
+                                <span id="statusLabel" class="status-text active">Active</span>
+                            </div>
+                            <label class="premium-switch">
                                 <input type="checkbox" id="userStatus" checked>
-                                <span class="toggle-slider"></span>
+                                <span class="switch-slider"></span>
                             </label>
-                            <span id="statusLabel">Active</span>
                         </div>
                     </div>
                 </form>
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" id="userModalCancel">Cancel</button>
-                <button class="btn btn-primary" id="userModalSave">Save User</button>
+            <div class="modal-footer premium-footer">
+                <button class="premium-btn btn-ghost" id="userModalCancel">Cancel</button>
+                <button class="premium-btn btn-glow" id="userModalSave">
+                    <span class="btn-text">Create User</span>
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <line x1="12" y1="5" x2="12" y2="19" />
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                </button>
             </div>
         </div>
     </div>
@@ -331,19 +412,7 @@
 
             async loadData() {
                 try {
-                    // Use standard Admin method which should map to `getUsers` or similar if implemented,
-                    // otherwise fetch profiles directly if that's the established pattern.
-                    // Given Admin.js doesn't show getUsers explicitly in partial view, let's assume valid API method 
-                    // or implement direct fetch if needed. Checking Admin.js earlier showed getSiteConfig but likely has getUsers.
-                    // If not, we can assume Admin.apiGet('users') works or add it.
-                    // Admin.js usually wraps things. Let's use apiGet('users') which is standard for REST-like admin API.
-
-                    if (Admin.getUsers) {
-                        this.users = await Admin.getUsers();
-                    } else {
-                        const response = await Admin.apiGet('users'); // Assuming backend endpoint exists
-                        this.users = response.data || response || [];
-                    }
+                    this.users = await Admin.getUsers();
                 } catch (error) {
                     console.error('Failed to load users:', error);
                     this.users = [];
@@ -459,12 +528,22 @@
                         document.getElementById('userName').value = user.name;
                         document.getElementById('userUsername').value = user.username;
                         document.getElementById('userEmail').value = user.email || '';
-                        document.getElementById('userRole').value = user.role;
+
+                        // Set radio button value
+                        const radio = document.querySelector(`input[name="userRole"][value="${user.role}"]`);
+                        if (radio) radio.checked = true;
+
                         document.getElementById('userStatus').checked = user.status === 'active';
                         document.getElementById('statusLabel').textContent = user.status === 'active' ? 'Active' : 'Inactive';
+                        document.getElementById('statusLabel').className = 'status-text ' + user.status;
+
+                        document.querySelector('#userModalSave .btn-text').textContent = 'Save Changes';
+                        document.getElementById('pwdHint').textContent = '(Leave blank to keep current)';
                     }
                 } else {
-                    document.getElementById('userModalTitle').textContent = 'Add User';
+                    document.getElementById('userModalTitle').textContent = 'Add New User';
+                    document.querySelector('#userModalSave .btn-text').textContent = 'Create User';
+                    document.getElementById('pwdHint').textContent = '(Required)';
                 }
 
                 document.getElementById('userModal').classList.add('active');
@@ -480,12 +559,14 @@
             },
 
             async saveUser() {
+                const btn = document.getElementById('userModalSave');
                 const name = document.getElementById('userName').value.trim();
                 const username = document.getElementById('userUsername').value.trim();
+                const email = document.getElementById('userEmail').value.trim();
                 const password = document.getElementById('userPassword').value;
 
-                if (!name || !username) {
-                    Admin.showToast('error', 'Error', 'Name and username are required');
+                if (!name || !username || !email) {
+                    Admin.showToast('error', 'Error', 'Full Name, Username, and Email are required');
                     return;
                 }
 
@@ -494,7 +575,7 @@
                     return;
                 }
 
-                // Check username uniqueness
+                // Check username uniqueness (frontend check)
                 const existing = this.users.find(u => u.username === username && u.id !== this.editingId);
                 if (existing) {
                     Admin.showToast('error', 'Error', 'Username already exists');
@@ -502,35 +583,57 @@
                 }
 
                 const userData = {
-                    id: this.editingId || 'user_' + Date.now(),
                     name,
                     username,
-                    email: document.getElementById('userEmail').value.trim(),
-                    role: document.getElementById('userRole').value,
+                    email,
+                    role: document.querySelector('input[name="userRole"]:checked').value,
                     status: document.getElementById('userStatus').checked ? 'active' : 'inactive'
                 };
 
                 if (password) {
-                    userData.password = password; // In production, this would be hashed
+                    userData.password = password;
                 }
 
-                if (this.editingId) {
-                    const index = this.users.findIndex(u => u.id === this.editingId);
-                    if (index !== -1) {
-                        const oldPassword = this.users[index].password;
-                        this.users[index] = { ...this.users[index], ...userData };
-                        if (!password) this.users[index].password = oldPassword;
+                try {
+                    // Set loading state
+                    const originalText = btn.innerHTML;
+                    btn.disabled = true;
+                    btn.innerHTML = '<span class="loading-spinner"></span> Saving...';
+
+                    if (this.editingId) {
+                        const success = await Admin.updateUser(this.editingId, userData);
+                        if (success) {
+                            Admin.showToast('success', 'Success', 'User updated successfully');
+                            await this.loadData();
+                            this.closeModal();
+                            this.render();
+                        }
+                    } else {
+                        const success = await Admin.createUser(userData);
+                        if (success) {
+                            Admin.showToast('success', 'Success', 'User created successfully');
+                            await this.loadData();
+                            this.closeModal();
+                            this.render();
+                        }
                     }
-                } else {
-                    userData.createdAt = new Date().toISOString();
-                    this.users.push(userData);
-                }
-
-                const success = await Admin.saveData('users.json', { users: this.users });
-                if (success) {
-                    this.closeModal();
-                    this.render();
-                    Admin.logActivity(this.editingId ? 'update' : 'create', 'users', `${this.editingId ? 'Updated' : 'Created'} user: ${username}`);
+                } catch (error) {
+                    console.error('Failed to save user:', error);
+                    Admin.showToast('error', 'Error', error.message || 'Failed to save user');
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = this.editingId ? `
+                        <span class="btn-text">Save Changes</span>
+                        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                    ` : `
+                        <span class="btn-text">Create User</span>
+                        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <line x1="12" y1="5" x2="12" y2="19" />
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                        </svg>
+                    `;
                 }
             },
 
@@ -540,18 +643,408 @@
 
                 if (!confirm(`Delete user "${user.name}"? This action cannot be undone.`)) return;
 
-                this.users = this.users.filter(u => u.id !== id);
-                const success = await Admin.saveData('users.json', { users: this.users });
-                if (success) {
-                    this.render();
-                    Admin.logActivity('delete', 'users', `Deleted user: ${user.username}`);
+                try {
+                    const success = await Admin.deleteUser(id);
+                    if (success) {
+                        Admin.showToast('success', 'Success', 'User deleted successfully');
+                        await this.loadData();
+                        this.render();
+                    }
+                } catch (error) {
+                    Admin.showToast('error', 'Error', error.message || 'Failed to delete user');
                 }
             }
         };
 
-        document.addEventListener('DOMContentLoaded', () => UserManager.init());
+        document.addEventListener('DOMContentLoaded', () => {
+            UserManager.init();
+
+            // Handle status toggle label update
+            const statusToggle = document.getElementById('userStatus');
+            const statusLabel = document.getElementById('statusLabel');
+            if (statusToggle && statusLabel) {
+                statusToggle.addEventListener('change', () => {
+                    if (statusToggle.checked) {
+                        statusLabel.textContent = 'Active';
+                        statusLabel.className = 'status-text active';
+                    } else {
+                        statusLabel.textContent = 'Inactive';
+                        statusLabel.className = 'status-text inactive';
+                    }
+                });
+            }
+        });
     </script>
     <style>
+        /* Premium Modal Styles */
+        .premium-modal {
+            background: #0f172a;
+            /* Slate 900 */
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(255, 255, 255, 0.05);
+            max-width: 600px;
+        }
+
+        .modal-title-group {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+        }
+
+        .modal-icon-glow {
+            width: 42px;
+            height: 42px;
+            background: rgba(249, 115, 22, 0.15);
+            color: #f97316;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .modal-icon-glow::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            background: inherit;
+            filter: blur(8px);
+            opacity: 0.4;
+            border-radius: inherit;
+            z-index: -1;
+        }
+
+        .modal-icon-glow svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .modal-subtitle {
+            font-size: 0.813rem;
+            color: #94a3b8;
+            margin-top: 0.125rem;
+        }
+
+        .modal-close-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+        }
+
+        .modal-close-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #f8fafc;
+        }
+
+        .modal-close-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Form Sections */
+        .section-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #64748b;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+        }
+
+        .premium-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #cbd5e1;
+            margin-bottom: 0.5rem;
+        }
+
+        .premium-label .required {
+            color: #ef4444;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .field-icon {
+            position: absolute;
+            left: 1rem;
+            width: 18px;
+            height: 18px;
+            color: #64748b;
+            pointer-events: none;
+            transition: color 0.2s;
+        }
+
+        .premium-input,
+        .premium-select {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.75rem;
+            background: #1e293b;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            color: #f8fafc;
+            font-size: 0.9375rem;
+            transition: all 0.2s;
+        }
+
+        .premium-input:focus,
+        .premium-select:focus {
+            outline: none;
+            border-color: #f97316;
+            background: #1e293b;
+            box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.1);
+        }
+
+        .premium-input:focus+.field-icon,
+        .input-wrapper:focus-within .field-icon {
+            color: #f97316;
+        }
+
+        .hint-text {
+            font-size: 0.75rem;
+            color: #64748b;
+            font-weight: 400;
+            margin-left: 0.25rem;
+        }
+
+        /* Select styling */
+        .premium-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2364748b' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.75rem center;
+            background-repeat: no-repeat;
+            background-size: 1.25rem;
+            padding-right: 2.5rem;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .role-radio-group {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+        }
+
+        .role-radio-card {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .role-radio-card input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .role-radio-content {
+            padding: 0.75rem 0.5rem;
+            background: #1e293b;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: all 0.2s;
+            height: 100%;
+        }
+
+        .role-radio-card:hover .role-radio-content {
+            border-color: rgba(249, 115, 22, 0.3);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .role-radio-card input:checked+.role-radio-content {
+            background: rgba(249, 115, 22, 0.1);
+            border-color: #f97316;
+            box-shadow: 0 0 0 1px #f97316;
+        }
+
+        .role-radio-title {
+            font-size: 0.813rem;
+            font-weight: 600;
+            color: #f8fafc;
+            margin-bottom: 0.125rem;
+        }
+
+        .role-radio-desc {
+            font-size: 0.625rem;
+            color: #64748b;
+            line-height: 1.2;
+        }
+
+        .role-radio-card input:checked+.role-radio-content .role-radio-title {
+            color: #f97316;
+        }
+
+        /* Status Toggle */
+        .status-toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.25rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+        }
+
+        .status-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .status-label {
+            font-size: 0.813rem;
+            font-weight: 600;
+            color: #94a3b8;
+        }
+
+        .status-text {
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-top: 0.125rem;
+        }
+
+        .status-text.active {
+            color: #22c55e;
+        }
+
+        .status-text.inactive {
+            color: #ef4444;
+        }
+
+        .premium-switch {
+            position: relative;
+            width: 48px;
+            height: 24px;
+        }
+
+        .premium-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .switch-slider {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background: #1e293b;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            transition: .4s;
+        }
+
+        .switch-slider:before {
+            content: "";
+            position: absolute;
+            height: 16px;
+            width: 16px;
+            left: 3px;
+            bottom: 3px;
+            background: #64748b;
+            border-radius: 50%;
+            transition: .4s;
+        }
+
+        .premium-switch input:checked+.switch-slider {
+            background: rgba(34, 197, 94, 0.1);
+            border-color: #22c55e;
+        }
+
+        .premium-switch input:checked+.switch-slider:before {
+            transform: translateX(24px);
+            background: #22c55e;
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
+        }
+
+        /* Buttons */
+        .premium-footer {
+            background: #0f172a;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 1.25rem 1.5rem;
+        }
+
+        .premium-btn {
+            font-weight: 600;
+            font-size: 0.875rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: #94a3b8;
+        }
+
+        .btn-ghost:hover {
+            color: #f8fafc;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .btn-glow {
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+            color: white;
+            box-shadow: 0 10px 20px -5px rgba(234, 88, 12, 0.3);
+        }
+
+        .btn-glow:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 25px -5px rgba(234, 88, 12, 0.4);
+            filter: brightness(1.1);
+        }
+
+        .btn-icon {
+            width: 18px;
+            height: 18px;
+        }
+
+        .mt-3 {
+            margin-top: 0.75rem;
+        }
+
+        .mt-4 {
+            margin-top: 1.5rem;
+        }
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -687,6 +1180,69 @@
             color: #f87171;
         }
 
+        /* Enhanced Stats & Cards */
+        .card {
+            background: #111827;
+            /* Gray 900 */
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-card {
+            background: #111827;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.3);
+            border-color: rgba(249, 115, 22, 0.2);
+        }
+
+        .permissions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            padding: 1rem;
+        }
+
+        .permission-item {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 1.5rem;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            transition: background 0.3s;
+        }
+
+        .permission-item:hover {
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .permission-item h4 {
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .permission-item li {
+            padding: 0.75rem 0;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .permission-item li:last-child {
+            border-bottom: none;
+        }
+
+        .permission-item li span.icon {
+            font-size: 1.1em;
+        }
+
         code {
             background: var(--admin-bg);
             padding: 0.25rem 0.5rem;
@@ -773,9 +1329,8 @@
             transform: translateX(20px);
         }
     </style>
-    <script type="module" src="../js/supabase-config.js"></script>
-    <script type="module" src="../js/auth.js"></script>
-    <script type="module" src="../js/admin.js"></script>
+    <link rel="stylesheet" href="../css/admin.css?v=1.1">
+    <script type="module" src="../js/admin.js?v=1.1"></script>
 </body>
 
 </html>

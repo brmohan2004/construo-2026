@@ -28,6 +28,7 @@ const Admin = {
         this.initSidebar();
         this.initTheme();
         this.loadUserInfo();
+        this.loadDashboardStats();
         this.bindGlobalEvents();
         this.initLoadingStates();
     },
@@ -143,6 +144,133 @@ const Admin = {
         if (welcomeName) {
             welcomeName.textContent = user.name.split(' ')[0];
         }
+    },
+
+    async loadDashboardStats() {
+        // Elements
+        const totalRegEl = document.getElementById('totalRegistrations');
+        const totalEventsEl = document.getElementById('totalEvents');
+        const recentRegTbody = document.getElementById('recentRegistrations');
+        const activityFeedEl = document.getElementById('activityFeed');
+
+        if (!totalRegEl) return; // Not on dashboard
+
+        try {
+            // 1. Fetch Registrations (Total count + Recent 5)
+            const { data: recentRegs, count: regCount, error: regErr } = await supabase
+                .from('registrations')
+                .select('*', { count: 'exact' })
+                .order('created_at', { ascending: false })
+                .range(0, 4);
+
+            if (regErr) throw regErr;
+
+            // 2. Fetch Events Count
+            const { count: eventsCount, error: evtErr } = await supabase
+                .from('events')
+                .select('*', { count: 'exact', head: true });
+
+            if (evtErr) throw evtErr;
+
+            // 3. Fetch Recent Activity
+            const { data: activities, error: actErr } = await supabase
+                .from('activity_logs')
+                .select('*')
+                .order('timestamp', { ascending: false })
+                .limit(5);
+
+            // Update Stats Cards
+            if (totalRegEl) totalRegEl.textContent = regCount || 0;
+            if (totalEventsEl) totalEventsEl.textContent = eventsCount || 0;
+
+            // Update Recent Registrations Table
+            if (recentRegTbody && recentRegs) {
+                if (recentRegs.length === 0) {
+                    recentRegTbody.innerHTML = '<tr><td colspan="5" class="text-center">No registrations yet</td></tr>';
+                } else {
+                    recentRegTbody.innerHTML = recentRegs.map(reg => `
+                        <tr>
+                            <td><code>${reg.registration_number || 'N/A'}</code></td>
+                            <td>${reg.full_name || 'Unknown'}</td>
+                            <td>${(reg.events || []).length} events</td>
+                            <td><span class="badge badge-${this.getStatusBadgeColor(reg.status)}">${reg.status}</span></td>
+                            <td>₹${reg.amount || 0}</td>
+                        </tr>
+                    `).join('');
+                }
+            }
+
+            // Update Activity Feed
+            if (activityFeedEl && activities) {
+                if (activities.length === 0) {
+                    activityFeedEl.innerHTML = '<div class="text-center text-muted">No recent activity</div>';
+                } else {
+                    activityFeedEl.innerHTML = activities.map(log => `
+                        <div class="activity-item">
+                            <div class="activity-icon ${this.getActivityIconColor(log.action)}">
+                                ${this.getActivityIcon(log.action)}
+                            </div>
+                            <div class="activity-content">
+                                <p><strong>${this.formatActivityTitle(log.action, log.section)}</strong> - ${log.description}</p>
+                                <span class="activity-time">${this.timeAgo(new Date(log.timestamp))}</span>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            }
+
+            console.log('[Admin] Dashboard stats updated dynamically');
+        } catch (error) {
+            console.error('[Admin] Failed to load dashboard stats:', error);
+            if (totalRegEl) totalRegEl.textContent = 'Err';
+            if (totalEventsEl) totalEventsEl.textContent = 'Err';
+        }
+    },
+
+    getStatusBadgeColor(status) {
+        switch (status) {
+            case 'confirmed': return 'success';
+            case 'pending': return 'warning';
+            case 'cancelled': return 'danger';
+            default: return 'secondary';
+        }
+    },
+
+    getActivityIconColor(action) {
+        switch (action) {
+            case 'create': return 'success';
+            case 'update': return 'info';
+            case 'delete': return 'warning'; // or danger
+            default: return 'primary';
+        }
+    },
+
+    getActivityIcon(action) {
+        switch (action) {
+            case 'create': return '➕';
+            case 'update': return '✏️';
+            case 'delete': return '🗑️';
+            default: return '📝';
+        }
+    },
+
+    formatActivityTitle(action, section) {
+        return `${action.charAt(0).toUpperCase() + action.slice(1)} ${section}`;
+    },
+
+    timeAgo(date) {
+        const seconds = Math.floor((new Date() - date) / 1000);
+        let interval = seconds / 31536000;
+        if (interval > 1) return Math.floor(interval) + " years ago";
+        interval = seconds / 2592000;
+        if (interval > 1) return Math.floor(interval) + " months ago";
+        interval = seconds / 86400;
+        if (interval > 1) return Math.floor(interval) + " days ago";
+        interval = seconds / 3600;
+        if (interval > 1) return Math.floor(interval) + " hours ago";
+        interval = seconds / 60;
+        if (interval > 1) return Math.floor(interval) + " minutes ago";
+        return Math.floor(seconds) + " seconds ago";
     },
 
     bindGlobalEvents() {
@@ -710,6 +838,9 @@ const Admin = {
     },
 
     async updateOrganizer(id, organizerData) {
+        if (!id) throw new Error('Cannot update organizer without ID');
+        console.log('Admin: Updating organizer', id);
+
         try {
             const user = await Auth.getCurrentUser();
 
@@ -733,7 +864,7 @@ const Admin = {
                 })
                 .eq('organizer_id', id)
                 .select()
-                .single();
+                .maybeSingle();
 
             if (error) throw error;
 
@@ -927,9 +1058,158 @@ const Admin = {
         }
     },
 
+    // -------------------- USER MANAGEMENT METHODS --------------------
+
+    async getUsers() {
+        try {
+            const { data, error } = await supabase
+                .from('profiles')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) throw error;
+            this.cache.users = data;
+            return data;
+        } catch (error) {
+            console.error('Error fetching users:', error);
+            throw error;
+        }
+    },
+
+    async createUser(userData) {
+        try {
+            // Note: Creating auth users from frontend without service role is limited.
+            // We use signUp which may affect the current session if not handled correctly.
+            // Ideally, an Edge Function should be used for this.
+            // For now, we'll try to insert into profiles if the user already exists in auth,
+            // or use signUp if it's a new user (warning: this might log the admin out).
+
+            // Checking if user exists in profiles first
+            const { data: existing } = await supabase
+                .from('profiles')
+                .select('id')
+                .eq('username', userData.username)
+                .maybeSingle();
+
+            if (existing) throw new Error('Username already exists');
+
+            // If a password and email are provided, we try to create an auth user
+            if (userData.password) {
+                if (!userData.email) throw new Error('Email is required for new users');
+
+                const { data: authData, error: authError } = await supabase.auth.signUp({
+                    email: userData.email,
+                    password: userData.password,
+                    options: {
+                        data: {
+                            username: userData.username,
+                            name: userData.name,
+                            role: userData.role
+                        }
+                    }
+                });
+
+                if (authError) throw authError;
+
+                // Profile is usually created via trigger or signUp options, 
+                // but let's ensure it's there or update it
+                const { error: profileError } = await supabase
+                    .from('profiles')
+                    .update({
+                        username: userData.username,
+                        name: userData.name,
+                        role: userData.role,
+                        status: userData.status || 'active'
+                    })
+                    .eq('user_id', authData.user.id);
+
+                // If update failed (maybe no record yet), try insert
+                if (profileError) {
+                    await supabase.from('profiles').insert({
+                        user_id: authData.user.id,
+                        username: userData.username,
+                        name: userData.name,
+                        email: userData.email,
+                        role: userData.role,
+                        status: userData.status || 'active'
+                    });
+                }
+            } else {
+                // Just create/update profile
+                const { data: profile, error } = await supabase
+                    .from('profiles')
+                    .insert({
+                        username: userData.username,
+                        name: userData.name,
+                        email: userData.email,
+                        role: userData.role,
+                        status: userData.status || 'active'
+                    })
+                    .select()
+                    .single();
+
+                if (error) throw error;
+                return profile;
+            }
+
+            await this.logActivity('create', 'users', `Created user: ${userData.username}`);
+            return true;
+        } catch (error) {
+            console.error('Error creating user:', error);
+            if (error.status === 429 || error.message?.includes('security purposes')) {
+                throw new Error('Security Cooldown: Please wait a few seconds before creating another user.');
+            }
+            throw error;
+        }
+    },
+
+    async updateUser(id, userData) {
+        try {
+            const { data, error } = await supabase
+                .from('profiles')
+                .update({
+                    name: userData.name,
+                    username: userData.username,
+                    email: userData.email,
+                    role: userData.role,
+                    status: userData.status,
+                    updated_at: new Date().toISOString()
+                })
+                .eq('id', id)
+                .select()
+                .single();
+
+            if (error) throw error;
+
+            await this.logActivity('update', 'users', `Updated user: ${userData.username}`);
+            return data;
+        } catch (error) {
+            console.error('Error updating user:', error);
+            throw error;
+        }
+    },
+
+    async deleteUser(id) {
+        try {
+            const { error } = await supabase
+                .from('profiles')
+                .delete()
+                .eq('id', id);
+
+            if (error) throw error;
+
+            await this.logActivity('delete', 'users', `Deleted user: ${id}`);
+            return true;
+        } catch (error) {
+            console.error('Error deleting user:', error);
+            throw error;
+        }
+    },
+
     // -------------------- GENERIC API HELPERS (BACKWARD COMPAT) --------------------
 
     async apiGet(endpoint) {
+        if (endpoint === 'users') return this.getUsers();
         if (endpoint === 'registrations/stats') return this.getRegistrationStats();
         if (endpoint === 'registrations/forms') return this.getRegistrationForms();
         if (endpoint === 'registrations') return this.getRegistrations();
@@ -954,6 +1234,7 @@ const Admin = {
     },
 
     async apiPost(endpoint, body) {
+        if (endpoint === 'users') return this.createUser(body);
         if (endpoint === 'registrations/forms') {
             const { data, error } = await supabase.from('registration_forms').insert({
                 ...body,
@@ -995,6 +1276,10 @@ const Admin = {
     },
 
     async apiPut(endpoint, body) {
+        if (endpoint.startsWith('users/')) {
+            const userId = endpoint.split('/')[1];
+            return this.updateUser(userId, body);
+        }
         if (endpoint.startsWith('registrations/forms/')) {
             const formId = endpoint.split('/')[2];
             if (endpoint.endsWith('/toggle')) {
@@ -1032,6 +1317,10 @@ const Admin = {
     },
 
     async apiDelete(endpoint) {
+        if (endpoint.startsWith('users/')) {
+            const userId = endpoint.split('/')[1];
+            return this.deleteUser(userId);
+        }
         if (endpoint.startsWith('registrations/forms/')) {
             const formId = endpoint.split('/')[2];
             const { error } = await supabase.from('registration_forms').delete().eq('id', formId);
@@ -1162,10 +1451,13 @@ const Admin = {
 
         container.appendChild(toast);
 
+        // Balanced Timing: longer for errors, shorter for success
+        const duration = (type === 'error' || type === 'warning') ? 60000 : 30000;
+
         setTimeout(() => {
             toast.classList.add('toast-exit');
-            setTimeout(() => toast.remove(), 300);
-        }, 5000);
+            setTimeout(() => toast.remove(), 100);
+        }, duration);
     },
 
     showModal(modalId) {

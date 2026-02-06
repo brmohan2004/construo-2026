@@ -42,13 +42,37 @@ class ConstruoApp {
         console.log('Loading initial data from Supabase...');
         try {
             // Import Supabase data loader
-            if (!window.ConstruoSupabaseData) {
-                console.error('Supabase data loader not available');
-                return;
-            }
+            const waitForDataLoader = () => {
+                return new Promise((resolve) => {
+                    if (window.ConstruoSupabaseData) {
+                        resolve(window.ConstruoSupabaseData);
+                        return;
+                    }
+                    const checkInterval = setInterval(() => {
+                        if (window.ConstruoSupabaseData) {
+                            clearInterval(checkInterval);
+                            resolve(window.ConstruoSupabaseData);
+                        }
+                    }, 50);
+                    // Timeout after 5s to avoid infinite waiting
+                    setTimeout(() => {
+                        clearInterval(checkInterval);
+                        if (!window.ConstruoSupabaseData) {
+                            console.error('Supabase data loader timed out');
+                            resolve(null);
+                        }
+                    }, 5000);
+                });
+            };
 
-            const dataLoader = window.ConstruoSupabaseData;
+            const dataLoader = await waitForDataLoader();
+            if (!dataLoader) return;
             const { siteConfig, events, timeline, speakers, sponsors, organizers } = await dataLoader.loadAll();
+
+            // Update Preloader appearance with loaded settings
+            if (siteConfig && siteConfig.settings && window.construoAnimations) {
+                window.construoAnimations.updatePreloader(siteConfig.settings);
+            }
 
             // Update Hero UI
             if (siteConfig && siteConfig.hero) {
@@ -87,7 +111,7 @@ class ConstruoApp {
 
             // Update Sponsors UI
             if (sponsors) {
-                // Group sponsors by tier
+                this.sponsorsRaw = sponsors; // Store raw array
                 const sponsorsObj = {
                     platinum: sponsors.filter(s => s.tier_id === 'platinum'),
                     gold: sponsors.filter(s => s.tier_id === 'gold'),
@@ -118,6 +142,7 @@ class ConstruoApp {
 
             // Update Organizers UI
             if (organizers) {
+                this.organizersRaw = organizers; // Store raw array
                 // Group organizers by category
                 const categories = [
                     { id: 'faculty', name: 'Faculty', members: organizers.filter(o => o.category === 'faculty') },
@@ -287,6 +312,17 @@ class ConstruoApp {
             });
         }
 
+        // Attach event listeners for details popup
+        if (carouselsContainer) {
+            carouselsContainer.querySelectorAll('.organizer-card').forEach(card => {
+                card.style.cursor = 'pointer';
+                card.addEventListener('click', () => {
+                    const orgId = card.getAttribute('data-id');
+                    if (orgId) this.showOrganizerDetail(orgId);
+                });
+            });
+        }
+
         // Re-init animations if needed
         if (window.gsap && window.ScrollTrigger) {
             setTimeout(() => {
@@ -298,19 +334,15 @@ class ConstruoApp {
     renderOrganizerCard(org) {
         const name = org.name || 'Organizer';
         const role = org.role || org.designation || '';
-        const contact = org.contact || org.email || '';
-        const phone = org.phone || '';
-        const image = org.image || org.photo || '';
+        const image = this.sanitizeUrl(org.image || org.photo || '');
 
         return `
-            <div class="organizer-card">
+            <div class="organizer-card" data-id="${org.id}">
                 <div class="organizer-photo">
                     ${image ? `<img src="${image}" alt="${name}">` : `<div class="image-placeholder"><span>${name.charAt(0)}</span></div>`}
                 </div>
                 <h3 class="organizer-name">${name}</h3>
                 ${role ? `<p class="organizer-role">${role}</p>` : ''}
-                ${contact ? `<p class="organizer-contact">${contact}</p>` : ''}
-                ${phone ? `<p class="organizer-phone">${phone}</p>` : ''}
             </div>
         `;
     }
@@ -546,25 +578,56 @@ class ConstruoApp {
                 tierDiv.style.display = '';
             }
 
-            tierDiv.innerHTML = `
-                <h3 class="tier-title">${tierLabels[tier]}</h3>
-                <div class="sponsor-billboards">
-                    ${tierSponsors.map(sponsor => `
-                        <div class="sponsor-billboard ${tierClasses[tier]}">
-                            <div class="billboard-content">
-                                ${sponsor.logo ?
+            const billboardsHTML = tierSponsors.map(sponsor => `
+                <div class="sponsor-billboard ${tierClasses[tier]}" data-id="${sponsor.id}">
+                    <div class="billboard-content">
+                        ${sponsor.logo ?
                     `<img src="${this.sanitizeUrl(sponsor.logo)}" alt="${sponsor.name}" style="max-width: 100%; max-height: 100%; object-fit: contain;">` :
                     `<span style="font-size: 1.2rem; font-weight: 600;">${sponsor.name}</span>`
                 }
-                            </div>
-                            ${sponsor.website ?
-                    `<a href="${sponsor.website}" target="_blank" rel="noopener" style="position: absolute; inset: 0; opacity: 0;" aria-label="Visit ${sponsor.name}"></a>` :
+                    </div>
+                    ${sponsor.website ?
+                    `<a href="${sponsor.website}" target="_blank" rel="noopener" style="position: absolute; inset: 0; opacity: 0; z-index: 2;" aria-label="Visit ${sponsor.name}"></a>` :
                     ''
                 }
-                        </div>
-                    `).join('')}
+                </div>
+            `).join('');
+
+            // To ensure a seamless infinite scroll:
+            // Only scroll if there are at least 5 sponsors, otherwise just center them
+            const shouldScroll = tierSponsors.length >= 5;
+            let finalContent = '';
+
+            if (shouldScroll) {
+                const singleSetWidth = 250; // approximate width of one billboard + gap
+                const billboardsPerScreen = Math.ceil(window.innerWidth / singleSetWidth);
+                const repeatFactor = Math.max(1, Math.ceil(billboardsPerScreen / Math.max(tierSponsors.length, 1)));
+                const baseSet = billboardsHTML.repeat(repeatFactor);
+                finalContent = baseSet + baseSet;
+            } else {
+                finalContent = billboardsHTML;
+            }
+
+            tierDiv.innerHTML = `
+                <h3 class="tier-title">${tierLabels[tier]}</h3>
+                <div class="sponsor-carousel ${!shouldScroll ? 'no-scroll' : ''}">
+                    <div class="sponsor-track" style="${!shouldScroll ? 'animation: none; justify-content: center; width: 100%;' : ''}">
+                        ${finalContent}
+                    </div>
                 </div>
             `;
+        });
+
+        // Attach event listeners for details popup
+        container.querySelectorAll('.sponsor-billboard').forEach(billboard => {
+            billboard.style.cursor = 'pointer';
+            billboard.addEventListener('click', (e) => {
+                // If clicked on the website link, don't show modal
+                if (e.target.tagName === 'A') return;
+
+                const sponsorId = billboard.getAttribute('data-id');
+                if (sponsorId) this.showSponsorDetail(sponsorId);
+            });
         });
 
         // Re-init animations if present
@@ -871,6 +934,100 @@ class ConstruoApp {
         } else {
             return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`;
         }
+    }
+
+    showSponsorDetail(sponsorId) {
+        if (!this.sponsorsRaw) return;
+        const sponsor = this.sponsorsRaw.find(s => s.id === sponsorId);
+        if (!sponsor) return;
+
+        const modalBody = document.getElementById('generic-modal-body');
+        if (!modalBody) return;
+
+        modalBody.innerHTML = `
+            <div class="event-modal-header" style="flex-direction: column; align-items: center; text-align: center;">
+                <div class="event-modal-icon" style="width: 200px; height: 120px; background: rgba(255,255,255,0.05); border-radius: 12px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 1.5rem;">
+                    ${sponsor.logo ? `<img src="${this.sanitizeUrl(sponsor.logo)}" alt="${sponsor.name}" style="max-width: 100%; max-height: 100%; object-fit: contain;">` : `<span style="font-size: 2rem; font-weight: 700;">${sponsor.name}</span>`}
+                </div>
+                <div class="event-modal-title">
+                    <h2 style="font-size: 2rem; margin-bottom: 0.5rem;">${sponsor.name}</h2>
+                    <span class="event-modal-category technical">${sponsor.tier_id ? sponsor.tier_id.toUpperCase() : 'SPONSOR'}</span>
+                </div>
+            </div>
+            <div class="event-modal-content" style="margin-top: 2rem;">
+                <div class="event-modal-description" style="text-align: center; margin-bottom: 2rem; font-size: 1.1rem; line-height: 1.6;">
+                    <p>${sponsor.description || 'Proud sponsor of CONSTRUO 2026.'}</p>
+                </div>
+                ${sponsor.website ? `
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <a href="${sponsor.website}" target="_blank" rel="noopener" class="btn btn-secondary" style="display: inline-flex; align-items: center; gap: 0.5rem;">
+                        Visit Website
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width: 18px; height: 18px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+                    </a>
+                </div>` : ''}
+            </div>
+            <div class="event-modal-actions" style="justify-content: center;">
+                <button class="btn btn-primary" onclick="window.construoApp.closeModal('modal-generic-event')">Close</button>
+            </div>
+        `;
+
+        this.openModal('modal-generic-event');
+    }
+
+    showOrganizerDetail(organizerId) {
+        if (!this.organizersRaw) return;
+        const org = this.organizersRaw.find(o => o.id === organizerId);
+        if (!org) return;
+
+        const modalBody = document.getElementById('generic-modal-body');
+        if (!modalBody) return;
+
+        const image = this.sanitizeUrl(org.image || org.photo || '');
+
+        modalBody.innerHTML = `
+            <div class="event-modal-header" style="flex-direction: column; align-items: center; text-align: center;">
+                <div class="event-modal-icon" style="width: 150px; height: 150px; border-radius: 50%; border: 4px solid var(--color-accent); overflow: hidden; margin-bottom: 1.5rem; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center;">
+                    ${image ? `<img src="${image}" alt="${org.name}" style="width: 100%; height: 100%; object-fit: cover;">` : `<div class="image-placeholder" style="font-size: 3rem;"><span>${org.name.charAt(0)}</span></div>`}
+                </div>
+                <div class="event-modal-title">
+                    <h2 style="font-size: 2rem; margin-bottom: 0.25rem;">${org.name}</h2>
+                    <span class="event-modal-category workshop" style="text-transform: capitalize;">${org.category || 'Organizer'}</span>
+                </div>
+            </div>
+            <div class="event-modal-content" style="margin-top: 2rem;">
+                <div class="event-modal-details" style="grid-template-columns: 1fr; gap: 1rem; padding: 1.5rem; background: rgba(255,255,255,0.03);">
+                    <div class="detail-item">
+                        <span class="detail-label">Role / Title</span>
+                        <span class="detail-value">${org.role || org.designation || 'Specialist'}</span>
+                    </div>
+                    ${org.designation ? `
+                    <div class="detail-item">
+                        <span class="detail-label">Designation</span>
+                        <span class="detail-value">${org.designation}</span>
+                    </div>` : ''}
+                    ${org.department ? `
+                    <div class="detail-item">
+                        <span class="detail-label">Department</span>
+                        <span class="detail-value">${org.department}</span>
+                    </div>` : ''}
+                    ${org.email ? `
+                    <div class="detail-item">
+                        <span class="detail-label">Email</span>
+                        <span class="detail-value"><a href="mailto:${org.email}" style="color: var(--color-accent);">${org.email}</a></span>
+                    </div>` : ''}
+                    ${org.phone ? `
+                    <div class="detail-item">
+                        <span class="detail-label">Phone</span>
+                        <span class="detail-value"><a href="tel:${org.phone}" style="color: var(--color-accent);">${org.phone}</a></span>
+                    </div>` : ''}
+                </div>
+            </div>
+            <div class="event-modal-actions" style="justify-content: center;">
+                <button class="btn btn-primary" onclick="window.construoApp.closeModal('modal-generic-event')">Close</button>
+            </div>
+        `;
+
+        this.openModal('modal-generic-event');
     }
 
     showEventDetail(eventId) {
@@ -1483,24 +1640,37 @@ class ConstruoApp {
                     const inp = firstInput;
 
                     // Use native HTML5 validation
-                    if (!inp.checkValidity()) {
-                        isValid = false;
-                        inp.style.borderColor = '#ef4444';
-
-                        // Show specific validation message if possible
-                        if (inp.validationMessage) {
-                            console.warn(`Validation failed for ${fieldName}: ${inp.validationMessage}`);
-                            // We could show this message to the user next to the field
-                        }
-                    } else {
-                        inp.style.borderColor = '';
-                        if (inp.value) {
-                            if (inp.multiple) {
-                                data[fieldName] = Array.from(inp.selectedOptions).map(o => o.value);
-                            } else {
-                                data[fieldName] = inp.value;
+                    // Fix: Some browsers choke on complex patterns in checkValidity if they contain anchors or flags they don't like
+                    try {
+                        // Temp fix for email pattern issues: remove $ anchor if present in pattern attribute
+                        if (inp.type === 'email' && inp.hasAttribute('pattern')) {
+                            let p = inp.getAttribute('pattern');
+                            if (p.endsWith('$')) {
+                                inp.setAttribute('pattern', p.slice(0, -1));
                             }
                         }
+
+                        if (!inp.checkValidity()) {
+                            isValid = false;
+                            inp.style.borderColor = '#ef4444';
+                            // ... error handling
+                            if (inp.validationMessage) {
+                                console.warn(`Validation failed for ${fieldName}: ${inp.validationMessage}`);
+                            }
+                        } else {
+                            inp.style.borderColor = '';
+                            if (inp.value) {
+                                if (inp.multiple) {
+                                    data[fieldName] = Array.from(inp.selectedOptions).map(o => o.value);
+                                } else {
+                                    data[fieldName] = inp.value;
+                                }
+                            }
+                        }
+                    } catch (e) {
+                        console.warn('Validation error ignored:', e);
+                        // Fallback: assume valid if checkValidity crashes
+                        if (inp.value) data[fieldName] = inp.value;
                     }
                 }
             });

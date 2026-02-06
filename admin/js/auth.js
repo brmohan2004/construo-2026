@@ -31,16 +31,44 @@ const Auth = {
         if (logoutBtn) {
             logoutBtn.addEventListener('click', () => this.handleLogout());
         }
+
+        // Forgot Password
+        const forgotLink = document.querySelector('.forgot-link');
+        const forgotModal = document.getElementById('forgotPasswordModal');
+        const closeForgotModal = document.getElementById('closeForgotModal');
+        const cancelReset = document.getElementById('cancelReset');
+        const sendResetBtn = document.getElementById('sendResetLink');
+
+        if (forgotLink && forgotModal) {
+            forgotLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                forgotModal.classList.add('active');
+            });
+        }
+
+        if (closeForgotModal) closeForgotModal.addEventListener('click', () => forgotModal.classList.remove('active'));
+        if (cancelReset) cancelReset.addEventListener('click', () => forgotModal.classList.remove('active'));
+
+        if (sendResetBtn) {
+            sendResetBtn.addEventListener('click', () => this.handleForgotPassword());
+        }
+
+        // Reset Password Form
+        const resetForm = document.getElementById('resetPasswordForm');
+        if (resetForm) {
+            resetForm.addEventListener('submit', (e) => this.handleResetPassword(e));
+        }
     },
 
     async checkSession() {
         const { data: { session } } = await supabase.auth.getSession();
         const currentPath = window.location.pathname;
-        const isLoginPage = currentPath.includes('admin/index.html') || 
-                           currentPath.endsWith('/admin/') ||
-                           currentPath.endsWith('/admin');
+        const isLoginPage = currentPath.includes('admin/index.html') ||
+            currentPath.endsWith('/admin/') ||
+            currentPath.endsWith('/admin');
+        const isResetPage = currentPath.includes('reset-password.html');
 
-        console.log('[Auth] checkSession:', { session: !!session, currentPath, isLoginPage });
+        console.log('[Auth] checkSession:', { session: !!session, currentPath, isLoginPage, isResetPage });
 
         if (session) {
             const profile = await this.getProfile(session.user.id);
@@ -130,9 +158,9 @@ const Auth = {
 
             if (data.session) {
                 await this.logActivity('login', 'auth', `User ${username} logged in`);
-                
+
                 this.showToast('success', 'Login Successful', 'Redirecting to dashboard...');
-                
+
                 await this.delay(500);
                 window.location.href = this.config.redirectAfterLogin;
             }
@@ -141,6 +169,91 @@ const Auth = {
             this.showLoginError(error.message || 'Invalid username or password');
         } finally {
             submitBtn.classList.remove('loading');
+        }
+    },
+
+    async handleForgotPassword() {
+        const emailInput = document.getElementById('resetEmail');
+        const email = emailInput.value.trim();
+        const sendBtn = document.getElementById('sendResetLink');
+        const forgotModal = document.getElementById('forgotPasswordModal');
+
+        if (!email) {
+            this.showToast('error', 'Error', 'Please enter your email address');
+            return;
+        }
+
+        try {
+            sendBtn.disabled = true;
+            sendBtn.innerHTML = '<span>Sending...</span>';
+
+            const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                redirectTo: `${window.location.origin}/admin/reset-password.html`,
+            });
+
+            if (error) throw error;
+
+            this.showToast('success', 'Success', 'Reset link sent to your email');
+            forgotModal.classList.remove('active');
+            emailInput.value = '';
+        } catch (error) {
+            console.error('Forgot password error:', error);
+            this.showToast('error', 'Error', error.status === 429 ? 'Too many requests. Please wait a few minutes.' : (error.message || 'Failed to send reset link'));
+        } finally {
+            sendBtn.disabled = false;
+            sendBtn.innerHTML = '<span>Send Link</span>';
+        }
+    },
+
+    async handleResetPassword(e) {
+        e.preventDefault();
+        const form = e.target;
+        const newPassword = form.querySelector('#newPassword').value;
+        const confirmPassword = form.querySelector('#confirmPassword').value;
+        const submitBtn = form.querySelector('#updatePwdBtn');
+        const errorDiv = document.getElementById('resetError');
+        const errorMessage = document.getElementById('resetErrorMessage');
+
+        if (newPassword !== confirmPassword) {
+            if (errorDiv && errorMessage) {
+                errorMessage.textContent = 'Passwords do not match';
+                errorDiv.style.display = 'flex';
+            }
+            return;
+        }
+
+        if (newPassword.length < 6) {
+            if (errorDiv && errorMessage) {
+                errorMessage.textContent = 'Password must be at least 6 characters';
+                errorDiv.style.display = 'flex';
+            }
+            return;
+        }
+
+        try {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span>Updating...</span>';
+            errorDiv.style.display = 'none';
+
+            const { error } = await supabase.auth.updateUser({
+                password: newPassword
+            });
+
+            if (error) throw error;
+
+            this.showToast('success', 'Success', 'Password updated successfully! Logging you in...');
+
+            await this.delay(1500);
+            window.location.href = 'dashboard.html';
+        } catch (error) {
+            console.error('Reset password error:', error);
+            if (errorDiv && errorMessage) {
+                errorMessage.textContent = error.message || 'Failed to update password';
+                errorDiv.style.display = 'flex';
+            }
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<span>Update Password</span>';
         }
     },
 
@@ -171,7 +284,7 @@ const Auth = {
             if (error) throw error;
 
             this.showToast('info', 'Logged Out', 'You have been logged out successfully');
-            
+
             setTimeout(() => {
                 window.location.href = this.config.redirectAfterLogout;
             }, 500);
@@ -184,7 +297,7 @@ const Auth = {
     async logActivity(action, section, description) {
         try {
             const user = await this.getCurrentUser();
-            
+
             await supabase.from('activity_logs').insert({
                 action,
                 section,

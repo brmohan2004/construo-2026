@@ -26,45 +26,99 @@ class ConstruoAnimations {
     }
 
     initPreloader() {
-        const preloader = document.getElementById('preloader');
-        const progress = document.querySelector('.loader-progress');
-        const loaderText = document.querySelector('.loader-text');
-
-        // Settings from Supabase if available
-        const s = (window.construoApp && window.construoApp.siteConfig && window.construoApp.siteConfig.settings) || {};
-
-        if (loaderText && s.loaderText) {
-            loaderText.innerHTML = `${s.loaderText}<span class="dots">...</span>`;
+        // Try LocalStorage first for instant logo
+        let s = (window.construoApp && window.construoApp.siteConfig && window.construoApp.siteConfig.settings) || {};
+        if (Object.keys(s).length === 0) {
+            try {
+                const cachedConfig = localStorage.getItem('construo_site_config');
+                if (cachedConfig) {
+                    const parsed = JSON.parse(cachedConfig);
+                    s = parsed.settings || {};
+                }
+            } catch (e) { }
         }
 
-        if (progress && s.loaderColor) {
-            progress.style.background = s.loaderColor;
-        }
+        this.runCleanPreloader(s);
+    }
 
-        const speed = s.loaderSpeed || 100;
-
-        // Simulate loading progress
-        let loadProgress = 0;
-        const loadInterval = setInterval(() => {
-            loadProgress += Math.random() * 15;
-            if (loadProgress >= 100) {
-                loadProgress = 100;
-                clearInterval(loadInterval);
-
-                // Hide preloader
-                setTimeout(() => {
-                    gsap.to(preloader, {
-                        opacity: 0,
-                        duration: 0.5,
-                        onComplete: () => {
-                            preloader.classList.add('loaded');
-                            this.playHeroEntrance();
-                        }
-                    });
-                }, 500);
+    updatePreloader(s) {
+        // Optional: Update logo if it changes dynamically, 
+        // but for initial load, the first run is usually enough.
+        // We can just re-inject the logo if needed.
+        const logoUrl = s.loaderLogoUrl || s.logoUrl;
+        const logoContainer = document.querySelector('.loader-logo');
+        if (logoContainer && logoUrl) {
+            const img = logoContainer.querySelector('img');
+            if (!img || img.src !== logoUrl) {
+                logoContainer.innerHTML = `<img src="${logoUrl}" alt="Logo">`;
             }
-            if (progress) progress.style.width = `${loadProgress}%`;
+        }
+    }
+
+    runCleanPreloader(s) {
+        const preloader = document.getElementById('preloader');
+        if (!preloader) return;
+
+        // 1. Set Logo
+        const logoContainer = preloader.querySelector('.loader-logo');
+        const logoUrl = s.loaderLogoUrl || s.logoUrl;
+
+        if (logoContainer) {
+            if (logoUrl) {
+                logoContainer.innerHTML = `<img src="${logoUrl}" alt="Logo">`;
+            } else if (s.siteName) {
+                // Text fallback if no logo image yet
+                // But user requested "Logo", so maybe just leave blank or show placeholder?
+                // Text is safer than empty space.
+                logoContainer.innerHTML = `<span style="font-size:2rem; font-weight:700; color:#fff;">${s.siteName}</span>`;
+            }
+        }
+
+        // 2. Animate Bar
+        // We use a simple simulated progress because real "loading" of assets 
+        // is hard to measure perfectly in a simple static site without a heavy framework.
+        const barFill = preloader.querySelector('.loader-bar-fill');
+        // Faster loading simulation
+        const speed = s.loaderSpeed || 30; // 30ms per tick (was 50)
+        let progress = 0;
+
+        // Clear any existing interval
+        if (this.loaderInterval) clearInterval(this.loaderInterval);
+
+        this.loaderInterval = setInterval(() => {
+            // Faster increment: rapid loading
+            progress += Math.random() * 10 + 5;
+
+            if (progress >= 100) {
+                progress = 100;
+                clearInterval(this.loaderInterval);
+
+                // Finished
+                setTimeout(() => {
+                    this.hidePreloader();
+                }, 400); // short delay at 100%
+            }
+
+            if (barFill) {
+                barFill.style.width = `${progress}%`;
+            }
+
         }, speed);
+    }
+
+    hidePreloader() {
+        const preloader = document.getElementById('preloader');
+        if (preloader) {
+            gsap.to(preloader, {
+                opacity: 0,
+                duration: 0.4,
+                ease: "power2.inOut",
+                onComplete: () => {
+                    preloader.classList.add('loaded');
+                    this.playHeroEntrance();
+                }
+            });
+        }
     }
 
     playHeroEntrance() {
@@ -81,6 +135,12 @@ class ConstruoAnimations {
             duration: duration,
             ease: ease
         })
+            .from('.mobile-register-btn', {
+                y: 20,
+                opacity: 0,
+                duration: duration,
+                ease: ease
+            }, '-=0.6')
             .from('.title-line', {
                 y: 100,
                 opacity: 0,
@@ -135,7 +195,7 @@ class ConstruoAnimations {
 
     initHeroAnimations() {
         // Parallax title on scroll
-        gsap.to('.hero-content', {
+        gsap.to(['.hero-content', '.mobile-register-btn'], {
             scrollTrigger: {
                 trigger: '.section-hero',
                 start: 'top top',
@@ -527,19 +587,7 @@ class ConstruoAnimations {
             ease: 'none'
         });
 
-        // Sponsors billboard parallax
-        gsap.utils.toArray('.sponsor-billboard').forEach((billboard, index) => {
-            gsap.to(billboard, {
-                scrollTrigger: {
-                    trigger: billboard,
-                    start: 'top bottom',
-                    end: 'bottom top',
-                    scrub: 1
-                },
-                y: (index % 2 === 0) ? -30 : 30,
-                ease: 'none'
-            });
-        });
+
 
         // Footer skyline parallax
         gsap.from('.footer-skyline', {

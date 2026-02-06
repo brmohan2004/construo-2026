@@ -46,7 +46,14 @@ class ConstruoSupabaseData {
                 .single();
 
             if (error) throw error;
+            if (error) throw error;
             this.cache.siteConfig = data;
+            // Cache to localStorage for instant load next time
+            try {
+                localStorage.setItem('construo_site_config', JSON.stringify(data));
+            } catch (e) {
+                console.warn('LocalStorage save failed', e);
+            }
             return data;
         } catch (error) {
             console.error('Error fetching site config:', error);

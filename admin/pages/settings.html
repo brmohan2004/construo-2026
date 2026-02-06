@@ -155,7 +155,22 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">Logo URL</label>
-                                    <input type="text" class="form-input" id="logoUrl">
+                                    <div class="logo-input-group">
+                                        <input type="text" class="form-input" id="logoUrl"
+                                            oninput="Settings.updateLogoPreview('siteLogoPreview', this.value); Settings.updateLoaderPreview()">
+                                        <button class="btn btn-secondary btn-sm"
+                                            onclick="document.getElementById('siteLogoFile').click()">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                width="14" height="14">
+                                                <path
+                                                    d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" />
+                                            </svg>
+                                            Upload
+                                        </button>
+                                        <input type="file" id="siteLogoFile" hidden accept="image/*"
+                                            onchange="Settings.handleFileUpload(this, 'logoUrl', 'siteLogoPreview')">
+                                        <div class="logo-preview-box" id="siteLogoPreview"></div>
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">Favicon URL</label>
@@ -322,18 +337,54 @@
                             </div>
                             <div class="card-body">
                                 <div class="form-group">
+                                    <label class="form-label">Loading Logo URL</label>
+                                    <div class="logo-input-group">
+                                        <input type="text" class="form-input" id="loaderLogoUrl"
+                                            placeholder="/img/logo.png" oninput="Settings.updateLoaderPreview()">
+                                        <button class="btn btn-secondary btn-sm"
+                                            onclick="document.getElementById('loaderLogoFile').click()">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                width="14" height="14">
+                                                <path
+                                                    d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" />
+                                            </svg>
+                                            Upload
+                                        </button>
+                                        <input type="file" id="loaderLogoFile" hidden accept="image/*"
+                                            onchange="Settings.handleFileUpload(this, 'loaderLogoUrl', 'loaderLogoPreview')">
+                                        <div class="logo-preview-box" id="loaderLogoPreview"></div>
+                                    </div>
+                                    <span class="help-text">Leave blank to use the main Site Logo.</span>
+                                </div>
+                                <div class="form-group">
                                     <label class="form-label">Loading Text</label>
                                     <input type="text" class="form-input" id="loaderText"
                                         placeholder="Constructing....">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Loader Style</label>
+                                    <select class="form-select" id="loaderStyle">
+                                        <option value="bar">Progress Bar</option>
+                                        <option value="spinner">Circular Spinner</option>
+                                        <option value="pulse">Pulsing Logo</option>
+                                        <option value="blocks">Bouncing Blocks</option>
+                                    </select>
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">Loader Speed (ms per %)</label>
                                     <input type="number" class="form-input" id="loaderSpeed" value="100" min="20"
                                         max="1000">
                                 </div>
-                                <div class="form-group">
-                                    <label class="form-label">Loader Accent Color</label>
-                                    <input type="color" class="form-input form-input-color" id="loaderColor">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Accent Color</label>
+                                        <input type="color" class="form-input form-input-color" id="loaderColor">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Background Color</label>
+                                        <input type="color" class="form-input form-input-color" id="loaderBgColor"
+                                            value="#0a0a0a">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -472,103 +523,181 @@
             render() {
                 const s = this.data.settings || {};
 
+                const setVal = (id, val) => {
+                    const el = document.getElementById(id);
+                    if (el) el.value = val;
+                };
+
+                const setCheck = (id, val) => {
+                    const el = document.getElementById(id);
+                    if (el) el.checked = val === true;
+                };
+
                 // General
-                document.getElementById('siteName').value = s.siteName || '';
-                document.getElementById('siteTagline').value = s.siteTagline || '';
-                document.getElementById('logoUrl').value = s.logoUrl || '';
-                document.getElementById('faviconUrl').value = s.faviconUrl || '';
-                document.getElementById('eventStartDate').value = s.eventStartDate || '';
-                document.getElementById('eventEndDate').value = s.eventEndDate || '';
-                document.getElementById('showCountdown').checked = s.showCountdown !== false;
+                setVal('siteName', s.siteName || '');
+                setVal('siteTagline', s.siteTagline || '');
+                setVal('logoUrl', s.logoUrl || '');
+                setVal('faviconUrl', s.faviconUrl || '');
+                setVal('eventStartDate', s.eventStartDate || '');
+                setVal('eventEndDate', s.eventEndDate || '');
+                setCheck('showCountdown', s.showCountdown);
 
                 // Registration
-                document.getElementById('registrationStatus').value = s.registrationStatus || 'open';
-                document.getElementById('regOpenDate').value = s.regOpenDate || '';
-                document.getElementById('regCloseDate').value = s.regCloseDate || '';
-                document.getElementById('maxRegistrations').value = s.maxRegistrations || 0;
-                document.getElementById('baseFee').value = s.baseFee || 0;
-                document.getElementById('earlyBirdDiscount').value = s.earlyBirdDiscount || 0;
-                document.getElementById('earlyBirdDate').value = s.earlyBirdDate || '';
+                setVal('registrationStatus', s.registrationStatus || 'closed');
+                setVal('regOpenDate', s.regOpenDate || '');
+                setVal('regCloseDate', s.regCloseDate || '');
+                setVal('maxRegistrations', s.maxRegistrations || 0);
+                setVal('baseFee', s.baseFee || 0);
+                setVal('earlyBirdDiscount', s.earlyBirdDiscount || 0);
+                setVal('earlyBirdDate', s.earlyBirdDate || '');
 
                 // Email
-                document.getElementById('emailRegConfirm').checked = s.emailRegConfirm !== false;
-                document.getElementById('emailPayConfirm').checked = s.emailPayConfirm !== false;
-                document.getElementById('emailAdminNotify').checked = s.emailAdminNotify !== false;
-                document.getElementById('emailFrom').value = s.emailFrom || '';
-                document.getElementById('emailReplyTo').value = s.emailReplyTo || '';
-                document.getElementById('emailAdmin').value = s.emailAdmin || '';
+                setCheck('emailRegConfirm', s.emailRegConfirm);
+                setCheck('emailPayConfirm', s.emailPayConfirm);
+                setCheck('emailAdminNotify', s.emailAdminNotify);
+                setVal('emailFrom', s.emailFrom || '');
+                setVal('emailReplyTo', s.emailReplyTo || '');
+                setVal('emailAdmin', s.emailAdmin || '');
 
                 // SEO
-                document.getElementById('metaTitle').value = s.metaTitle || '';
-                document.getElementById('metaDescription').value = s.metaDescription || '';
-                document.getElementById('metaKeywords').value = s.metaKeywords || '';
-                document.getElementById('ogImage').value = s.ogImage || '';
-                document.getElementById('twitterCard').value = s.twitterCard || 'summary_large_image';
+                setVal('metaTitle', s.metaTitle || '');
+                setVal('metaDescription', s.metaDescription || '');
+                setVal('metaKeywords', s.metaKeywords || '');
+                setVal('ogImage', s.ogImage || '');
+                setVal('twitterCard', s.twitterCard || 'summary_large_image');
 
                 // Animations
-                document.getElementById('loaderText').value = s.loaderText || 'Constructing....';
-                document.getElementById('loaderSpeed').value = s.loaderSpeed || 100;
-                document.getElementById('loaderColor').value = s.loaderColor || '#ff6b35';
-                document.getElementById('animDuration').value = s.animDuration || 0.8;
-                document.getElementById('animStagger').value = s.animStagger || 0.2;
-                document.getElementById('animEase').value = s.animEase || 'power3.out';
+                setVal('loaderLogoUrl', s.loaderLogoUrl || '');
+                setVal('loaderText', s.loaderText || 'Constructing....');
+                setVal('loaderStyle', s.loaderStyle || 'bar');
+                setVal('loaderSpeed', s.loaderSpeed || 100);
+                setVal('loaderColor', s.loaderColor || '#ff6b35');
+                setVal('loaderBgColor', s.loaderBgColor || '#0a0a0a');
+                setVal('animDuration', s.animDuration || 0.8);
+                setVal('animStagger', s.animStagger || 0.2);
+                setVal('animEase', s.animEase || 'power3.out');
 
                 // Maintenance
-                document.getElementById('maintenanceMode').checked = s.maintenanceMode === true;
-                document.getElementById('maintenanceMessage').value = s.maintenanceMessage || '';
+                setCheck('maintenanceMode', s.maintenanceMode);
+                setVal('maintenanceMessage', s.maintenanceMessage || '');
+
+                // Update Previews
+                this.updateLogoPreview('siteLogoPreview', s.logoUrl);
+                this.updateLoaderPreview();
+            },
+
+            updateLogoPreview(id, url) {
+                const preview = document.getElementById(id);
+                if (!preview) return;
+                if (url) {
+                    preview.innerHTML = `<img src="${url}" alt="Preview" style="max-height: 40px; border-radius: 4px;">`;
+                } else {
+                    preview.innerHTML = '<span style="font-size: 10px; color: var(--admin-text-muted);">No Logo</span>';
+                }
+            },
+
+            updateLoaderPreview() {
+                const loaderUrl = document.getElementById('loaderLogoUrl').value;
+                const siteUrl = document.getElementById('logoUrl').value;
+                this.updateLogoPreview('loaderLogoPreview', loaderUrl || siteUrl);
+            },
+
+            async handleFileUpload(input, targetId, previewId) {
+                const file = input.files[0];
+                if (!file) return;
+
+                const originalBtn = input.previousElementSibling;
+                const originalText = originalBtn.innerHTML;
+                originalBtn.disabled = true;
+                originalBtn.innerHTML = '<span class="spinner-sm"></span> uploading...';
+
+                try {
+                    // Upload to 'assets' bucket
+                    const url = await Admin.uploadFile('assets', file, 'logos');
+                    document.getElementById(targetId).value = url;
+                    this.updateLogoPreview(previewId, url);
+
+                    if (targetId === 'logoUrl') {
+                        this.updateLoaderPreview();
+                    }
+
+                    Admin.showToast('success', 'Upload Successful', 'Logo has been uploaded.');
+                } catch (e) {
+                    console.error('Logo upload failed', e);
+                    Admin.showToast('error', 'Upload Failed', e.message || 'Could not upload image.');
+                } finally {
+                    originalBtn.disabled = false;
+                    originalBtn.innerHTML = originalText;
+                    input.value = ''; // Reset input
+                }
             },
 
             async save() {
                 const saveBtn = document.getElementById('saveBtn');
+                if (!saveBtn) return;
+
                 const originalText = saveBtn.innerHTML;
                 saveBtn.textContent = 'Saving...';
                 saveBtn.disabled = true;
 
+                const getVal = (id) => {
+                    const el = document.getElementById(id);
+                    return el ? el.value : '';
+                };
+
+                const getCheck = (id) => {
+                    const el = document.getElementById(id);
+                    return el ? el.checked : false;
+                };
+
                 const newSettings = {
                     // General
-                    siteName: document.getElementById('siteName').value,
-                    siteTagline: document.getElementById('siteTagline').value,
-                    logoUrl: document.getElementById('logoUrl').value,
-                    faviconUrl: document.getElementById('faviconUrl').value,
-                    eventStartDate: document.getElementById('eventStartDate').value,
-                    eventEndDate: document.getElementById('eventEndDate').value,
-                    showCountdown: document.getElementById('showCountdown').checked,
+                    siteName: getVal('siteName'),
+                    siteTagline: getVal('siteTagline'),
+                    logoUrl: getVal('logoUrl'),
+                    faviconUrl: getVal('faviconUrl'),
+                    eventStartDate: getVal('eventStartDate'),
+                    eventEndDate: getVal('eventEndDate'),
+                    showCountdown: getCheck('showCountdown'),
 
                     // Registration
-                    registrationStatus: document.getElementById('registrationStatus').value,
-                    regOpenDate: document.getElementById('regOpenDate').value,
-                    regCloseDate: document.getElementById('regCloseDate').value,
-                    maxRegistrations: parseInt(document.getElementById('maxRegistrations').value) || 0,
-                    baseFee: parseInt(document.getElementById('baseFee').value) || 0,
-                    earlyBirdDiscount: parseInt(document.getElementById('earlyBirdDiscount').value) || 0,
-                    earlyBirdDate: document.getElementById('earlyBirdDate').value,
+                    registrationStatus: getVal('registrationStatus'),
+                    regOpenDate: getVal('regOpenDate'),
+                    regCloseDate: getVal('regCloseDate'),
+                    maxRegistrations: parseInt(getVal('maxRegistrations')) || 0,
+                    baseFee: parseInt(getVal('baseFee')) || 0,
+                    earlyBirdDiscount: parseInt(getVal('earlyBirdDiscount')) || 0,
+                    earlyBirdDate: getVal('earlyBirdDate'),
 
                     // Email
-                    emailRegConfirm: document.getElementById('emailRegConfirm').checked,
-                    emailPayConfirm: document.getElementById('emailPayConfirm').checked,
-                    emailAdminNotify: document.getElementById('emailAdminNotify').checked,
-                    emailFrom: document.getElementById('emailFrom').value,
-                    emailReplyTo: document.getElementById('emailReplyTo').value,
-                    emailAdmin: document.getElementById('emailAdmin').value,
+                    emailRegConfirm: getCheck('emailRegConfirm'),
+                    emailPayConfirm: getCheck('emailPayConfirm'),
+                    emailAdminNotify: getCheck('emailAdminNotify'),
+                    emailFrom: getVal('emailFrom'),
+                    emailReplyTo: getVal('emailReplyTo'),
+                    emailAdmin: getVal('emailAdmin'),
 
                     // SEO
-                    metaTitle: document.getElementById('metaTitle').value,
-                    metaDescription: document.getElementById('metaDescription').value,
-                    metaKeywords: document.getElementById('metaKeywords').value,
-                    ogImage: document.getElementById('ogImage').value,
-                    twitterCard: document.getElementById('twitterCard').value,
+                    metaTitle: getVal('metaTitle'),
+                    metaDescription: getVal('metaDescription'),
+                    metaKeywords: getVal('metaKeywords'),
+                    ogImage: getVal('ogImage'),
+                    twitterCard: getVal('twitterCard') || 'summary_large_image',
 
                     // Animations
-                    loaderText: document.getElementById('loaderText').value,
-                    loaderSpeed: parseInt(document.getElementById('loaderSpeed').value) || 100,
-                    loaderColor: document.getElementById('loaderColor').value,
-                    animDuration: parseFloat(document.getElementById('animDuration').value) || 0.8,
-                    animStagger: parseFloat(document.getElementById('animStagger').value) || 0.2,
-                    animEase: document.getElementById('animEase').value,
+                    loaderLogoUrl: getVal('loaderLogoUrl'),
+                    loaderText: getVal('loaderText'),
+                    loaderStyle: getVal('loaderStyle') || 'bar',
+                    loaderSpeed: parseInt(getVal('loaderSpeed')) || 100,
+                    loaderColor: getVal('loaderColor') || '#ff6b35',
+                    loaderBgColor: getVal('loaderBgColor') || '#0a0a0a',
+                    animDuration: parseFloat(getVal('animDuration')) || 0.8,
+                    animStagger: parseFloat(getVal('animStagger')) || 0.2,
+                    animEase: getVal('animEase') || 'power3.out',
 
                     // Maintenance
-                    maintenanceMode: document.getElementById('maintenanceMode').checked,
-                    maintenanceMessage: document.getElementById('maintenanceMessage').value
+                    maintenanceMode: getCheck('maintenanceMode'),
+                    maintenanceMessage: getVal('maintenanceMessage')
                 };
 
                 try {
@@ -758,6 +887,55 @@
         .action-item p {
             font-size: 0.813rem;
             color: var(--admin-text-muted);
+        }
+
+        .logo-input-group {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.813rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .spinner-sm {
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .logo-preview-box {
+            width: 60px;
+            height: 40px;
+            background: var(--admin-bg);
+            border: 1px solid var(--admin-border);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .help-text {
+            font-size: 0.75rem;
+            color: var(--admin-text-muted);
+            margin-top: 0.25rem;
+            display: block;
         }
 
         @media (max-width: 768px) {

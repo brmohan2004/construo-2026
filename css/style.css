@@ -88,7 +88,7 @@ img {
     background: var(--color-accent);
     border-radius: 50%;
     pointer-events: none;
-    z-index: 10002;
+    z-index: 9999;
     mix-blend-mode: difference;
     transition: transform 0.1s ease;
 }
@@ -98,6 +98,7 @@ img {
     width: 40px;
     height: 40px;
     border: 1px solid var(--color-accent);
+    z-index: 9998;
     border-radius: 50%;
     pointer-events: none;
     z-index: 10001;
@@ -159,79 +160,169 @@ body:hover .cursor-follower {
     }
 }
 
-/* -------------------- Preloader -------------------- */
+/* -------------------- Premium Symposium Preloader -------------------- */
 #preloader {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: var(--color-bg);
+    /* Subtle radial gradient to focus attention on the center logo */
+    background: radial-gradient(circle at center, #151b26 0%, var(--color-bg) 80%);
+    z-index: 10005;
+    /* Higher than navbar (10000) */
     display: flex;
-    align-items: center;
     justify-content: center;
-    z-index: 10001;
-    transition: opacity 0.5s ease, visibility 0.5s ease;
+    align-items: center;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.4s cubic-bezier(0.7, 0, 0.3, 1), visibility 0.4s ease;
 }
 
 #preloader.loaded {
     opacity: 0;
     visibility: hidden;
+    pointer-events: none;
 }
 
 .loader-content {
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    /* More breathing room */
+    width: 100%;
+    max-width: 100%;
+    /* Full width to allow large logo */
+    padding: 2rem;
 }
 
 .loader-logo {
-    font-family: var(--font-display);
-    font-size: 4rem;
-    letter-spacing: 0.2em;
-    color: var(--color-text);
-    margin-bottom: 2rem;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Soft entrance animation */
+    animation: symposiumLogoEntrance 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
-.loader-bar {
-    width: 200px;
-    height: 4px;
-    background: var(--color-concrete);
-    border-radius: 2px;
+/* Subtle glow behind the logo */
+.loader-logo::after {
+    content: '';
+    position: absolute;
+    width: 120%;
+    height: 120%;
+    background: radial-gradient(circle, rgba(255, 107, 53, 0.15) 0%, transparent 70%);
+    z-index: -1;
+    opacity: 0;
+    animation: fadeInGlow 1.5s ease-out 0.5s forwards;
+}
+
+.loader-logo img {
+    max-height: 80vh;
+    /* Responsive cap */
+    max-width: 1000px;
+    /* Requested size */
+    width: 100%;
+    object-fit: contain;
+    /* Premium shadow */
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
+}
+
+.loader-bar-container {
+    width: 180px;
+    /* Minimalist width */
+    height: 2px;
+    /* Very sleek line */
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
     overflow: hidden;
-    margin: 0 auto 1rem;
+    position: relative;
+    margin-top: 1rem;
 }
 
-.loader-progress {
-    width: 0%;
+.loader-bar-fill {
     height: 100%;
-    background: linear-gradient(90deg, var(--color-accent), var(--color-blueprint));
-    transition: width 0.3s ease;
+    width: 0%;
+    /* Vibrant gradient */
+    background: linear-gradient(90deg, var(--color-accent), #ff9f43);
+    box-shadow: 0 0 15px var(--color-accent);
+    transition: width 0.1s linear;
+    border-radius: 4px;
 }
 
 .loader-text {
     font-family: var(--font-mono);
-    font-size: 0.875rem;
+    font-size: 0.7rem;
     color: var(--color-text-muted);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0.7;
 }
 
-.loader-text .dots {
-    animation: dots 1.5s infinite;
-}
-
-@keyframes dots {
-
-    0%,
-    20% {
-        content: '.';
+@keyframes symposiumLogoEntrance {
+    0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+        filter: blur(10px);
     }
 
-    40% {
-        content: '..';
-    }
-
-    60%,
     100% {
-        content: '...';
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
     }
+}
+
+@keyframes fadeInGlow {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+
+
+.loader-blocks {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 1.5rem;
+}
+
+.loader-block {
+    width: 15px;
+    height: 15px;
+    background: var(--color-accent);
+    animation: block-jump 0.6s infinite alternate;
+}
+
+.loader-block:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.loader-block:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes block-jump {
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(-20px);
+    }
+}
+
+.loader-logo img {
+    max-height: 80px;
+    width: auto;
+    margin-bottom: 1rem;
 }
 
 /* -------------------- Navigation -------------------- */
@@ -552,11 +643,7 @@ body:hover .cursor-follower {
 }
 
 .mobile-link.cta {
-    font-size: 1.5rem;
-    padding: 1rem 2rem;
-    background: var(--color-accent);
-    border-radius: 4px;
-    margin-top: 1rem;
+    display: none;
 }
 
 /* -------------------- Scroll Progress -------------------- */
@@ -687,6 +774,31 @@ body:hover .cursor-follower {
     width: 100%;
 }
 
+.mobile-register-btn {
+    display: none;
+}
+
+@media (max-width: 968px) {
+    .mobile-register-btn {
+        display: inline-block;
+        padding: 0.8rem 2.5rem;
+        background: linear-gradient(90deg, var(--color-accent), #ff8f5a);
+        color: var(--color-text);
+        border-radius: 8px;
+        font-family: var(--font-display);
+        font-size: 1.5rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin-top: 1rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 30px rgba(255, 107, 53, 0.2);
+        z-index: 100;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+}
+
+
 .hero-badge {
     display: inline-block;
     padding: 0.5rem 1.5rem;
@@ -725,6 +837,31 @@ body:hover .cursor-follower {
     letter-spacing: 0.2em;
     text-transform: uppercase;
     margin-bottom: 2rem;
+    opacity: 0.7;
+}
+
+@keyframes symposiumLogoEntrance {
+    0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+        filter: blur(10px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+    }
+}
+
+@keyframes fadeInGlow {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 .hero-date {
@@ -2511,38 +2648,73 @@ body:hover .cursor-follower {
     color: var(--color-text-muted);
 }
 
-.sponsor-billboards {
+.sponsor-carousel {
+    width: 100%;
+    overflow: hidden;
+    mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
     display: flex;
     justify-content: center;
-    gap: 2rem;
-    flex-wrap: wrap;
+}
+
+.sponsor-carousel.no-scroll {
+    mask-image: none;
+    -webkit-mask-image: none;
+}
+
+.sponsor-track {
+    display: flex;
+    gap: 4rem;
+    width: max-content;
+    animation: scrollLeft 30s linear infinite;
+    padding: 3rem 0;
+    align-items: center;
+}
+
+.sponsor-track:hover {
+    animation-play-state: paused;
+}
+
+.sponsor-billboards {
+    display: none;
+    /* Replaced by sponsor-carousel */
 }
 
 .sponsor-billboard {
     background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all var(--transition-fast);
     position: relative;
+    overflow: hidden;
 }
 
 .sponsor-billboard.large {
-    width: 280px;
-    height: 160px;
+    width: 220px;
+    height: 180px;
 }
 
 .sponsor-billboard.medium {
-    width: 200px;
-    height: 120px;
+    width: 180px;
+    height: 140px;
 }
 
 .sponsor-billboard.small {
-    width: 150px;
-    height: 90px;
+    width: 140px;
+    height: 110px;
 }
+
+.billboard-content img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+
 
 .sponsor-billboard:hover {
     border-color: var(--color-accent);
@@ -3181,7 +3353,7 @@ body:hover .cursor-follower {
     }
 
     .event-name {
-        font-size: 0.8rem;
+        font-size: 1rem;
     }
 
     /* === SPEAKERS SECTION MOBILE === */
@@ -3211,14 +3383,14 @@ body:hover .cursor-follower {
     }
 
     .speaker-image {
-        width: 80px;
-        height: 80px;
-        border-width: 2px;
+        width: 140px;
+        height: 140px;
+        border-width: 3px;
     }
 
     .speaker-name {
-        font-size: 0.9rem;
-        margin-bottom: 0.15rem;
+        font-size: 1.1rem;
+        margin-bottom: 0.25rem;
     }
 
     .speaker-title {
@@ -3227,7 +3399,7 @@ body:hover .cursor-follower {
     }
 
     .speaker-topic {
-        font-size: 0.55rem;
+        font-size: 0.65rem;
     }
 
     /* Empty state styling */
@@ -3274,9 +3446,9 @@ body:hover .cursor-follower {
     }
 
     .event-card {
-        padding: 0.85rem;
-        min-height: 130px;
-        border-radius: 8px;
+        padding: 1.25rem;
+        min-height: 180px;
+        border-radius: 12px;
     }
 
     .event-icon {
@@ -3408,16 +3580,16 @@ body:hover .cursor-follower {
     }
 
     .organizer-card {
-        width: 120px;
-        padding: 0.6rem;
-        border-radius: 8px;
+        width: 160px;
+        padding: 1rem;
+        border-radius: 10px;
     }
 
     .organizer-photo {
-        width: 50px;
-        height: 50px;
-        margin-bottom: 0.5rem;
-        border-width: 2px;
+        width: 80px;
+        height: 80px;
+        margin-bottom: 0.75rem;
+        border-width: 3px;
     }
 
     .organizer-photo .image-placeholder {
@@ -3465,9 +3637,29 @@ body:hover .cursor-follower {
         letter-spacing: 0.08em;
     }
 
+    .sponsor-carousel {
+        width: 100%;
+        overflow: hidden;
+        mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+        -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    }
+
+    .sponsor-track {
+        display: flex;
+        gap: 2rem;
+        width: max-content;
+        animation: scrollLeft 12s linear infinite;
+        padding: 1.5rem 0;
+        align-items: center;
+    }
+
+    .sponsor-track:hover {
+        animation-play-state: paused;
+    }
+
     .sponsor-billboards {
-        gap: 0.6rem;
-        justify-content: center;
+        display: none;
+        /* Replaced by sponsor-carousel */
     }
 
     .sponsor-billboard {
@@ -3475,18 +3667,18 @@ body:hover .cursor-follower {
     }
 
     .sponsor-billboard.large {
-        width: 130px;
-        height: 70px;
+        width: 140px;
+        height: 110px;
     }
 
     .sponsor-billboard.medium {
-        width: 100px;
-        height: 55px;
+        width: 110px;
+        height: 85px;
     }
 
     .sponsor-billboard.small {
-        width: 75px;
-        height: 42px;
+        width: 90px;
+        height: 70px;
     }
 
     .billboard-content {

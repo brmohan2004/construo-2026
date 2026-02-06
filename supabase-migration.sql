@@ -314,15 +314,16 @@ CREATE POLICY "Users can update own profile"
     ON profiles FOR UPDATE
     USING (auth.uid() = user_id);
 
--- Only admins can insert/delete profiles
-CREATE POLICY "Admins can insert profiles"
+-- Users can create their own profile upon signup
+CREATE POLICY "Users can create own profile"
     ON profiles FOR INSERT
-    WITH CHECK (
-        EXISTS (
-            SELECT 1 FROM profiles 
-            WHERE user_id = auth.uid() 
-            AND role IN ('admin', 'superadmin')
-        )
+    WITH CHECK (auth.uid() = user_id);
+
+-- Admins can manage all profiles
+CREATE POLICY "Admins can manage all profiles"
+    ON profiles FOR ALL
+    USING (
+        role IN ('admin', 'superadmin')
     );
 
 CREATE POLICY "Admins can delete profiles"
