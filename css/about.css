@@ -1,0 +1,221 @@
+/* ================================================
+   CONSTRUO 2026 - About Section Styles
+   ================================================ */
+
+/* -------------------- About Section -------------------- */
+.section-about {
+    background: linear-gradient(180deg, var(--color-bg) 0%, var(--color-primary) 100%);
+}
+
+.about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+}
+
+.about-lead {
+    font-size: 1.5rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.about-text {
+    color: var(--color-text-muted);
+    margin-bottom: 2rem;
+}
+
+.about-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-number {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 3rem;
+    color: var(--color-accent);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.blueprint-frame {
+    position: relative;
+    aspect-ratio: 4/3;
+    border: 2px solid var(--color-blueprint);
+    border-radius: 8px;
+    overflow: hidden;
+    background: rgba(74, 144, 217, 0.05);
+}
+
+.blueprint-frame::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        linear-gradient(90deg, rgba(74, 144, 217, 0.1) 1px, transparent 1px),
+        linear-gradient(rgba(74, 144, 217, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+    pointer-events: none;
+}
+
+.blueprint-content {
+    width: 100%;
+    height: 100%;
+}
+
+.event-poster-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.event-poster {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.event-poster:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.brochure-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: var(--color-accent);
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.brochure-link:hover {
+    background: transparent;
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    transform: translateY(-2px);
+}
+
+.brochure-link .btn-icon {
+    font-size: 1.2rem;
+}
+
+@media (max-width: 968px) {
+    .about-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .about-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .event-poster-container {
+        gap: 1rem;
+    }
+
+    .event-poster {
+        max-width: 350px;
+    }
+}
+
+/* Mobile-specific about section */
+@media (max-width: 768px) {
+    .section-about {
+        padding: 35px 0;
+    }
+
+    .about-grid {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+    }
+
+    .about-visual {
+        order: -1;
+    }
+
+    .event-poster-container {
+        gap: 0.75rem;
+    }
+
+    .event-poster {
+        max-width: 180px;
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .poster-trigger {
+        background: none;
+        border: none;
+        padding: 0;
+    }
+
+    .brochure-link {
+        padding: 0.55rem 1rem;
+        font-size: 0.7rem;
+        border-radius: 6px;
+    }
+
+    .brochure-link .btn-icon {
+        font-size: 0.9rem;
+    }
+
+    .about-lead {
+        font-size: 1rem;
+        line-height: 1.45;
+        text-align: center;
+        margin-bottom: 0.75rem;
+    }
+
+    .about-text {
+        font-size: 0.8rem;
+        text-align: center;
+        margin-bottom: 1rem;
+        line-height: 1.5;
+        opacity: 0.85;
+    }
+
+    .about-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+
+    .stat-item {
+        padding: 0.5rem;
+    }
+
+    .stat-number {
+        font-size: 1.6rem;
+        margin-bottom: 0.2rem;
+    }
+
+    .stat-label {
+        font-size: 0.55rem;
+        letter-spacing: 0.08em;
+    }
+}

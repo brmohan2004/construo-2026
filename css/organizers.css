@@ -1,0 +1,305 @@
+/* ================================================
+   CONSTRUO 2026 - Organizers Section Styles
+   ================================================ */
+
+/* -------------------- Organizers Section -------------------- */
+.section-organizers {
+    background: linear-gradient(180deg, var(--color-bg) 0%, var(--color-primary) 100%);
+    overflow: hidden;
+}
+
+/* Organizers Carousels Container */
+.organizers-carousels {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+.organizer-row {
+    width: 100%;
+}
+
+.organizer-row .row-title {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: var(--color-blueprint);
+    margin-bottom: 1.5rem;
+    padding: 0.5rem 1rem;
+    border-left: 3px solid var(--color-blueprint);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-align: center;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.carousel-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+    display: flex;
+    justify-content: center;
+}
+
+.carousel-track {
+    display: flex;
+    gap: 1.5rem;
+    width: max-content;
+    animation: scrollLeft 30s linear infinite;
+    justify-content: center;
+}
+
+.carousel-track[data-direction="right"] {
+    animation: scrollRight 30s linear infinite;
+}
+
+.carousel-track:hover {
+    animation-play-state: paused;
+}
+
+/* When only a few cards, center them without animation */
+.carousel-track.no-scroll {
+    animation: none;
+    justify-content: center;
+}
+
+.carousel-wrapper:has(.no-scroll) {
+    mask-image: none;
+    -webkit-mask-image: none;
+}
+
+@keyframes scrollLeft {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+@keyframes scrollRight {
+    0% {
+        transform: translateX(-50%);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+/* Legacy Grid (fallback) */
+.organizers-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+}
+
+.organizer-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all var(--transition-medium);
+    flex-shrink: 0;
+    width: 220px;
+}
+
+.organizer-photo {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 1rem;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid rgba(255, 255, 255, 0.04);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.organizer-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.organizer-photo .image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--color-blueprint), var(--color-primary));
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
+}
+
+.organizer-name {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    margin-bottom: 0.25rem;
+}
+
+.organizer-role {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    margin-bottom: 0.5rem;
+}
+
+.organizer-contact {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--color-blueprint);
+}
+
+.organizer-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+    .organizers-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .organizers-carousels {
+        gap: 2rem;
+    }
+
+    .organizer-row .row-title {
+        font-size: 1.25rem;
+    }
+
+    .organizer-card {
+        width: 180px;
+        padding: 1rem;
+    }
+
+    .organizer-photo {
+        width: 80px;
+        height: 80px;
+    }
+
+    .organizer-name {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .section-organizers {
+        padding: 35px 0;
+    }
+
+    .organizers-carousels {
+        gap: 1.25rem;
+    }
+
+    .organizer-row .row-title {
+        font-size: 0.9rem;
+        padding: 0.3rem 0.6rem;
+        margin-bottom: 0.75rem;
+        border-left-width: 2px;
+    }
+
+    .organizer-card {
+        width: 160px;
+        padding: 1rem;
+        border-radius: 10px;
+    }
+
+    .organizer-photo {
+        width: 80px;
+        height: 80px;
+        margin-bottom: 0.75rem;
+        border-width: 3px;
+    }
+
+    .organizer-photo .image-placeholder {
+        font-size: 1.25rem;
+    }
+
+    .organizer-name {
+        font-size: 0.75rem;
+        margin-bottom: 0.15rem;
+    }
+
+    .organizer-role {
+        font-size: 0.6rem;
+        margin-bottom: 0.15rem;
+    }
+
+    .organizer-contact {
+        font-size: 0.55rem;
+    }
+
+    .carousel-track {
+        gap: 0.6rem;
+    }
+
+    .organizers-grid:empty::after {
+        content: 'Coming soon...';
+        display: block;
+        text-align: center;
+        color: var(--color-text-muted);
+        font-size: 0.85rem;
+        padding: 2rem;
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 480px) {
+    .organizers-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .organizers-carousels {
+        gap: 1.5rem;
+    }
+
+    .organizer-row .row-title {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+    }
+
+    .organizer-card {
+        width: 160px;
+        padding: 0.75rem;
+    }
+
+    .organizer-photo {
+        width: 70px;
+        height: 70px;
+    }
+
+    .organizer-name {
+        font-size: 0.9rem;
+    }
+
+    .organizer-role {
+        font-size: 0.75rem;
+    }
+
+    .carousel-track {
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 380px) {
+    .organizer-card {
+        width: 100px;
+        padding: 0.5rem;
+    }
+
+    .organizer-photo {
+        width: 42px;
+        height: 42px;
+    }
+
+    .organizer-name {
+        font-size: 0.65rem;
+    }
+}

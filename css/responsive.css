@@ -1,0 +1,381 @@
+/* ================================================
+   CONSTRUO 2026 - Mobile Responsive Styles
+   Ultra-optimized for mobile devices
+   ================================================ */
+
+/* === Touch Device Improvements === */
+@media (hover: none) and (pointer: coarse) {
+
+    /* Remove hover effects */
+    .event-card:hover,
+    .speaker-card:hover .speaker-image,
+    .organizer-card:hover,
+    .sponsor-billboard:hover,
+    .event-block:hover {
+        transform: none;
+    }
+
+    .event-card:active,
+    .organizer-card:active {
+        transform: scale(0.98);
+        opacity: 0.9;
+    }
+
+    /* Better tap targets - minimum 44px */
+    .nav-toggle {
+        min-width: 44px;
+        min-height: 44px;
+    }
+
+    .social-link {
+        min-width: 40px;
+        min-height: 40px;
+    }
+
+    .btn {
+        min-height: 42px;
+    }
+
+    .event-register-btn {
+        min-height: 32px;
+        padding: 0.4rem 0.85rem;
+    }
+
+    /* Hide custom cursor on touch */
+    .cursor,
+    .cursor-follower {
+        display: none !important;
+    }
+
+    body,
+    a,
+    button {
+        cursor: auto;
+    }
+}
+
+/* === Landscape Mobile === */
+@media (max-width: 768px) and (orientation: landscape) {
+    .section-hero {
+        min-height: auto;
+        padding: calc(var(--nav-height) + 0.5rem) 1.5rem 1rem;
+    }
+
+    .hero-inner {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .hero-content {
+        width: 100%;
+    }
+
+    .hero-fee {
+        margin-top: 0.5rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .title-line {
+        font-size: clamp(1.8rem, 10vw, 3rem);
+    }
+
+    .title-line.outline {
+        font-size: clamp(1.5rem, 8vw, 2.5rem);
+    }
+
+    .hero-cta {
+        flex-direction: row;
+        justify-content: center;
+        max-width: none;
+    }
+
+    .hero-cta .btn {
+        width: auto;
+        padding: 0.6rem 1.25rem;
+    }
+
+    .scroll-indicator {
+        display: none;
+    }
+}
+
+/* === Print Styles === */
+@media print {
+
+    .cursor,
+    .cursor-follower,
+    .scroll-progress,
+    .scroll-indicator,
+    #navbar,
+    .mobile-menu,
+    .hero-cta,
+    .modal,
+    #webgl-canvas {
+        display: none !important;
+    }
+
+    .section {
+        padding: 20px 0;
+        page-break-inside: avoid;
+    }
+}
+
+/* === Extra Small Devices (max-width: 380px) === */
+@media (max-width: 380px) {
+    :root {
+        --section-padding: 30px;
+    }
+
+    .section-container {
+        padding: 0 0.75rem;
+    }
+
+    .section-title {
+        font-size: 1.3rem;
+    }
+
+    /* Hero - Extra compact */
+    .title-line {
+        font-size: clamp(2.2rem, 18vw, 3.5rem);
+    }
+
+    .title-line.outline {
+        font-size: clamp(1.8rem, 15vw, 2.8rem);
+    }
+
+    .hero-tagline {
+        font-size: 0.6rem;
+    }
+
+    .hero-date {
+        gap: 0.4rem;
+    }
+
+    .date-day {
+        font-size: 1.4rem;
+    }
+
+    .date-month {
+        font-size: 0.9rem;
+    }
+
+    .fee-amount {
+        font-size: 1.2rem;
+    }
+
+    .hero-cta {
+        max-width: 260px;
+    }
+
+    .hero-cta .btn-primary {
+        padding: 0.85rem 1.5rem;
+        font-size: 0.8rem;
+    }
+
+    /* Hide Explore button on very small screens */
+    .hero-cta .btn-secondary {
+        display: none;
+    }
+
+    /* About */
+    .event-poster {
+        max-width: 180px;
+    }
+
+    .about-lead {
+        font-size: 0.9rem;
+    }
+
+    .stat-number {
+        font-size: 1.4rem;
+    }
+
+    /* Events - single column */
+    .events-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .event-card {
+        min-height: 110px;
+    }
+
+    /* Speakers - single column */
+    .speakers-grid {
+        grid-template-columns: 1fr;
+        max-width: 200px;
+        margin: 0 auto;
+    }
+
+    .mobile-link {
+        font-size: 1.4rem;
+    }
+}
+
+/* === Responsive Font Adjustments for Hero Section on Mobile === */
+@media (max-width: 768px) {
+    .hero-badge {
+        font-size: 0.95rem;
+        padding: 0.5rem 1.25rem;
+        letter-spacing: 0.08em;
+    }
+
+    .title-line {
+        font-size: clamp(4.5rem, 18vw, 12rem);
+    }
+
+    .title-line.outline {
+        font-size: clamp(3.5rem, 15vw, 9rem);
+    }
+
+    .hero-tagline {
+        font-size: 1.2rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .hero-date {
+        gap: 0.75rem;
+    }
+
+    .date-day {
+        font-size: 3.5rem;
+    }
+
+    .date-month {
+        font-size: 1.75rem;
+    }
+
+    .date-year {
+        font-size: 1.1rem;
+    }
+}
+
+/* === Mobile Base Overrides (max-width: 768px) === */
+@media (max-width: 768px) {
+    :root {
+        --section-padding: 40px;
+        --nav-height: 56px;
+    }
+
+    .section {
+        min-height: auto;
+        padding: var(--section-padding) 0;
+        width: 100%;
+        position: relative;
+        z-index: 1;
+        overflow-x: hidden;
+        background-color: var(--color-bg);
+    }
+
+    .section-container {
+        padding: 0 1rem;
+    }
+
+    .section-header {
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+
+    .section-number {
+        font-size: 0.7rem;
+        margin-bottom: 0.35rem;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        line-height: 1.15;
+        margin-bottom: 0.5rem;
+    }
+
+    .blueprint-line {
+        width: 50px;
+        height: 2px;
+        margin: 0 auto;
+    }
+
+    /* Navigation */
+    #navbar {
+        height: var(--nav-height);
+        padding: 0 1rem;
+    }
+
+    .nav-container {
+        padding: 0 0.5rem;
+    }
+
+    .logo-text {
+        font-size: 1.35rem;
+        letter-spacing: 0.08em;
+    }
+
+    .logo-year.badge {
+        font-size: 0.6rem;
+        padding: 0.1rem 0.35rem;
+    }
+
+    /* Buttons */
+    .btn {
+        padding: 0.7rem 1.5rem;
+        font-size: 0.75rem;
+        letter-spacing: 0.06em;
+        border-radius: 5px;
+    }
+
+    .btn-sm {
+        padding: 0.4rem 1rem;
+        font-size: 0.65rem;
+    }
+
+    /* Mobile Menu */
+    .mobile-menu-content {
+        gap: 1.25rem;
+        padding: 1.5rem;
+    }
+
+    .mobile-link {
+        font-size: 1.65rem;
+    }
+
+    .mobile-link.cta {
+        font-size: 1rem;
+        padding: 0.75rem 1.5rem;
+        margin-top: 0.5rem;
+    }
+
+    /* Scroll Progress */
+    .scroll-progress {
+        bottom: 0.75rem;
+        right: 0.75rem;
+        width: 40px;
+        height: 40px;
+    }
+
+    .scroll-progress .progress-text {
+        font-size: 0.5rem;
+    }
+}
+
+/* === Reduced Motion === */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    html {
+        scroll-behavior: auto;
+    }
+
+    .carousel-track {
+        animation: none !important;
+    }
+
+    .sponsor-track {
+        animation: none !important;
+    }
+}

@@ -1,0 +1,378 @@
+/* ================================================
+   CONSTRUO 2026 - Events Section Styles
+   ================================================ */
+
+/* -------------------- Events Section -------------------- */
+.section-events {
+    background: var(--color-bg);
+    padding: 60px 0 40px;
+    min-height: auto;
+}
+
+/* Events Grid */
+.events-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+/* Event Categories */
+.event-category {
+    margin-bottom: 2rem;
+}
+
+.category-title {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    color: var(--color-accent);
+    margin-bottom: 1rem;
+    text-align: center;
+    position: relative;
+}
+
+.category-title::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 2px;
+    background: var(--color-accent);
+    border-radius: 1px;
+}
+
+/* Event Card */
+.event-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 1.25rem;
+    position: relative;
+    overflow: hidden;
+    transition: all var(--transition-medium);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    min-height: 200px;
+}
+
+.event-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--color-accent);
+    transform: scaleX(0);
+    transition: transform var(--transition-medium);
+}
+
+.event-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--color-accent);
+    box-shadow: 0 12px 24px rgba(255, 107, 53, 0.15);
+}
+
+.event-card:hover::before {
+    transform: scaleX(1);
+}
+
+/* Event Type Specific Colors */
+.event-card.technical::before {
+    background: var(--color-accent);
+}
+
+.event-card.workshop::before {
+    background: var(--color-blueprint);
+}
+
+.event-card.nontech::before {
+    background: #22c55e;
+}
+
+.event-card.technical:hover {
+    border-color: var(--color-accent);
+    box-shadow: 0 12px 24px rgba(255, 107, 53, 0.15);
+}
+
+.event-card.workshop:hover {
+    border-color: var(--color-blueprint);
+    box-shadow: 0 12px 24px rgba(74, 144, 217, 0.15);
+}
+
+.event-card.nontech:hover {
+    border-color: #22c55e;
+    box-shadow: 0 12px 24px rgba(34, 197, 94, 0.15);
+}
+
+/* Event Icon */
+.event-icon {
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    transition: all var(--transition-fast);
+}
+
+.event-icon svg {
+    width: 24px;
+    height: 24px;
+    stroke: var(--color-accent);
+    stroke-width: 1.5;
+}
+
+.event-card:hover .event-icon {
+    background: var(--color-accent);
+    transform: scale(1.1);
+}
+
+.event-card:hover .event-icon svg {
+    stroke: var(--color-text);
+}
+
+.event-card.workshop .event-icon svg {
+    stroke: var(--color-blueprint);
+}
+
+.event-card.workshop:hover .event-icon {
+    background: var(--color-blueprint);
+}
+
+.event-card.nontech .event-icon svg {
+    stroke: #22c55e;
+}
+
+.event-card.nontech:hover .event-icon {
+    background: #22c55e;
+}
+
+/* Event Name */
+.event-name {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: var(--color-text);
+    line-height: 1.3;
+}
+
+/* Event Type */
+.event-type {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    margin-bottom: 1rem;
+    font-weight: 500;
+}
+
+/* Event Register Button */
+.event-register-btn {
+    display: inline-block;
+    padding: 0.5rem 1.25rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text);
+    transition: all var(--transition-fast);
+    text-decoration: none;
+}
+
+.event-register-btn:hover {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    transform: translateY(-1px);
+}
+
+.event-card.workshop .event-register-btn:hover {
+    background: var(--color-blueprint);
+    border-color: var(--color-blueprint);
+}
+
+.event-card.nontech .event-register-btn:hover {
+    background: #22c55e;
+    border-color: #22c55e;
+}
+
+/* Prize Banner */
+.prize-banner {
+    background: linear-gradient(135deg, var(--color-accent) 0%, #ff8f5a 50%, var(--color-blueprint) 100%);
+    border-radius: 16px;
+    padding: 3px;
+    position: relative;
+    overflow: hidden;
+}
+
+.prize-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(50%);
+    }
+}
+
+.prize-banner-content {
+    background: var(--color-bg);
+    border-radius: 14px;
+    padding: 2.5rem;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.prize-label {
+    display: block;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--color-text-muted);
+    margin-bottom: 0.5rem;
+}
+
+.prize-amount {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 4rem;
+    background: linear-gradient(135deg, var(--color-accent), var(--color-blueprint));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+}
+
+.prize-sub {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+}
+
+/* Events Grid Responsive */
+@media (max-width: 1200px) {
+    .events-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .events-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .prize-amount {
+        font-size: 3rem;
+    }
+
+    .section-events {
+        padding: 35px 0 25px;
+    }
+
+    .event-category {
+        margin-bottom: 1.25rem;
+    }
+
+    .category-title {
+        font-size: 1.1rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .category-title::after {
+        bottom: -5px;
+        width: 40px;
+    }
+
+    .events-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .event-card {
+        padding: 1.25rem;
+        min-height: 180px;
+        border-radius: 12px;
+    }
+
+    .event-icon {
+        width: 32px;
+        height: 32px;
+        margin-bottom: 0.5rem;
+        border-radius: 6px;
+    }
+
+    .event-icon svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .event-card .event-name {
+        font-size: 0.8rem;
+        margin-bottom: 0.35rem;
+        line-height: 1.2;
+    }
+
+    .event-type {
+        font-size: 0.6rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .event-register-btn {
+        padding: 0.35rem 0.75rem;
+        font-size: 0.6rem;
+        border-radius: 4px;
+    }
+
+    .prize-banner {
+        border-radius: 10px;
+        padding: 2px;
+    }
+
+    .prize-banner-content {
+        padding: 1.25rem 1rem;
+        border-radius: 8px;
+    }
+
+    .prize-label {
+        font-size: 0.65rem;
+        letter-spacing: 0.12em;
+        margin-bottom: 0.25rem;
+    }
+
+    .prize-amount {
+        font-size: 2rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .prize-sub {
+        font-size: 0.65rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .events-grid {
+        grid-template-columns: 1fr;
+    }
+}
