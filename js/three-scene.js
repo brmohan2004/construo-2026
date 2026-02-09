@@ -10,12 +10,7 @@ class AutoCADScene {
 
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000);
-        this.renderer = new THREE.WebGLRenderer({
-            canvas: this.canvas,
-            antialias: true,
-            alpha: true,
-            powerPreference: 'high-performance'
-        });
+        this.renderer = null;
 
         // State
         this.wireframes = [];
@@ -36,17 +31,21 @@ class AutoCADScene {
 
     detectLowPower() {
         // Detect low-power devices
-        const canvas = document.createElement('canvas');
-        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-        if (!gl) return true;
+        try {
+            const canvas = document.createElement('canvas');
+            const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+            if (!gl) return true;
 
-        const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-        if (debugInfo) {
-            const renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
-            // Check for integrated graphics or mobile GPUs
-            if (renderer.includes('Intel') || renderer.includes('Mali') || renderer.includes('Adreno')) {
-                return true;
+            const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+            if (debugInfo) {
+                const renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL).toLowerCase();
+                // Check for integrated graphics or mobile GPUs
+                if (renderer.includes('intel') || renderer.includes('mali') || renderer.includes('adreno') || renderer.includes('software')) {
+                    return true;
+                }
             }
+        } catch (e) {
+            return true;
         }
 
         // Check for reduced motion preference
@@ -54,12 +53,22 @@ class AutoCADScene {
             return true;
         }
 
-        return this.isMobile;
+        // Don't just return this.isMobile; check if it's a high-end mobile
+        return false;
     }
 
     init() {
         // Renderer setup - optimized for performance
         const pixelRatio = this.isLowPower ? 1 : Math.min(window.devicePixelRatio, 2);
+
+        // Use a more compatible power preference for emulators
+        this.renderer = new THREE.WebGLRenderer({
+            canvas: this.canvas,
+            antialias: !this.isLowPower,
+            alpha: true,
+            powerPreference: 'default'
+        });
+
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.setPixelRatio(pixelRatio);
         this.renderer.setClearColor(0x0a0f1a, 1);

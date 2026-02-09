@@ -9,23 +9,35 @@ class ConstruoAnimations {
     }
 
     init() {
-        // Register GSAP plugins
-        gsap.registerPlugin(ScrollTrigger);
+        // Safe GSAP registration
+        if (typeof gsap !== 'undefined') {
+            try {
+                gsap.registerPlugin(ScrollTrigger);
+            } catch (e) {
+                console.warn('ScrollTrigger registration failed:', e);
+            }
+        } else {
+            console.error('GSAP not loaded! Animations will be disabled.');
+        }
 
-        // Initialize all animations
+        // Initialize all animations with safety checks
         this.initPreloader();
-        this.initHeroAnimations();
-        this.initSectionAnimations();
-        this.initCounterAnimations();
-        this.initTimelineAnimations();
-        this.initSpeakerAnimations();
-        this.initEventAnimations();
-        this.initOrganizersAnimations();
-        this.initFormAnimations();
-        this.initParallaxEffects();
+
+        if (typeof gsap !== 'undefined') {
+            this.initHeroAnimations();
+            this.initSectionAnimations();
+            this.initCounterAnimations();
+            this.initTimelineAnimations();
+            this.initSpeakerAnimations();
+            this.initEventAnimations();
+            this.initOrganizersAnimations();
+            this.initFormAnimations();
+            this.initParallaxEffects();
+        }
     }
 
     initPreloader() {
+        this.dataReady = false;
         // Try LocalStorage first for instant logo
         let s = (window.construoApp && window.construoApp.siteConfig && window.construoApp.siteConfig.settings) || {};
         if (Object.keys(s).length === 0) {
@@ -41,10 +53,13 @@ class ConstruoAnimations {
         this.runCleanPreloader(s);
     }
 
+    markDataLoaded() {
+        console.log('Preloader: Data loaded signal received');
+        this.dataReady = true;
+    }
+
     updatePreloader(s) {
-        // Optional: Update logo if it changes dynamically, 
-        // but for initial load, the first run is usually enough.
-        // We can just re-inject the logo if needed.
+        if (!s) return;
         const logoUrl = s.loaderLogoUrl || s.logoUrl;
         const logoContainer = document.querySelector('.loader-logo');
         if (logoContainer && logoUrl) {
@@ -67,25 +82,35 @@ class ConstruoAnimations {
             if (logoUrl) {
                 logoContainer.innerHTML = `<img src="${logoUrl}" alt="Logo">`;
             } else if (s.siteName) {
-                // Text fallback if no logo image yet
-                // But user requested "Logo", so maybe just leave blank or show placeholder?
-                // Text is safer than empty space.
                 logoContainer.innerHTML = `<span style="font-size:2rem; font-weight:700; color:#fff;">${s.siteName}</span>`;
             }
         }
 
         // 2. Animate Bar
-        // We use a simple simulated progress because real "loading" of assets 
-        // is hard to measure perfectly in a simple static site without a heavy framework.
         const barFill = preloader.querySelector('.loader-bar-fill');
-        // Faster loading simulation
-        const speed = s.loaderSpeed || 30; // 30ms per tick (was 50)
+        const speed = s.loaderSpeed || 30;
         let progress = 0;
+
+        // 3. Safety Timeout: Lowered to 4 seconds for better UX
+        setTimeout(() => {
+            if (!this.dataReady) {
+                console.warn('Preloader safety timeout reached (4s). Forcing entrance.');
+                this.markDataLoaded();
+            }
+        }, 4000);
 
         // Clear any existing interval
         if (this.loaderInterval) clearInterval(this.loaderInterval);
 
         this.loaderInterval = setInterval(() => {
+            // Wait for data at 90%
+            if (progress > 90 && !this.dataReady) {
+                // Smoothly slow down progress but don't stop entirely
+                progress += (99.5 - progress) * 0.05;
+                if (barFill) barFill.style.width = `${progress}%`;
+                return;
+            }
+
             // Faster increment: rapid loading
             progress += Math.random() * 10 + 5;
 
@@ -108,18 +133,32 @@ class ConstruoAnimations {
 
     hidePreloader() {
         const preloader = document.getElementById('preloader');
-        if (preloader) {
+        if (!preloader) return;
+
+        console.log('Preloader: Hiding...');
+
+        if (typeof gsap !== 'undefined') {
             gsap.to(preloader, {
                 opacity: 0,
-                duration: 0.4,
+                duration: 0.6,
                 ease: "power2.inOut",
                 onComplete: () => {
                     preloader.classList.add('loaded');
+                    preloader.style.display = 'none';
                     this.playHeroEntrance();
                 }
             });
+        } else {
+            // Fallback without GSAP
+            preloader.style.transition = 'opacity 0.6s ease';
+            preloader.style.opacity = '0';
+            setTimeout(() => {
+                preloader.classList.add('loaded');
+                preloader.style.display = 'none';
+            }, 600);
         }
     }
+
 
     playHeroEntrance() {
         const tl = gsap.timeline();
@@ -135,12 +174,6 @@ class ConstruoAnimations {
             duration: duration,
             ease: ease
         })
-            .from('.mobile-register-btn', {
-                y: 20,
-                opacity: 0,
-                duration: duration,
-                ease: ease
-            }, '-=0.6')
             .from('.title-line', {
                 y: 100,
                 opacity: 0,
@@ -174,6 +207,12 @@ class ConstruoAnimations {
                 stagger: stagger * 0.75,
                 ease: ease
             }, '-=0.3')
+            .from('.mobile-register-btn', {
+                y: 20,
+                opacity: 0,
+                duration: duration,
+                ease: ease
+            }, '-=0.2')
             .from('.scroll-indicator', {
                 y: 20,
                 opacity: 0,

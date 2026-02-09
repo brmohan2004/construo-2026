@@ -14,28 +14,99 @@ class ConstruoSupabaseData {
         try {
             console.log('Loading website data from Supabase...');
 
-            const [siteConfig, events, timeline, speakers, sponsors, organizers] = await Promise.all([
-                this.getSiteConfig(),
-                this.getEvents(),
-                this.getTimeline(),
-                this.getSpeakers(),
-                this.getSponsors(),
-                this.getOrganizers()
-            ]);
+            // Try to load everything from cache first for instant render
+            const cachedData = this.getAllFromCache();
+            if (cachedData) {
+                console.log('Using cached data for instant render');
+                // Trigger background refresh
+                this.refreshAllData();
+                return cachedData;
+            }
 
-            return {
-                siteConfig,
-                events,
-                timeline,
-                speakers,
-                sponsors,
-                organizers
-            };
+            // Fallback to normal fetch if no cache
+            return await this.fetchAllFresh();
         } catch (error) {
             console.error('Error loading data from Supabase:', error);
             throw error;
         }
     }
+
+    async fetchAllFresh() {
+        const [siteConfig, events, timeline, speakers, sponsors, organizers] = await Promise.all([
+            this.getSiteConfig(),
+            this.getEvents(),
+            this.getTimeline(),
+            this.getSpeakers(),
+            this.getSponsors(),
+            this.getOrganizers()
+        ]);
+
+        return {
+            siteConfig,
+            events,
+            timeline,
+            speakers,
+            sponsors,
+            organizers
+        };
+    }
+
+    async refreshAllData() {
+        console.log('Refreshing data in background...');
+        try {
+            const freshData = await this.fetchAllFresh();
+            // Dispatch event for UI to update if needed (optional)
+            const event = new CustomEvent('construo-data-refreshed', { detail: freshData });
+            window.dispatchEvent(event);
+        } catch (e) {
+            console.warn('Background refresh failed', e);
+        }
+    }
+
+    // --- Cache Helpers ---
+    getFromCache(key) {
+        try {
+            const cached = localStorage.getItem(`construo_${key}`);
+            if (!cached) return null;
+
+            const { data, timestamp, version } = JSON.parse(cached);
+            // 1 hour cache validity
+            if (Date.now() - timestamp > 60 * 60 * 1000) return null;
+
+            return data;
+        } catch (e) {
+            return null;
+        }
+    }
+
+    saveToCache(key, data) {
+        try {
+            const cacheObj = {
+                data,
+                timestamp: Date.now(),
+                version: '1.0'
+            };
+            localStorage.setItem(`construo_${key}`, JSON.stringify(cacheObj));
+        } catch (e) {
+            console.warn('Cache save failed', e);
+        }
+    }
+
+    getAllFromCache() {
+        const siteConfig = this.getFromCache('siteConfig');
+        const events = this.getFromCache('events');
+        const timeline = this.getFromCache('timeline');
+        const speakers = this.getFromCache('speakers');
+        const sponsors = this.getFromCache('sponsors');
+        const organizers = this.getFromCache('organizers');
+
+        if (siteConfig && events && timeline && speakers && organizers) {
+            return { siteConfig, events, timeline, speakers, sponsors, organizers };
+        }
+        return null;
+    }
+
+    // --- Data Fetchers ---
 
     async getSiteConfig() {
         try {
@@ -46,18 +117,12 @@ class ConstruoSupabaseData {
                 .single();
 
             if (error) throw error;
-            if (error) throw error;
             this.cache.siteConfig = data;
-            // Cache to localStorage for instant load next time
-            try {
-                localStorage.setItem('construo_site_config', JSON.stringify(data));
-            } catch (e) {
-                console.warn('LocalStorage save failed', e);
-            }
+            this.saveToCache('siteConfig', data);
             return data;
         } catch (error) {
             console.error('Error fetching site config:', error);
-            return null;
+            return this.getFromCache('siteConfig') || null;
         }
     }
 
@@ -65,16 +130,17 @@ class ConstruoSupabaseData {
         try {
             const { data, error } = await supabase
                 .from('events')
-                .select('*')
+                .select('*') // Select only necessary fields if possible
                 .eq('status', 'active')
                 .order('created_at', { ascending: false });
 
             if (error) throw error;
             this.cache.events = data;
+            this.saveToCache('events', data);
             return data;
         } catch (error) {
             console.error('Error fetching events:', error);
-            return [];
+            return this.getFromCache('events') || [];
         }
     }
 
@@ -87,10 +153,11 @@ class ConstruoSupabaseData {
 
             if (error) throw error;
             this.cache.timeline = data;
+            this.saveToCache('timeline', data);
             return data;
         } catch (error) {
             console.error('Error fetching timeline:', error);
-            return [];
+            return this.getFromCache('timeline') || [];
         }
     }
 
@@ -104,10 +171,11 @@ class ConstruoSupabaseData {
 
             if (error) throw error;
             this.cache.speakers = data;
+            this.saveToCache('speakers', data);
             return data;
         } catch (error) {
             console.error('Error fetching speakers:', error);
-            return [];
+            return this.getFromCache('speakers') || [];
         }
     }
 
@@ -121,10 +189,11 @@ class ConstruoSupabaseData {
 
             if (error) throw error;
             this.cache.sponsors = data;
+            this.saveToCache('sponsors', data);
             return data;
         } catch (error) {
             console.error('Error fetching sponsors:', error);
-            return [];
+            return this.getFromCache('sponsors') || [];
         }
     }
 
@@ -138,10 +207,11 @@ class ConstruoSupabaseData {
 
             if (error) throw error;
             this.cache.organizers = data;
+            this.saveToCache('organizers', data);
             return data;
         } catch (error) {
             console.error('Error fetching organizers:', error);
-            return [];
+            return this.getFromCache('organizers') || [];
         }
     }
 

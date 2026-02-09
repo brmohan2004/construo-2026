@@ -255,3 +255,6 @@ construo-2026/
 **Cost**: Free (Supabase free tier)
 
 Happy building! 🚀
+
+run on android studio
+cd C:\Users\mohan\AppData\Local\Android\Sdk\platform-tools\adb.exe" -s emulator-5554 shell am start -a android.intent.action.VIEW -d http://10.0.2.2:8000/index.html

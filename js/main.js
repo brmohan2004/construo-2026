@@ -35,6 +35,45 @@ class ConstruoApp {
     async initDataSync() {
         console.log('Loading website data from Supabase...');
         this.loadInitialData();
+
+        // Listen for background updates
+        window.addEventListener('construo-data-refreshed', (e) => {
+            console.log('Data refreshed from background, updating UI...');
+            const { siteConfig, events, timeline, speakers, sponsors, organizers } = e.detail;
+            this.updateUI({ siteConfig, events, timeline, speakers, sponsors, organizers });
+        });
+    }
+
+    updateUI({ siteConfig, events, timeline, speakers, sponsors, organizers }) {
+        if (siteConfig && siteConfig.settings) this.updateSettingsUI(siteConfig.settings);
+        if (siteConfig && siteConfig.hero) this.updateHeroUI(siteConfig.hero);
+        if (siteConfig && siteConfig.about) this.updateAboutUI(siteConfig.about);
+        if (events) this.updateEventsUI(events);
+        if (timeline) this.updateTimelineUI(timeline);
+        if (speakers) this.updateSpeakersUI(speakers);
+        if (sponsors) {
+            this.sponsorsRaw = sponsors;
+            const sponsorsObj = this.convertSponsorsData({ tiers: [{ id: 'platinum' }, { id: 'gold' }, { id: 'silver' }, { id: 'bronze' }] }) || {};
+            // Re-filtering manually since convertSponsorsData expects different structure sometimes
+            const sObj = {
+                platinum: sponsors.filter(s => s.tier_id === 'platinum'),
+                gold: sponsors.filter(s => s.tier_id === 'gold'),
+                silver: sponsors.filter(s => s.tier_id === 'silver'),
+                bronze: sponsors.filter(s => s.tier_id === 'bronze')
+            };
+            this.updateSponsorsUI(sObj);
+        }
+        if (siteConfig && siteConfig.venue) this.updateVenueUI(siteConfig.venue);
+        if (siteConfig && siteConfig.footer) this.updateFooterUI(siteConfig.footer);
+        if (organizers) {
+            this.organizersRaw = organizers;
+            const categories = [
+                { id: 'faculty', name: 'Faculty', members: organizers.filter(o => o.category === 'faculty') },
+                { id: 'student', name: 'Student', members: organizers.filter(o => o.category === 'student') },
+                { id: 'organizing', name: 'Organizing', members: organizers.filter(o => o.category === 'organizing') }
+            ];
+            this.updateOrganizersUI({ organizers, categories });
+        }
     }
 
     // Load initial data on page load (called once)
@@ -66,29 +105,34 @@ class ConstruoApp {
             };
 
             const dataLoader = await waitForDataLoader();
-            if (!dataLoader) return;
-            const { siteConfig, events, timeline, speakers, sponsors, organizers } = await dataLoader.loadAll();
+            if (!dataLoader) {
+                console.error('Data loader failed to initialize');
+                if (window.construoAnimations && typeof window.construoAnimations.markDataLoaded === 'function') {
+                    window.construoAnimations.markDataLoaded();
+                }
+                return;
+            }
+
+            // Add a timeout to the data fetch to prevent hanging forever
+            const fetchDataWithTimeout = async () => {
+                return Promise.race([
+                    dataLoader.loadAll(),
+                    new Promise((_, reject) => setTimeout(() => reject(new Error('Data fetch timeout')), 5000))
+                ]);
+            };
+
+            const { siteConfig, events, timeline, speakers, sponsors, organizers } = await fetchDataWithTimeout();
 
             // Update Preloader appearance with loaded settings
             if (siteConfig && siteConfig.settings && window.construoAnimations) {
                 window.construoAnimations.updatePreloader(siteConfig.settings);
             }
 
-            // Update Hero UI
-            if (siteConfig && siteConfig.hero) {
-                this.updateHeroUI(siteConfig.hero);
-            }
+            // Update all UI components using the centralized method
+            this.updateUI({ siteConfig, events, timeline, speakers, sponsors, organizers });
 
-            // Update About UI
-            if (siteConfig && siteConfig.about) {
-                this.updateAboutUI(siteConfig.about);
-            }
-
-            // Update Events UI
-            if (events) {
-                this.updateEventsUI(events);
-
-                // Update prize pool banner if data available
+            // Extra logic for Prize Pool Banner (not in generic updateUI)
+            if (siteConfig) {
                 const prizePool = (siteConfig.events && siteConfig.events.prizePool) || siteConfig.prizePool;
                 if (prizePool) {
                     const prizeAmount = document.querySelector('.prize-amount');
@@ -98,63 +142,27 @@ class ConstruoApp {
                 }
             }
 
-            // Update Timeline UI
-            if (timeline) {
-                this.updateTimelineUI(timeline);
-            }
-
-            // Update Speakers UI
-            if (speakers) {
-                console.log('Initial speakers data:', speakers);
-                this.updateSpeakersUI(speakers);
-            }
-
-            // Update Sponsors UI
-            if (sponsors) {
-                this.sponsorsRaw = sponsors; // Store raw array
-                const sponsorsObj = {
-                    platinum: sponsors.filter(s => s.tier_id === 'platinum'),
-                    gold: sponsors.filter(s => s.tier_id === 'gold'),
-                    silver: sponsors.filter(s => s.tier_id === 'silver'),
-                    bronze: sponsors.filter(s => s.tier_id === 'bronze')
-                };
-                this.updateSponsorsUI(sponsorsObj);
-
-                // Update Become a Sponsor button with configured email
-                if (siteConfig && siteConfig.sponsors && siteConfig.sponsors.email) {
-                    const sponsorBtn = document.querySelector('.sponsor-contact-btn');
-                    if (sponsorBtn) {
-                        sponsorBtn.href = `mailto:${siteConfig.sponsors.email}?subject=Sponsorship%20Inquiry%20for%20CONSTRUO%202026`;
-                        sponsorBtn.target = '_self';
-                    }
+            // Extra logic for Sponsor Connect Button
+            if (siteConfig && siteConfig.sponsors && siteConfig.sponsors.email) {
+                const sponsorBtn = document.querySelector('.sponsor-contact-btn');
+                if (sponsorBtn) {
+                    sponsorBtn.href = `mailto:${siteConfig.sponsors.email}?subject=Sponsorship%20Inquiry%20for%20CONSTRUO%202026`;
+                    sponsorBtn.target = '_self';
                 }
             }
 
-            // Update Venue UI
-            if (siteConfig && siteConfig.venue) {
-                this.updateVenueUI(siteConfig.venue);
-            }
-
-            // Update Footer UI
-            if (siteConfig && siteConfig.footer) {
-                this.updateFooterUI(siteConfig.footer);
-            }
-
-            // Update Organizers UI
-            if (organizers) {
-                this.organizersRaw = organizers; // Store raw array
-                // Group organizers by category
-                const categories = [
-                    { id: 'faculty', name: 'Faculty', members: organizers.filter(o => o.category === 'faculty') },
-                    { id: 'student', name: 'Student', members: organizers.filter(o => o.category === 'student') },
-                    { id: 'organizing', name: 'Organizing', members: organizers.filter(o => o.category === 'organizing') }
-                ];
-                this.updateOrganizersUI({ organizers, categories });
-            }
-
             console.log('Initial data loaded successfully from Supabase');
+
+            // Signal preloader to finish
+            if (window.construoAnimations && typeof window.construoAnimations.markDataLoaded === 'function') {
+                window.construoAnimations.markDataLoaded();
+            }
         } catch (err) {
             console.error('Failed to load initial data from Supabase:', err);
+            // Also unblock on error so user isn't stuck
+            if (window.construoAnimations && typeof window.construoAnimations.markDataLoaded === 'function') {
+                window.construoAnimations.markDataLoaded();
+            }
         }
     }
 
@@ -635,6 +643,46 @@ class ConstruoApp {
             window.construoAnimations.initSponsorAnimations();
         } else if (window.gsap && window.ScrollTrigger) {
             try { ScrollTrigger.refresh(); } catch (e) { }
+        }
+    }
+
+    updateSettingsUI(settings) {
+        if (!settings) return;
+
+        // 1. Update Favicon
+        if (settings.faviconUrl) {
+            const faviconUrl = this.sanitizeUrl(settings.faviconUrl);
+            let favicon = document.querySelector('link[rel="icon"]');
+            if (favicon) {
+                favicon.href = faviconUrl;
+                // If it's not SVG, we should remove the type attribute to let browser detect
+                if (!faviconUrl.toLowerCase().endsWith('.svg')) {
+                    favicon.removeAttribute('type');
+                }
+            } else {
+                favicon = document.createElement('link');
+                favicon.rel = 'icon';
+                favicon.href = faviconUrl;
+                document.head.appendChild(favicon);
+            }
+        }
+
+        // 2. Update Navbar Logo
+        if (settings.logoUrl) {
+            const logoUrl = this.sanitizeUrl(settings.logoUrl);
+            const logoIcon = document.querySelector('.nav-logo .logo-icon');
+            if (logoIcon) {
+                logoIcon.innerHTML = `<img src="${logoUrl}" alt="Logo" style="height: 100%; width: auto; object-fit: contain;">`;
+                logoIcon.classList.add('has-image');
+            }
+        }
+
+        // 3. Update Site Name in Nav
+        if (settings.siteName) {
+            const logoText = document.querySelector('.nav-logo .logo-text');
+            if (logoText) {
+                logoText.textContent = settings.siteName;
+            }
         }
     }
 
