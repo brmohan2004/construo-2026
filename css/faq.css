@@ -1,0 +1,199 @@
+/* FAQ Chat Widget Styles */
+:root {
+    --faq-primary: #ff3333;
+    /* Use a vibrant color matching the theme */
+    --faq-bg: rgba(20, 20, 20, 0.95);
+    --faq-text: #ffffff;
+    --faq-border: rgba(255, 255, 255, 0.1);
+    --faq-hover: rgba(255, 255, 255, 0.05);
+}
+
+/* Floating Button */
+.faq-fab {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background: var(--faq-primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.faq-fab:hover {
+    transform: scale(1.1);
+    box-shadow: 0 15px 40px rgba(255, 51, 51, 0.4);
+}
+
+.faq-fab svg {
+    width: 30px;
+    height: 30px;
+    fill: none;
+    stroke: white;
+    stroke-width: 2;
+    transition: all 0.3s ease;
+}
+
+.faq-fab.active svg {
+    /* No rotation, just swap */
+    transform: scale(1);
+}
+
+/* Chat Box */
+.faq-chat-box {
+    position: fixed;
+    bottom: 100px;
+    right: 30px;
+    width: 350px;
+    max-height: 500px;
+    background: var(--faq-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--faq-border);
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform-origin: bottom right;
+    transform: scale(0);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 999;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.faq-chat-box.active {
+    transform: scale(1);
+    opacity: 1;
+}
+
+/* Header */
+.faq-header {
+    background: linear-gradient(135deg, var(--faq-primary), #cc0000);
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.faq-title h3 {
+    margin: 0;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: 1px;
+    color: white;
+}
+
+.faq-title p {
+    margin: 5px 0 0;
+    font-size: 0.8rem;
+    opacity: 0.8;
+    color: white;
+}
+
+/* Content */
+.faq-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.faq-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.faq-content::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+}
+
+/* FAQ Item */
+.faq-item {
+    margin-bottom: 10px;
+    border-bottom: 1px solid var(--faq-border);
+}
+
+.faq-item:last-child {
+    border-bottom: none;
+}
+
+.faq-question {
+    padding: 12px 15px;
+    cursor: pointer;
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.2s;
+    border-radius: 8px;
+    color: #eee;
+}
+
+.faq-question:hover {
+    background: var(--faq-hover);
+}
+
+.faq-question::after {
+    content: '+';
+    font-size: 1.2rem;
+    font-weight: 300;
+    transition: transform 0.3s;
+}
+
+.faq-item.open .faq-question {
+    color: var(--faq-primary);
+}
+
+.faq-item.open .faq-question::after {
+    transform: rotate(45deg);
+}
+
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    padding: 0 15px;
+    font-size: 0.9rem;
+    color: #ccc;
+    line-height: 1.5;
+}
+
+.faq-item.open .faq-answer {
+    max-height: 200px;
+    /* Adjust if needed */
+    padding-bottom: 15px;
+    transition: max-height 0.3s ease-in;
+}
+
+/* Empty State */
+.faq-empty {
+    text-align: center;
+    padding: 30px;
+    color: #888;
+    font-style: italic;
+}
+
+@media (max-width: 480px) {
+    .faq-chat-box {
+        bottom: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        max-height: 100%;
+        border-radius: 0;
+    }
+
+    .faq-fab {
+        bottom: 20px;
+        right: 20px;
+    }
+}

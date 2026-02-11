@@ -491,6 +491,52 @@
                 opacity: 0;
             }
         }
+
+        /* WhatsApp Feature Styles */
+        .selected-row {
+            background-color: rgba(37, 211, 102, 0.1) !important;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: -1;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid transparent;
+        }
+
+        .alert-success {
+            background: rgba(37, 211, 102, 0.1);
+            color: #128C7E;
+            border-color: #25D366;
+        }
+
+        #waParticipantList::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #waParticipantList::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        #waParticipantList::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 3px;
+        }
+
+        #waParticipantList::-webkit-scrollbar-thumb:hover {
+            background: var(--text-tertiary);
+        }
     </style>
 </head>
 
@@ -550,6 +596,14 @@
                                 <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
                             </svg>
                             <span>Refresh</span>
+                        </button>
+                        <button class="btn btn-primary" onclick="window.location.href='certificates.html'"
+                            style="background-color: var(--admin-info); border-color: var(--admin-info); color: white;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 15l-2 5L9 9l11 4-5 2zm0 0l4 4" />
+                                <path d="M4 18l-1 4 4-1M20 18l1 4-4-1" />
+                            </svg>
+                            <span>Certificates</span>
                         </button>
                         <button class="btn btn-success" onclick="toggleWhatsAppMode()" id="waGroupBtn"
                             style="background-color: #25D366; border-color: #25D366; color: white;">
@@ -687,65 +741,15 @@
                 </div>
             </div>
         </div>
-        <!-- WhatsApp Group Modal -->
-        <div class="modal" id="whatsappModal">
-            <div class="modal-content modal-sm" style="max-width: 500px;">
-                <div class="modal-header">
-                    <h2 class="modal-title">Create WhatsApp Group</h2>
-                    <button class="modal-close" onclick="closeWhatsAppModal()">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="18" y1="6" x2="6" y2="18" />
-                            <line x1="6" y1="6" x2="18" y2="18" />
-                        </svg>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group" style="margin-bottom: 1rem;">
-                        <label class="form-label">Group Name</label>
-                        <input type="text" class="form-input" id="waGroupName" placeholder="e.g. Construo Event 2026">
-                    </div>
-                    <div class="form-group" style="margin-bottom: 1rem;">
-                        <label class="form-label">Description</label>
-                        <textarea class="form-input" id="waGroupDesc" rows="3"
-                            placeholder="Group description..."></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Participants</label>
-                        <div
-                            style="padding: 0.5rem; background: var(--bg-secondary); border-radius: 4px; font-size: 0.9rem;">
-                            <span id="waParticipantCount">0</span> participants selected
-                        </div>
-                    </div>
-
-                    <div id="waResultArea" style="display: none; margin-top: 1rem;">
-                        <div class="alert alert-success"
-                            style="padding: 1rem; background: #d4edda; color: #155724; border-radius: 4px; margin-bottom: 1rem;">
-                            <strong>Ready to Create!</strong><br>
-                            Since browser automation is limited, click below to open WhatsApp with the contacts.
-                        </div>
-                        <textarea id="waPhoneList" class="form-input" rows="4" readonly
-                            style="font-family: monospace; font-size: 0.8rem;"></textarea>
-                        <p style="font-size: 0.8rem; color: var(--text-secondary);">Copy these numbers if needed.</p>
-                    </div>
-                </div>
-                <div class="modal-footer"
-                    style="padding: 1.25rem; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 0.5rem;"
-                    id="waModalFooter">
-                    <button class="btn btn-secondary" onclick="closeWhatsAppModal()">Cancel</button>
-                    <button class="btn btn-primary" onclick="generateWhatsAppGroup()">Create Group</button>
-                </div>
-            </div>
-        </div>
     </div>
 
-    <!-- WhatsApp Group Modal -->
-    <div class="modal" id="whatsappModal">
-        <div class="modal-overlay" onclick="closeWhatsAppModal()"></div>
-        <div class="modal-content modal-sm" style="max-width: 500px;">
+    <!-- Event Selection Confirmation Modal -->
+    <div class="modal" id="eventSelectionModal" style="z-index: 1100;">
+        <div class="modal-overlay" onclick="closeEventModal()"></div>
+        <div class="modal-content" style="max-width: 500px;">
             <div class="modal-header">
-                <h2 class="modal-title">Create WhatsApp Group</h2>
-                <button class="modal-close" onclick="closeWhatsAppModal()">
+                <h2 class="modal-title">Confirm Registration</h2>
+                <button class="btn-icon" onclick="closeEventModal()">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="18" y1="6" x2="6" y2="18" />
                         <line x1="6" y1="6" x2="18" y2="18" />
@@ -753,40 +757,186 @@
                 </button>
             </div>
             <div class="modal-body">
+                <p style="margin-bottom: 1rem; color: var(--text-secondary);">Select the events to confirm for this
+                    participant:</p>
+                <div id="eventCheckboxList"
+                    style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.5rem;">
+                    <!-- Checkboxes injected here -->
+                </div>
+                <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+                    <button class="btn btn-secondary" onclick="closeEventModal()">Cancel</button>
+                    <button class="btn btn-primary" id="finalConfirmBtn"
+                        style="background-color: var(--success); border-color: var(--success);">Confirm
+                        Selected</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- WhatsApp Group Modal (Unified and Multi-step) -->
+    <div class="modal" id="whatsappModal">
+        <div class="modal-overlay" onclick="closeWhatsAppModal()"></div>
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2 class="modal-title">Create WhatsApp Group</h2>
+                <button class="btn-icon" onclick="closeWhatsAppModal()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Step 1: Review Participants -->
+            <div id="waStep1" class="modal-body">
+                <h3 class="section-title" style="margin-bottom: 0.5rem;">Review Selected Participants</h3>
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">Confirm the list of
+                    participants to be added to the group.</p>
+                <div id="waParticipantList"
+                    style="max-height: 300px; overflow-y: auto; margin-bottom: 1.5rem; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-secondary);">
+                    <!-- List will be populated here -->
+                </div>
+                <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+                    <button class="btn btn-secondary" onclick="closeWhatsAppModal()">Cancel</button>
+                    <button class="btn btn-primary" onclick="goToWaStep2()">Configure Group</button>
+                </div>
+            </div>
+
+            <!-- Step 2: Group Configuration -->
+            <div id="waStep2" class="modal-body" style="display: none;">
+                <h3 class="section-title" style="margin-bottom: 1rem;">Group Details</h3>
                 <div class="form-group" style="margin-bottom: 1rem;">
                     <label class="form-label">Group Name</label>
-                    <input type="text" class="form-input" id="waGroupName" placeholder="e.g. Construo Event 2026">
+                    <input type="text" class="form-input" id="waGroupName"
+                        placeholder="e.g. Construo Event 2026 Participants">
                 </div>
                 <div class="form-group" style="margin-bottom: 1rem;">
                     <label class="form-label">Description</label>
                     <textarea class="form-input" id="waGroupDesc" rows="3"
-                        placeholder="Group description..."></textarea>
+                        placeholder="Enter group purpose, rules, etc..."></textarea>
+                </div>
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label class="form-label">Admin Phone Number</label>
+                    <input type="text" class="form-input" id="waAdminNumber"
+                        placeholder="e.g. 919876543210 (with country code)">
+                    <small style="color: var(--text-secondary); display: block; margin-top: 0.25rem;">This number will
+                        be included in the contact list.</small>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label">Participants</label>
-                    <div
-                        style="padding: 0.5rem; background: var(--bg-secondary); border-radius: 4px; font-size: 0.9rem;">
-                        <span id="waParticipantCount">0</span> participants selected
-                    </div>
-                </div>
-
-                <div id="waResultArea" style="display: none; margin-top: 1rem;">
-                    <div class="alert alert-success"
-                        style="padding: 1rem; background: #d4edda; color: #155724; border-radius: 4px; margin-bottom: 1rem;">
-                        <strong>Ready to Create!</strong><br>
-                        Click below to open WhatsApp with the contacts (requires WhatsApp Web/App).
-                    </div>
-                    <textarea id="waPhoneList" class="form-input" rows="4" readonly
-                        style="font-family: monospace; font-size: 0.8rem;"></textarea>
-                    <p style="font-size: 0.8rem; color: var(--text-secondary);">Copy these numbers if needed.</p>
+                <div
+                    style="display: flex; justify-content: flex-end; gap: 0.75rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                    <button class="btn btn-secondary" onclick="goToWaStep1()">Back to Review</button>
+                    <button class="btn btn-primary" onclick="generateWhatsAppGroup()"
+                        style="background-color: #075E54; border-color: #075E54;">
+                        Create Group
+                    </button>
                 </div>
             </div>
-            <div class="modal-footer"
-                style="padding: 1.25rem; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 0.5rem;"
-                id="waModalFooter">
-                <button class="btn btn-secondary" onclick="closeWhatsAppModal()">Cancel</button>
-                <button class="btn btn-primary" onclick="generateWhatsAppGroup()">Create Group</button>
+
+            <!-- Step 3: Result Area -->
+            <div id="waResultArea" class="modal-body" style="display: none;">
+                <div class="alert alert-success"
+                    style="padding: 1rem; background: rgba(37, 211, 102, 0.1); color: #128C7E; border-radius: 8px; border: 1px solid #25D366; margin-bottom: 1.5rem;">
+                    <div style="display: flex; gap: 0.75rem; align-items: flex-start;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            style="width: 20px; height: 20px; flex-shrink: 0;">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                            <polyline points="22 4 12 14.01 9 11.01" />
+                        </svg>
+                        <div>
+                            <strong style="display: block; margin-bottom: 0.25rem;">Group Data Ready!</strong>
+                            <span style="font-size: 0.85rem;">Browser security prevents automatic group creation. Follow
+                                these 3 simple steps:</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    style="background: var(--bg-secondary); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; font-size: 0.85rem;">
+                    <div style="margin-bottom: 0.75rem; display: flex; gap: 0.5rem;">
+                        <span
+                            style="background: #25D366; color: white; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: bold; flex-shrink: 0;">1</span>
+                        <span>Download and open the <strong>Contacts File</strong> to add all participants to your
+                            phone.</span>
+                    </div>
+                    <div style="margin-bottom: 0.75rem; display: flex; gap: 0.5rem;">
+                        <span
+                            style="background: #25D366; color: white; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: bold; flex-shrink: 0;">2</span>
+                        <span>Open WhatsApp and create a <strong>New Group</strong> named: <code id="waGroupLabel"
+                                style="background: #eee; padding: 2px 4px; border-radius: 4px; color: #128C7E;"></code></span>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <span
+                            style="background: #25D366; color: white; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: bold; flex-shrink: 0;">3</span>
+                        <span>Search and select the newly added participants to complete the group.</span>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1.5rem;">
+                    <button class="btn btn-primary" onclick="downloadVCF()"
+                        style="background-color: #075E54; border-color: #075E54; display: flex; flex-direction: column; align-items: center; padding: 1rem; height: auto;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            style="width: 24px; height: 24px; margin-bottom: 0.5rem;">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="7 10 12 15 17 10" />
+                            <line x1="12" y1="15" x2="12" y2="3" />
+                        </svg>
+                        <span>Download Contacts File</span>
+                    </button>
+                    <button class="btn btn-primary" onclick="openWhatsApp()"
+                        style="background-color: #25D366; border-color: #25D366; display: flex; flex-direction: column; align-items: center; padding: 1rem; height: auto;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            style="width: 24px; height: 24px; margin-bottom: 0.5rem;">
+                            <path
+                                d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+                        </svg>
+                        <span>Open WhatsApp</span>
+                    </button>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label class="form-label" style="display: flex; justify-content: space-between;">
+                        Participant Numbers
+                        <a href="javascript:void(0)" onclick="copyPhoneNumbers()"
+                            style="color: #128C7E; font-size: 0.75rem; text-decoration: none;">Copy All</a>
+                    </label>
+                    <textarea id="waPhoneList" class="form-input" rows="4" readonly
+                        style="font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; background: var(--bg-secondary);"></textarea>
+                </div>
+
+                <div
+                    style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end;">
+                    <button class="btn btn-secondary" onclick="closeWhatsAppModal()">Done</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Event Selection Modal -->
+    <div class="modal" id="eventSelectionModal">
+        <div class="modal-overlay" onclick="closeEventModal()"></div>
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2 class="modal-title">Confirm Registered Events</h2>
+                <button class="btn-icon" onclick="closeEventModal()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: 1rem; color: var(--text-secondary); font-size: 0.9rem;">
+                    The participant has registered for the following events. Select the ones you wish to confirm.
+                </p>
+                <div id="eventCheckboxList"
+                    style="display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.5rem;">
+                    <!-- Checkboxes will be injected here -->
+                </div>
+                <div
+                    style="display: flex; justify-content: flex-end; gap: 0.75rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                    <button class="btn btn-secondary" onclick="closeEventModal()">Cancel</button>
+                    <button class="btn btn-primary" id="finalConfirmBtn">Confirm Registration</button>
+                </div>
             </div>
         </div>
     </div>
@@ -922,17 +1072,28 @@
                     }
                 } else if (action === 'confirm' || action === 'cancel') {
                     if (regId && newStatus) {
-                        if (confirm(`Change status to ${newStatus}?`)) {
-                            updateStatus(regId, newStatus);
-                            // update UI immediately
-                            const statusBadge = document.querySelector('#detailsModal .status-badge');
-                            if (statusBadge) {
-                                statusBadge.className = `status-badge ${newStatus}`;
-                                statusBadge.textContent = newStatus;
+                        if (action === 'confirm') {
+                            const registration = allRegistrations.find(r => (r.id === regId || r._id === regId));
+                            if (registration) {
+                                openEventConfirmation(registration);
+                            } else {
+                                updateStatus(regId, 'confirmed');
+                                loadRegistrations(); // Reload table after status update
+                                closeModal(); // Close modal after status update
                             }
-                            // update instances in table by reloading
-                            loadRegistrations();
-                            closeModal();
+                        } else { // This is the 'cancel' action
+                            if (confirm(`Change status to ${newStatus}?`)) {
+                                updateStatus(regId, newStatus);
+                                // update UI immediately
+                                const statusBadge = document.querySelector('#detailsModal .status-badge');
+                                if (statusBadge) {
+                                    statusBadge.className = `status-badge ${newStatus}`;
+                                    statusBadge.textContent = newStatus;
+                                }
+                                // update instances in table by reloading
+                                loadRegistrations();
+                                closeModal();
+                            }
                         }
                     }
                 } else if (action === 'print') {
@@ -975,7 +1136,10 @@
                 }
             } else if (action === 'confirm') {
                 const regId = button.getAttribute('data-reg-id');
-                if (regId) {
+                const registration = allRegistrations.find(r => (r.id === regId || r._id === regId));
+                if (registration) {
+                    openEventConfirmation(registration);
+                } else if (regId) {
                     updateStatus(regId, 'confirmed');
                 }
             } else if (action === 'delete') {
@@ -988,12 +1152,9 @@
 
         async function loadRegistrations() {
             try {
-                // If formId is provided, fetch submissions for that specific form
-                const endpoint = currentFormId
-                    ? `registrations/forms/${currentFormId}/submissions`
-                    : 'registrations';
-
-                const data = await Admin.apiGet(endpoint);
+                const data = currentFormId
+                    ? await Admin.getFormSubmissions(currentFormId)
+                    : await Admin.getRegistrations();
 
                 if (currentFormId) {
                     allRegistrations = data.submissions || [];
@@ -1302,10 +1463,99 @@
             if (lastActiveElement && lastActiveElement.focus) lastActiveElement.focus();
         }
 
-        async function updateStatus(id, newStatus) {
+        // --- Event Confirmation Modal Logic ---
+        function openEventConfirmation(registration) {
+            const modal = document.getElementById('eventSelectionModal');
+            const list = document.getElementById('eventCheckboxList');
+
+            // The currently active/confirmed events (from the specific column)
+            const currentConfirmed = registration.events || [];
+
+            // Try to find the original full list of events from the 'data' payload
+            // This allows us to show unchecked options that were originally submitted
+            let allOptions = [...currentConfirmed];
+
+            if (registration.data) {
+                // Find a field in 'data' that explains where these events came from
+                // We look for an array that contains at least one of the confirmed events
+                // OR if confirmed is empty, look for any array of strings (heuristic)
+
+                const dataValues = Object.values(registration.data);
+
+                const sourceArray = dataValues.find(val => {
+                    return Array.isArray(val) && val.length > 0 &&
+                        (currentConfirmed.length === 0 || val.some(v => currentConfirmed.includes(v))) &&
+                        typeof val[0] === 'string';
+                });
+
+                if (sourceArray) {
+                    allOptions = [...sourceArray];
+                }
+            }
+
+            // Deduplicate
+            allOptions = [...new Set(allOptions)];
+
+            if (allOptions.length === 0) {
+                // No events found anywhere, just confirm status directly
+                updateStatus(registration.id || registration._id, 'confirmed');
+                return;
+            }
+
+            // Populate checkboxes
+            // We use 'allOptions' for the list, but check them based on 'currentConfirmed'
+            // If currentConfirmed is empty (but we have options), initially check ALL (assuming first confirmation) or NONE?
+            // Better: If status is 'pending', check all (default accept). If status is 'confirmed', check only confirmed.
+
+            const isPending = registration.status === 'pending';
+
+            list.innerHTML = allOptions.map((event, idx) => {
+                const isChecked = isPending || currentConfirmed.includes(event);
+
+                return `
+                <label class="event-checkbox-label" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; cursor: pointer; transition: all 0.2s;">
+                    <input type="checkbox" ${isChecked ? 'checked' : ''} class="event-confirm-checkbox" value="${event}">
+                    <span style="font-weight: 500;">${event}</span>
+                </label>
+            `}).join('');
+
+            // Hover effect for labels
+            document.querySelectorAll('.event-checkbox-label').forEach(label => {
+                label.onmouseover = () => label.style.backgroundColor = 'var(--bg-secondary)';
+                label.onmouseout = () => label.style.backgroundColor = 'transparent';
+            });
+
+            const confirmBtn = document.getElementById('finalConfirmBtn');
+            confirmBtn.onclick = async () => {
+                const selectedEvents = Array.from(document.querySelectorAll('.event-confirm-checkbox:checked')).map(cb => cb.value);
+
+                if (selectedEvents.length === 0) {
+                    if (!confirm('No events selected. This will clear the events list for this registration. Continue?')) {
+                        return;
+                    }
+                }
+
+                // Call updateStatus (backend handles overall status)
+                await updateStatus(registration.id || registration._id, 'confirmed', selectedEvents);
+                closeEventModal();
+                closeModal(); // Close details modal if open
+            };
+
+            modal.classList.add('active');
+        }
+
+        function closeEventModal() {
+            document.getElementById('eventSelectionModal').classList.remove('active');
+        }
+
+        async function updateStatus(id, newStatus, selectedEvents = null) {
             try {
-                await Admin.apiPut(`registrations/submissions/${id}/status`, { status: newStatus });
-                showNotification('Status updated successfully', 'success');
+                const updateData = { status: newStatus };
+                if (selectedEvents !== null) updateData.events = selectedEvents;
+
+                await Admin.updateRegistration(id, updateData);
+                showNotification('Registration updated successfully', 'success');
+                // Refresh data to reflect changes
                 loadRegistrations();
             } catch (error) {
                 console.error('Error updating status:', error);
@@ -1319,7 +1569,7 @@
             }
 
             try {
-                await Admin.apiDelete(`registrations/submissions/${id}`);
+                await Admin.deleteRegistration(id);
                 showNotification('Registration deleted successfully', 'success');
                 loadRegistrations();
             } catch (error) {
@@ -1477,47 +1727,56 @@
 
         function updateSelectionUI() {
             document.getElementById('selectedCount').textContent = `${selectedRegistrations.size} selected`;
-            document.getElementById('waParticipantCount').textContent = selectedRegistrations.size;
         }
 
         function openGroupConfigModal() {
-            try {
-                console.log('Opening Group Config Modal. Selected count:', selectedRegistrations.size);
-
-                if (selectedRegistrations.size === 0) {
-                    showNotification('Please select at least one participant first.', 'error');
-                    return;
-                }
-
-                const modal = document.getElementById('whatsappModal');
-                if (!modal) {
-                    console.error('WhatsApp Modal element not found!');
-                    showNotification('Error: Modal template missing.', 'error');
-                    return;
-                }
-
-                modal.classList.add('active');
-
-                // Reset fields
-                const resultArea = document.getElementById('waResultArea');
-                if (resultArea) resultArea.style.display = 'none';
-
-                const phoneList = document.getElementById('waPhoneList');
-                if (phoneList) phoneList.value = '';
-
-                const footer = document.getElementById('waModalFooter');
-                if (footer) footer.style.display = 'flex';
-
-                // Focus name input
-                setTimeout(() => {
-                    const nameInput = document.getElementById('waGroupName');
-                    if (nameInput) nameInput.focus();
-                }, 100);
-
-            } catch (e) {
-                console.error('Error opening modal:', e);
-                alert('Error opening modal: ' + e.message);
+            if (selectedRegistrations.size === 0) {
+                showNotification('Please select at least one participant first.', 'error');
+                return;
             }
+
+            const modal = document.getElementById('whatsappModal');
+            modal.classList.add('active');
+
+            goToWaStep1();
+        }
+
+        function goToWaStep1() {
+            document.getElementById('waStep1').style.display = 'block';
+            document.getElementById('waStep2').style.display = 'none';
+            document.getElementById('waResultArea').style.display = 'none';
+
+            populateParticipantList();
+        }
+
+        function populateParticipantList() {
+            const listContainer = document.getElementById('waParticipantList');
+            let html = '<table class="admin-table" style="margin-bottom: 0; font-size: 0.85rem;">';
+            html += '<thead><tr><th>Name</th><th>Phone</th><th>College</th></tr></thead><tbody>';
+
+            selectedRegistrations.forEach(id => {
+                const reg = allRegistrations.find(r => r.id === id);
+                if (reg) {
+                    const phone = reg.participant?.phone || 'N/A';
+                    html += `<tr>
+                        <td>${reg.participant?.name || 'N/A'}</td>
+                        <td>${phone}</td>
+                        <td>${reg.participant?.college || 'N/A'}</td>
+                    </tr>`;
+                }
+            });
+
+            html += '</tbody></table>';
+            listContainer.innerHTML = html;
+        }
+
+        function goToWaStep2() {
+            document.getElementById('waStep1').style.display = 'none';
+            document.getElementById('waStep2').style.display = 'block';
+            document.getElementById('waResultArea').style.display = 'none';
+
+            // Auto-focus group name
+            setTimeout(() => document.getElementById('waGroupName').focus(), 100);
         }
 
         function closeWhatsAppModal() {
@@ -1526,38 +1785,108 @@
 
         function generateWhatsAppGroup() {
             const groupName = document.getElementById('waGroupName').value;
+            const groupDesc = document.getElementById('waGroupDesc').value;
+            const adminNumber = document.getElementById('waAdminNumber').value;
+
             if (!groupName) {
                 showNotification('Please enter a group name', 'error');
                 return;
             }
 
+            // Set group label in result area
+            document.getElementById('waGroupLabel').textContent = groupName;
+
             // Collect Phone Numbers
             const phones = [];
+
+            // Add admin number if provided
+            if (adminNumber) {
+                const cleanAdmin = adminNumber.replace(/\D/g, '');
+                if (cleanAdmin) phones.push(cleanAdmin);
+            }
+
             selectedRegistrations.forEach(id => {
                 const reg = allRegistrations.find(r => r.id === id);
                 if (reg) {
-                    // Try to find phone in standard field or dynamic fields
                     let phone = reg.participant?.phone;
                     if (!phone && reg.data) {
-                        // Search in data for keys containing 'phone' or 'mobile'
                         const key = Object.keys(reg.data).find(k => k.toLowerCase().includes('phone') || k.toLowerCase().includes('mobile'));
                         if (key) phone = reg.data[key];
                     }
-                    if (phone) phones.push(phone);
+                    if (phone) {
+                        const cleanPhone = phone.replace(/\D/g, '');
+                        if (cleanPhone) phones.push(cleanPhone);
+                    }
                 }
             });
 
             if (phones.length === 0) {
-                showNotification('No phone numbers found for selected participants', 'error');
+                showNotification('No valid phone numbers found', 'error');
                 return;
             }
 
-            // Show Result
-            document.getElementById('waResultArea').style.display = 'block';
-            document.getElementById('waPhoneList').value = phones.join(',\n');
-            document.getElementById('waModalFooter').style.display = 'none'; // Hide create button to prevent re-click
+            // Format numbers for WhatsApp (comma separated)
+            document.getElementById('waPhoneList').value = phones.join(', ');
 
-            showNotification(`Ready! Found ${phones.length} contacts.`, 'success');
+            // Go to Step 3
+            document.getElementById('waStep1').style.display = 'none';
+            document.getElementById('waStep2').style.display = 'none';
+            document.getElementById('waResultArea').style.display = 'block';
+
+            showNotification(`Prepared ${phones.length} contacts for group creation.`, 'success');
+        }
+
+        function downloadVCF() {
+            const groupName = document.getElementById('waGroupName').value || 'Group_Participants';
+            let vcfContent = '';
+
+            selectedRegistrations.forEach(id => {
+                const reg = allRegistrations.find(r => r.id === id);
+                if (reg) {
+                    const name = reg.participant?.name || 'Participant';
+                    let phone = reg.participant?.phone;
+                    if (!phone && reg.data) {
+                        const key = Object.keys(reg.data).find(k => k.toLowerCase().includes('phone') || k.toLowerCase().includes('mobile'));
+                        if (key) phone = reg.data[key];
+                    }
+
+                    if (phone) {
+                        const cleanPhone = phone.replace(/\D/g, '');
+                        vcfContent += `BEGIN:VCARD\nVERSION:3.0\nFN:${name} (Construo)\nTEL;TYPE=CELL:${cleanPhone}\nEND:VCARD\n`;
+                    }
+                }
+            });
+
+            if (!vcfContent) {
+                showNotification('No valid contacts to download', 'error');
+                return;
+            }
+
+            const blob = new Blob([vcfContent], { type: 'text/vcard' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${groupName.replace(/\s+/g, '_')}_contacts.vcf`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showNotification('Contacts file downloaded! Open it to add participants.', 'success');
+        }
+
+        function copyPhoneNumbers() {
+            const textArea = document.getElementById('waPhoneList');
+            textArea.select();
+            document.execCommand('copy');
+            showNotification('Phone numbers copied to clipboard!', 'success');
+        }
+
+        function openWhatsApp() {
+            // Since we can't create a group via URL easily with multiple numbers,
+            // we open WhatsApp Web so the user can paste.
+            // A common trick is to open a chat with one person and then add others.
+            window.open('https://web.whatsapp.com/', '_blank');
         }
 
         // Close details modal on outside click

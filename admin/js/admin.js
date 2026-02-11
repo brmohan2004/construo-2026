@@ -47,6 +47,8 @@ const Admin = {
 
     initSidebar() {
         const sidebar = document.getElementById('sidebar');
+        if (!sidebar) return; // Exit if no sidebar exists (e.g. builder page)
+
         const sidebarToggle = document.getElementById('sidebarToggle');
         const mobileSidebarToggle = document.getElementById('mobileSidebarToggle');
 
@@ -911,9 +913,10 @@ const Admin = {
                 .update({
                     status: regData.status,
                     payment: regData.payment,
+                    events: regData.events, // Added events field
                     updated_by: user ? user.username : null
                 })
-                .eq('registration_id', id)
+                .eq('id', id)
                 .select()
                 .single();
 
@@ -932,7 +935,7 @@ const Admin = {
             const { error } = await supabase
                 .from('registrations')
                 .delete()
-                .eq('registration_id', id);
+                .eq('id', id);
 
             if (error) throw error;
 

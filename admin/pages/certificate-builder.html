@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate Builder | CONSTRUO Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@400;600;700&family=Dancing+Script:wght@700&family=Cinzel:wght@400;700&family=Great+Vibes&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/admin.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+    <style>
+        /* --- Reset & Base --- */
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background: #1a1a1a;
+            color: white;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* --- Builder Layout --- */
+        .builder-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .builder-header {
+            height: 56px;
+            min-height: 56px;
+            background: linear-gradient(180deg, #2a2a2a, #222);
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 1.25rem;
+            flex-shrink: 0;
+            z-index: 10;
+        }
+
+        .builder-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .builder-body {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* --- Sidebar --- */
+        .builder-sidebar {
+            width: 260px;
+            min-width: 260px;
+            background: #222;
+            border-right: 1px solid #333;
+            display: flex;
+            flex-direction: column;
+            padding: 1rem;
+            gap: 0.75rem;
+            overflow-y: auto;
+        }
+
+        .builder-sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .builder-sidebar::-webkit-scrollbar-thumb {
+            background: #555;
+            border-radius: 2px;
+        }
+
+        /* --- Canvas Container (the desk) --- */
+        .builder-canvas-container {
+            flex: 1;
+            background: #1e1e1e;
+            position: relative;
+            overflow: hidden;
+            cursor: default;
+        }
+
+        /* Fabric.js creates a .canvas-container div wrapper */
+        .builder-canvas-container .canvas-container {
+            background-color: transparent !important;
+            position: absolute !important;
+            top: 0;
+            left: 0;
+        }
+
+        /* --- Properties Panel --- */
+        .builder-properties {
+            width: 280px;
+            min-width: 280px;
+            background: #222;
+            border-left: 1px solid #333;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+
+        .builder-properties::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .builder-properties::-webkit-scrollbar-thumb {
+            background: #555;
+            border-radius: 2px;
+        }
+
+        /* --- Toolbar Buttons --- */
+        .tool-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.6rem 0.75rem;
+            background: #2e2e2e;
+            border: 1px solid #3a3a3a;
+            color: #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-align: left;
+            width: 100%;
+            font-size: 0.85rem;
+        }
+
+        .tool-btn:hover {
+            background: #3a3a3a;
+            border-color: #4a4a4a;
+            color: #fff;
+        }
+
+        .tool-btn:active {
+            transform: scale(0.98);
+        }
+
+        .tool-btn .tool-icon {
+            width: 22px;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        /* --- Section Labels --- */
+        .section-label {
+            color: #777;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.35rem;
+            text-transform: uppercase;
+        }
+
+        /* --- Properties Panel Elements --- */
+        .prop-group {
+            margin-bottom: 1.25rem;
+            border-bottom: 1px solid #2e2e2e;
+            padding-bottom: 0.75rem;
+        }
+
+        .prop-group:last-child {
+            border-bottom: none;
+        }
+
+        .prop-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: #777;
+            margin-bottom: 0.4rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        .prop-input {
+            width: 100%;
+            background: #1a1a1a;
+            border: 1px solid #3a3a3a;
+            color: white;
+            padding: 0.45rem 0.5rem;
+            border-radius: 4px;
+            margin-bottom: 0.4rem;
+            font-family: inherit;
+            font-size: 0.85rem;
+            box-sizing: border-box;
+        }
+
+        .prop-input:focus {
+            border-color: #ea580c;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(234, 88, 12, 0.15);
+        }
+
+        .prop-row {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        /* --- Header Buttons --- */
+        .btn {
+            border: none;
+            padding: 0.4rem 0.85rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: all 0.15s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .btn-secondary {
+            background: #3a3a3a;
+            color: #ddd;
+        }
+
+        .btn-secondary:hover {
+            background: #4a4a4a;
+            color: #fff;
+        }
+
+        .btn-primary {
+            background: #ea580c;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #c2410c;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: #999;
+            border: 1px solid #3a3a3a;
+        }
+
+        .btn-ghost:hover {
+            background: #2e2e2e;
+            color: #fff;
+        }
+
+        /* --- Zoom Indicator --- */
+        .zoom-indicator {
+            font-size: 0.8rem;
+            color: #888;
+            font-family: 'JetBrains Mono', monospace;
+            padding: 0.3rem 0.6rem;
+            background: #1a1a1a;
+            border-radius: 4px;
+            border: 1px solid #333;
+            min-width: 55px;
+            text-align: center;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* --- Keyboard Shortcuts Tooltip --- */
+        .shortcuts-info {
+            font-size: 0.7rem;
+            color: #555;
+            border-top: 1px solid #2e2e2e;
+            padding-top: 0.75rem;
+            margin-top: auto;
+            line-height: 1.6;
+        }
+
+        .shortcuts-info kbd {
+            background: #333;
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-size: 0.65rem;
+            font-family: 'JetBrains Mono', monospace;
+            border: 1px solid #444;
+        }
+    </style>
+</head>
+
+<body oncontextmenu="return true;" onmousedown="if(event.button===1)return false;">
+    <div id="toastContainer"
+        style="position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px;">
+    </div>
+    <div class="builder-container">
+        <header class="builder-header">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <a href="certificates.html" class="btn btn-secondary">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                    Back
+                </a>
+                <h1 class="builder-title">Certificate Builder</h1>
+            </div>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <span class="zoom-indicator" id="zoomLevel">100%</span>
+                <button class="btn btn-ghost" onclick="CertBuilder.centerPage()" title="Fit to Page">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path>
+                    </svg>
+                    Fit
+                </button>
+                <button class="btn btn-primary" id="saveBuilderBtn">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                        <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                        <polyline points="7 3 7 8 15 8"></polyline>
+                    </svg>
+                    Save Template
+                </button>
+            </div>
+        </header>
+
+        <div class="builder-body">
+            <!-- Sidebar Tools -->
+            <aside class="builder-sidebar">
+                <div>
+                    <div class="section-label">Insert Elements</div>
+                    <div style="display: grid; gap: 0.35rem;">
+                        <button class="tool-btn" onclick="CertBuilder.addText()">
+                            <span class="tool-icon">T</span> Add Text
+                        </button>
+                        <button class="tool-btn" onclick="CertBuilder.addImage()">
+                            <span class="tool-icon">�️</span> Add Image
+                        </button>
+
+                        <div style="position: relative;">
+                            <button class="tool-btn" onclick="toggleShapesMenu(this)">
+                                <span class="tool-icon">💠</span> Shapes
+                                <span style="margin-left: auto; font-size: 0.7rem;">▼</span>
+                            </button>
+                            <div id="shapesDropdown"
+                                style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: #2e2e2e; border: 1px solid #3a3a3a; border-radius: 6px; padding: 0.5rem; z-index: 50; box-shadow: 0 4px 12px rgba(0,0,0,0.5); margin-top: 4px;">
+                                <button class="tool-btn" onclick="CertBuilder.addRect()"
+                                    style="margin-bottom: 0.25rem;">
+                                    <span class="tool-icon">▢</span> Rectangle
+                                </button>
+                                <button class="tool-btn" onclick="CertBuilder.addCircle()"
+                                    style="margin-bottom: 0.25rem;">
+                                    <span class="tool-icon">⚪</span> Circle
+                                </button>
+                                <button class="tool-btn" onclick="CertBuilder.addTriangle()"
+                                    style="margin-bottom: 0.25rem;">
+                                    <span class="tool-icon">🔺</span> Triangle
+                                </button>
+                                <button class="tool-btn" onclick="CertBuilder.addLine()">
+                                    <span class="tool-icon">➖</span> Line
+                                </button>
+                            </div>
+                        </div>
+
+                        <script>
+                            function toggleShapesMenu(btn) {
+                                const menu = document.getElementById('shapesDropdown');
+                                const isVisible = menu.style.display === 'block';
+
+                                // Close all other dropdowns if any
+                                document.querySelectorAll('[id$="Dropdown"]').forEach(el => el.style.display = 'none');
+                                document.querySelectorAll('[onclick^="toggleShapesMenu"] span:last-child').forEach(el => el.style.transform = 'rotate(0deg)');
+
+                                menu.style.display = isVisible ? 'none' : 'block';
+
+                                // Rotate arrow
+                                const arrow = btn.querySelector('span:last-child');
+                                if (arrow) arrow.style.transform = isVisible ? 'rotate(0deg)' : 'rotate(180deg)';
+                            }
+
+                            // Close dropdown when clicking outside
+                            window.addEventListener('click', (e) => {
+                                if (!e.target.closest('#shapesDropdown') && !e.target.closest('[onclick="toggleShapesMenu(this)"]')) {
+                                    const menu = document.getElementById('shapesDropdown');
+                                    if (menu) menu.style.display = 'none';
+                                    const arrow = document.querySelector('[onclick="toggleShapesMenu(this)"] span:last-child');
+                                    if (arrow) arrow.style.transform = 'rotate(0deg)';
+                                }
+                            });
+                        </script>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="section-label" style="margin-top: 0.5rem;">Dynamic Placeholders</div>
+                    <p style="font-size: 0.75rem; color: #555; margin: 0 0 0.4rem 0;">Auto-replaced during PDF
+                        generation</p>
+                    <div style="display: grid; gap: 0.35rem;">
+                        <button class="tool-btn" onclick="CertBuilder.addPlaceholder('name')">
+                            <span class="tool-icon">👤</span> {Participant Name}
+                        </button>
+                        <button class="tool-btn" onclick="CertBuilder.addPlaceholder('event')">
+                            <span class="tool-icon">📅</span> {Event Name}
+                        </button>
+                        <button class="tool-btn" onclick="CertBuilder.addPlaceholder('college')">
+                            <span class="tool-icon">🎓</span> {College Name}
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="section-label" style="margin-top: 0.5rem;">Canvas Settings</div>
+                    <div class="prop-group">
+                        <div class="prop-label">Page Background</div>
+                        <input type="color" id="bgColorPicker" class="prop-input" value="#ffffff"
+                            style="height: 36px; padding: 2px; cursor: pointer;"
+                            onchange="CertBuilder.setBackgroundColor(this.value)">
+                    </div>
+                </div>
+
+                <!-- Keyboard Shortcuts Info -->
+                <div class="shortcuts-info">
+                    <div><kbd>Scroll</kbd> Zoom in/out</div>
+                    <div><kbd>Middle Click</kbd> + Drag → Pan</div>
+                    <div><kbd>Alt</kbd> + Click + Drag → Pan</div>
+                    <div><kbd>Delete</kbd> Remove selected</div>
+                    <div><kbd>Ctrl</kbd>+<kbd>A</kbd> Select all</div>
+                </div>
+            </aside>
+
+            <!-- Canvas Area (the infinite desk) -->
+            <main class="builder-canvas-container" id="canvasArea">
+                <canvas id="c"></canvas>
+                <div
+                    style="position: absolute; top: 1rem; left: 50%; transform: translateX(-50%); pointer-events: none; opacity: 0.7; z-index: 5; text-align: center;">
+                    <span
+                        style="background: rgba(0,0,0,0.6); color: #ccc; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem;">
+                        ⚠️ Only content inside the white page will be exported
+                    </span>
+                </div>
+            </main>
+
+            <!-- Properties Panel -->
+            <aside class="builder-properties" id="builderProps">
+                <div class="prop-group">
+                    <div class="prop-label">Properties</div>
+                    <div id="noSelectionMsg" style="color: #555; font-size: 0.85rem; font-style: italic;">
+                        Select an object to edit.
+                    </div>
+                </div>
+
+                <div id="objectProps" style="display: none;">
+                    <div class="prop-group">
+                        <div class="prop-label">Position & Size</div>
+                        <div class="prop-row">
+                            <div style="flex: 1;">
+                                <label style="font-size: 0.65rem; color: #555;">X</label>
+                                <input type="number" id="propX" class="prop-input">
+                            </div>
+                            <div style="flex: 1;">
+                                <label style="font-size: 0.65rem; color: #555;">Y</label>
+                                <input type="number" id="propY" class="prop-input">
+                            </div>
+                        </div>
+                        <div class="prop-row">
+                            <div style="flex: 1;">
+                                <label style="font-size: 0.65rem; color: #555;">W</label>
+                                <input type="number" id="propW" class="prop-input">
+                            </div>
+                            <div style="flex: 1;">
+                                <label style="font-size: 0.65rem; color: #555;">H</label>
+                                <input type="number" id="propH" class="prop-input">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="prop-group" id="textProps">
+                        <div class="prop-label">Text Options</div>
+                        <input type="text" id="propTextContent" class="prop-input" placeholder="Text Content">
+
+                        <div class="prop-row">
+                            <select id="propFontFamily" class="prop-input" style="flex: 2;">
+                                <option value="Arial" style="font-family: Arial;">Arial (Sans-Serif)</option>
+                                <option value="Times New Roman" style="font-family: 'Times New Roman';">Times New Roman
+                                    (Serif)</option>
+                                <option value="Outfit" style="font-family: 'Outfit';">Outfit (Modern)</option>
+                                <option value="Inter" style="font-family: 'Inter';">Inter (UI)</option>
+                                <option value="Dancing Script" style="font-family: 'Dancing Script';">Dancing Script
+                                    (Cursive)</option>
+                                <option value="Cinzel" style="font-family: 'Cinzel';">Cinzel (Classic)</option>
+                                <option value="Great Vibes" style="font-family: 'Great Vibes';">Great Vibes (Elegant)
+                                </option>
+                                <option value="Courier New" style="font-family: 'Courier New';">Courier New (Mono)
+                                </option>
+                                <option value="Georgia" style="font-family: 'Georgia';">Georgia (Serif)</option>
+                                <option value="JetBrains Mono" style="font-family: 'JetBrains Mono';">JetBrains Mono
+                                    (Code)</option>
+                            </select>
+                            <input type="number" id="propFontSize" class="prop-input" placeholder="Size"
+                                style="flex: 1;">
+                        </div>
+
+                        <div class="prop-row" style="margin-top: 0.25rem;">
+                            <button id="propBold" class="tool-btn"
+                                style="justify-content: center; padding: 0.4rem; font-weight: bold;">B</button>
+                            <button id="propItalic" class="tool-btn"
+                                style="justify-content: center; padding: 0.4rem; font-style: italic;">I</button>
+                            <div style="flex: 1;">
+                                <input type="color" id="propColor" class="prop-input"
+                                    style="height: 34px; padding: 2px; cursor: pointer;">
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 0.4rem;">
+                            <label
+                                style="font-size: 0.65rem; color: #555; display: block; margin-bottom: 0.2rem;">Alignment</label>
+                            <div class="prop-row">
+                                <button onclick="CertBuilder.setTextAlign('left')" class="tool-btn"
+                                    style="justify-content: center; padding: 0.35rem; font-size: 0.75rem;">⫷</button>
+                                <button onclick="CertBuilder.setTextAlign('center')" class="tool-btn"
+                                    style="justify-content: center; padding: 0.35rem; font-size: 0.75rem;">☰</button>
+                                <button onclick="CertBuilder.setTextAlign('right')" class="tool-btn"
+                                    style="justify-content: center; padding: 0.35rem; font-size: 0.75rem;">⫸</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="prop-group" id="rectProps" style="display: none;">
+                        <div class="prop-label">Fill Color</div>
+                        <input type="color" id="propRectFill" class="prop-input"
+                            style="height: 34px; padding: 2px; cursor: pointer;">
+                        <div class="prop-label" style="margin-top: 0.4rem;">Opacity</div>
+                        <input type="range" id="propOpacity" min="0" max="100" value="100" class="prop-input"
+                            style="padding: 0;">
+                    </div>
+
+                    <div class="prop-group">
+                        <div class="prop-label">Actions</div>
+                        <div class="prop-row">
+                            <button onclick="CertBuilder.bringForward()" class="tool-btn"
+                                style="flex: 1; justify-content: center; font-size: 0.7rem;">↑ Forward</button>
+                            <button onclick="CertBuilder.sendBackward()" class="tool-btn"
+                                style="flex: 1; justify-content: center; font-size: 0.7rem;">↓ Backward</button>
+                        </div>
+                        <button onclick="CertBuilder.deleteSelected()" class="tool-btn"
+                            style="width: 100%; margin-top: 0.5rem; justify-content: center; background: #7f1d1d; border-color: #991b1b; color: #fca5a5;">
+                            🗑️ Delete Object
+                        </button>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Logic -->
+    <script type="module" src="../js/builder.js"></script>
+</body>
+
+</html>

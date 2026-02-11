@@ -45,7 +45,12 @@ class ConstruoApp {
     }
 
     updateUI({ siteConfig, events, timeline, speakers, sponsors, organizers }) {
-        if (siteConfig && siteConfig.settings) this.updateSettingsUI(siteConfig.settings);
+        if (siteConfig && siteConfig.settings) {
+            this.updateSettingsUI(siteConfig.settings);
+            if (siteConfig.settings.sections) {
+                this.updateSectionsUI(siteConfig.settings.sections);
+            }
+        }
         if (siteConfig && siteConfig.hero) this.updateHeroUI(siteConfig.hero);
         if (siteConfig && siteConfig.about) this.updateAboutUI(siteConfig.about);
         if (events) this.updateEventsUI(events);
@@ -687,6 +692,43 @@ class ConstruoApp {
     }
 
     // --- UI Update Methods ---
+    updateSectionsUI(sections) {
+        if (!sections || !Array.isArray(sections)) return;
+
+        const container = document.getElementById('smooth-content');
+        if (!container) return;
+
+        // Sort sections by order
+        const sortedSections = [...sections].sort((a, b) => a.order - b.order);
+
+        sortedSections.forEach(sectionData => {
+            const element = document.getElementById(sectionData.id);
+            if (element) {
+                // Update visibility
+                if (sectionData.visible === false) {
+                    element.style.display = 'none';
+                } else {
+                    element.style.display = '';
+                }
+
+                // Reorder: Append to container (moves it to end)
+                // We do this in the sorted order, so they end up in correct order
+                container.appendChild(element);
+            }
+        });
+
+        // Ensure footer is always last
+        const footer = document.getElementById('footer');
+        if (footer) {
+            container.appendChild(footer);
+        }
+
+        // Refresh ScrollTrigger as positions changed
+        if (window.ScrollTrigger) {
+            setTimeout(() => window.ScrollTrigger.refresh(), 100);
+        }
+    }
+
     updateHeroUI(data) {
         if (!data) return;
 
