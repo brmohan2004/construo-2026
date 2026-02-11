@@ -94,10 +94,10 @@ class ConstruoAnimations {
         // 3. Safety Timeout: Lowered to 4 seconds for better UX
         setTimeout(() => {
             if (!this.dataReady) {
-                console.warn('Preloader safety timeout reached (4s). Forcing entrance.');
+                console.warn('Preloader safety timeout reached (5s). Forcing entrance.');
                 this.markDataLoaded();
             }
-        }, 4000);
+        }, 5000);
 
         // Clear any existing interval
         if (this.loaderInterval) clearInterval(this.loaderInterval);
@@ -112,7 +112,7 @@ class ConstruoAnimations {
             }
 
             // Faster increment: rapid loading
-            progress += Math.random() * 10 + 5;
+            progress += Math.random() * 5 + 2;
 
             if (progress >= 100) {
                 progress = 100;
