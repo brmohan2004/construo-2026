@@ -400,6 +400,8 @@ const Admin = {
                     coordinator: eventData.coordinator || {},
                     registration_link: eventData.registrationLink || null,
                     status: eventData.status || 'active',
+                    // Added duration field
+                    duration: eventData.duration || null,
                     featured: eventData.featured || false,
                     created_by: user ? user.username : null,
                     updated_by: user ? user.username : null
@@ -440,6 +442,8 @@ const Admin = {
                     coordinator: eventData.coordinator,
                     registration_link: eventData.registrationLink,
                     status: eventData.status,
+                    // Added duration field
+                    duration: eventData.duration,
                     featured: eventData.featured,
                     updated_by: user ? user.username : null
                 })

@@ -135,9 +135,25 @@ class ConstruoSupabaseData {
                 .order('created_at', { ascending: false });
 
             if (error) throw error;
-            this.cache.events = data;
-            this.saveToCache('events', data);
-            return data;
+
+            // Map snake_case to camelCase for frontend compatibility
+            const mappedData = data.map(event => ({
+                ...event,
+                id: event.event_id, // Ensure ID is consistent
+                teamSize: event.team_size,
+                prizeMoney: event.prize_money,
+                entryFee: event.entry_fee,
+                registrationFee: event.entry_fee, // Map entry_fee to registrationFee for frontend
+                registrationLink: event.registration_link,
+                shortDescription: event.description,
+                // Ensure other potential camelCase fields are covered if needed
+                createdAt: event.created_at,
+                updatedAt: event.updated_at
+            }));
+
+            this.cache.events = mappedData;
+            this.saveToCache('events', mappedData);
+            return mappedData;
         } catch (error) {
             console.error('Error fetching events:', error);
             return this.getFromCache('events') || [];

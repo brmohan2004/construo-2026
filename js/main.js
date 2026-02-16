@@ -306,8 +306,8 @@ class ConstruoApp {
                 // Create cards HTML
                 const cardsHTML = members.map(org => this.renderOrganizerCard(org)).join('');
 
-                // Check if we need to scroll (more than 4 cards typically fills the viewport)
-                if (members.length <= 4) {
+                // Check if we need to scroll (more than 2 cards typically fills the mobile viewport)
+                if (members.length <= 2) {
                     // Center cards without scrolling
                     track.innerHTML = cardsHTML;
                     track.classList.add('no-scroll');
@@ -1177,7 +1177,16 @@ class ConstruoApp {
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Prize:</span>
-                        <span class="detail-value">${event.prizeMoney?.first ? '₹' + event.prizeMoney.first : 'TBD'}</span>
+                        <span class="detail-value">
+                            ${(() => {
+                if (!event.prizeMoney) return 'TBD';
+                const prizes = [];
+                if (event.prizeMoney.first) prizes.push(`1st: ₹${event.prizeMoney.first}`);
+                if (event.prizeMoney.second) prizes.push(`2nd: ₹${event.prizeMoney.second}`);
+                if (event.prizeMoney.third) prizes.push(`3rd: ₹${event.prizeMoney.third}`);
+                return prizes.length > 0 ? prizes.join(' | ') : 'TBD';
+            })()}
+                        </span>
                     </div>
                     ${event.registrationFee ? `
                     <div class="detail-item">
