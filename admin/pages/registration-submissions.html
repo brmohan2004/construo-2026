@@ -1278,6 +1278,17 @@
             }
         }
 
+        function formatValue(value) {
+            if (value === null || value === undefined || value === '') return 'N/A';
+            const strVal = String(value);
+            // Check if it's a valid URL or at least starts with http/https
+            if (strVal.startsWith('http://') || strVal.startsWith('https://')) {
+                // Return a clickable link
+                return `<a href="${strVal}" target="_blank" rel="noopener noreferrer" style="color: var(--admin-info); text-decoration: underline; word-break: break-all;">Open Link</a>`;
+            }
+            return strVal;
+        }
+
         function renderTable() {
             const tbody = document.getElementById('tableBody');
             const emptyState = document.getElementById('emptyState');
@@ -1302,8 +1313,8 @@
                     // Dynamic rendering
                     rowContent += `<td><strong>${reg.registrationNumber}</strong></td>`;
                     currentFormFields.forEach(field => {
-                        const value = reg.data?.[field.id] || 'N/A';
-                        rowContent += `<td>${value}</td>`;
+                        const rawValue = reg.data?.[field.id];
+                        rowContent += `<td>${formatValue(rawValue)}</td>`;
                     });
                 } else {
                     // Default rendering
@@ -1396,15 +1407,18 @@
 
                 if (currentFormFields && currentFormFields.length) {
                     currentFormFields.forEach(f => {
-                        const value = registration.data[f.id] || '';
-                        responsesHtml += `<div class="detail-item"><div class="detail-label">${f.label}</div><div class="detail-value">${value || 'N/A'}</div></div>`;
+                        const rawValue = registration.data[f.id];
+                        responsesHtml += `<div class="detail-item"><div class="detail-label">${f.label}</div><div class="detail-value">${formatValue(rawValue)}</div></div>`;
                     });
                 } else {
                     Object.entries(registration.data).forEach(([k, v]) => {
                         // Pretty label from key
                         const label = k.replace(/[_-]+/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-                        const value = (typeof v === 'string' || typeof v === 'number') ? v : JSON.stringify(v);
-                        responsesHtml += `<div class="detail-item"><div class="detail-label">${label}</div><div class="detail-value">${value || 'N/A'}</div></div>`;
+                        let displayVal = 'N/A';
+                        if (v !== null && v !== undefined) {
+                            displayVal = (typeof v === 'string' || typeof v === 'number') ? formatValue(v) : JSON.stringify(v);
+                        }
+                        responsesHtml += `<div class="detail-item"><div class="detail-label">${label}</div><div class="detail-value">${displayVal}</div></div>`;
                     });
                 }
 

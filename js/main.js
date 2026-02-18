@@ -19,6 +19,7 @@ class ConstruoApp {
         this.initEventCardModals();
         this.initIntersectionObserver();
         this.initDataSync();
+        this.initDevelopmentModal();
     }
 
     sanitizeUrl(url) {
@@ -1653,6 +1654,21 @@ class ConstruoApp {
                 });
             }
 
+            // Add Instruction if exists
+            if (field.instruction && field.showInstruction) {
+                const instr = document.createElement('p');
+                instr.className = 'field-instruction';
+                instr.style.fontSize = '0.75rem';
+                instr.style.color = 'rgba(255, 255, 255, 0.6)';
+                instr.style.marginTop = '0.5rem';
+                instr.style.marginBottom = '0';
+                instr.style.fontStyle = 'italic';
+                instr.style.lineHeight = '1.4';
+                instr.style.whiteSpace = 'pre-line';
+                instr.textContent = field.instruction;
+                formGroup.appendChild(instr);
+            }
+
             container.appendChild(formGroup);
         });
 
@@ -1824,10 +1840,135 @@ class ConstruoApp {
                 const result = await dataLoader.createRegistration(payload);
                 console.log('Registration successful:', result);
 
-                // Close modal and show success
+                // Close modal
                 self.closeModal('modal-register');
                 const regNum = result.registration_number || result.registrationNumber || 'Success';
-                self.showNotification(`Registration successful! Your ID: ${regNum}`, 'success');
+
+                // --- Success Modal with WhatsApp Links ---
+                try {
+                    // 1. Identify selected events and get their links
+                    let whatsappLinks = [];
+                    const allEvents = await dataLoader.getEvents(); // Use cached or fresh
+                    const values = Object.values(data).flat();
+
+                    console.log('--- Register Success Debug ---');
+                    console.log('Form Values:', values);
+                    console.log('All Events:', allEvents.map(e => ({ name: e.name, id: e.id, link: e.registrationLink })));
+
+                    const normalize = s => String(s).trim().toLowerCase();
+
+                    if (allEvents && allEvents.length > 0) {
+                        values.forEach(val => {
+                            if (!val) return;
+
+                            const nVal = normalize(val);
+                            // TYPO FIX: Handle "papper" -> "paper" mismatch specifically
+                            const cleanVal = nVal.replace('papper', 'paper');
+
+                            // Try multiple matching strategies
+                            let match = allEvents.find(e => {
+                                const eName = normalize(e.name);
+                                const eId = normalize(e.id);
+                                return eName === nVal || eId === nVal || eName === cleanVal;
+                            });
+
+                            // Fallback 1: Form value contains Event Name
+                            if (!match) {
+                                match = allEvents.find(e => {
+                                    const eName = normalize(e.name);
+                                    return nVal.includes(eName) || cleanVal.includes(eName);
+                                });
+                            }
+
+                            // Fallback 2: Event Name contains Form value (e.g. Form: "Paper Presentation", DB: "Paper Presentation (Civil)")
+                            // Constraint: nVal should be reasonably long to avoid matching "yes", "no", "active" etc.
+                            if (!match && nVal.length > 4) {
+                                match = allEvents.find(e => normalize(e.name).includes(nVal));
+                            }
+
+                            if (match) {
+                                console.log('Matched Event:', match.name, 'Link:', match.registrationLink);
+                                if (match.registrationLink) {
+                                    // Avoid duplicates
+                                    if (!whatsappLinks.some(l => l.name === match.name)) {
+                                        whatsappLinks.push({ name: match.name, link: match.registrationLink });
+                                    }
+                                }
+                            }
+                        });
+                    }
+                    console.log('Final WhatsApp Links:', whatsappLinks);
+                    console.log('------------------------------');
+
+                    // 2. Remove existing success modal if any
+                    const existingModal = document.getElementById('modal-success');
+                    if (existingModal) existingModal.remove();
+
+                    // 3. Create Modal HTML matching existing structure
+                    const modalHtml = `
+                    <div id="modal-success" class="modal" aria-hidden="true" style="z-index: 10002;">
+                        <div class="modal-backdrop" data-modal-close></div>
+                        <div class="modal-dialog" style="max-width: 450px; text-align: center;">
+                            <button class="modal-close" data-modal-close>&times;</button>
+                            <div class="modal-body" style="padding: 1rem;">
+                                <div style="font-size: 3.5rem; margin-bottom: 1rem; line-height: 1;">🎉</div>
+                                <h2 style="margin-bottom: 0.5rem; color: var(--color-text);">Registration Successful!</h2>
+                                <p style="color: var(--color-text-muted); margin-bottom: 1.5rem;">Thank you for registering! You are now confirmed.</p>
+                                
+                                <div style="background: rgba(255,255,255,0.05); padding: 1.25rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 1.5rem;">
+                                    <label style="display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-muted); margin-bottom: 0.5rem;">Registration Number</label>
+                                    <div style="font-size: 1.75rem; font-weight: 700; color: var(--color-accent); font-family: monospace; user-select: all;">${regNum}</div>
+                                </div>
+                                
+                                ${whatsappLinks.length > 0 ? `
+                                    <div style="text-align: left; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px dashed rgba(255,255,255,0.1);">
+                                        <h3 style="font-size: 1rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; color: var(--color-text);">
+                                            <span style="color: #25D366;">📱</span> Join WhatsApp Groups
+                                        </h3>
+                                        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                                            ${whatsappLinks.map(l => `
+                                                <a href="${l.link}" target="_blank" rel="noopener noreferrer" class="btn" style="width: 100%; justify-content: space-between; padding: 0.75rem 1rem; border: 1px solid rgba(37, 211, 102, 0.3); background: rgba(37, 211, 102, 0.1); color: var(--color-text); text-decoration: none; display: flex; align-items: center; border-radius: 6px; pointer-events: auto; position: relative; z-index: 10;">
+                                                    <span style="font-weight: 500;">${l.name}</span>
+                                                    <span style="font-size: 0.75rem; color: #25D366; display: flex; align-items: center; gap: 4px; font-weight: bold;">
+                                                        JOIN &rarr;
+                                                    </span>
+                                                </a>
+                                            `).join('')}
+                                        </div>
+                                        <p style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.75rem; text-align: center;">Click to join the official groups for updates.</p>
+                                    </div>
+                                ` : ''}
+
+                                <div style="margin-top: 2rem;">
+                                    <button class="btn btn-primary" data-modal-close style="min-width: 120px;">Done</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    `;
+
+                    // 4. Inject
+                    const temp = document.createElement('div');
+                    temp.innerHTML = modalHtml;
+                    const matchModal = temp.firstElementChild;
+                    document.body.appendChild(matchModal);
+
+                    // 5. Open it using existing logic or manually
+                    setTimeout(() => {
+                        self.openModal('modal-success');
+
+                        // Attach clean up on close
+                        const closeHandler = () => {
+                            setTimeout(() => { if (matchModal.parentNode) matchModal.remove(); }, 500);
+                        };
+                        matchModal.querySelectorAll('[data-modal-close]').forEach(b => b.addEventListener('click', closeHandler));
+                    }, 50);
+
+                } catch (e) {
+                    console.error('Error showing success modal:', e);
+                    // Fallback
+                    self.showNotification(`Registration successful! ID: ${regNum}`, 'success');
+                }
 
                 // Reset form
                 form.reset();
@@ -1986,6 +2127,66 @@ class ConstruoApp {
             notification.style.transform = 'translateX(-50%) translateY(100px)';
             setTimeout(() => notification.remove(), 400);
         }, 4000);
+    }
+
+    // Development Request Modal
+    initDevelopmentModal() {
+        const devBtn = document.querySelector('.dev-request-btn');
+        if (devBtn) {
+            devBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                // Check if openModal exists (it should as it's part of the class)
+                if (typeof this.openModal === 'function') {
+                    this.openModal('modal-development');
+                } else {
+                    const modal = document.getElementById('modal-development');
+                    if (modal) {
+                        modal.classList.add('open');
+                        modal.setAttribute('aria-hidden', 'false');
+                    }
+                }
+            });
+        }
+
+        const devForm = document.getElementById('development-form');
+        if (devForm) {
+            devForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                const name = document.getElementById('dev-name').value;
+                const phone = document.getElementById('dev-phone').value;
+                const email = document.getElementById('dev-email').value;
+                const service = document.getElementById('dev-service').value;
+                const message = document.getElementById('dev-message').value;
+
+                const subject = `Development Request: ${service} - ${name}`;
+                const fullBody = `Name: ${name}\nPhone: ${phone}\nEmail: ${email}\nService: ${service}\nMessage: ${message}`;
+
+                const safeMailto = `mailto:qynta2025@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(fullBody)}`;
+
+                window.location.href = safeMailto;
+
+                // Show success and close
+                if (typeof this.showNotification === 'function') {
+                    this.showNotification('Redirecting to email client...', 'info');
+                } else {
+                    alert('Redirecting to email client...');
+                }
+
+                setTimeout(() => {
+                    if (typeof this.closeModal === 'function') {
+                        this.closeModal('modal-development');
+                    } else {
+                        const modal = document.getElementById('modal-development');
+                        if (modal) {
+                            modal.classList.remove('open');
+                            modal.setAttribute('aria-hidden', 'true');
+                        }
+                    }
+                    devForm.reset();
+                }, 1000);
+            });
+        }
     }
 }
 

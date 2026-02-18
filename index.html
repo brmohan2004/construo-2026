@@ -348,6 +348,8 @@
                     <div class="footer-bottom">
                         <p class="footer-copyright"></p>
                         <p class="footer-credits"></p>
+                        <button class="btn btn-sm btn-secondary dev-request-btn" style="margin-top: 10px;">Request
+                            Development</button>
                     </div>
                 </div>
             </footer>
@@ -408,6 +410,57 @@
             <button class="modal-close" aria-label="Close modal" data-modal-close>&times;</button>
             <div class="modal-body" id="generic-modal-body">
                 <!-- Content injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Development Request Modal -->
+    <div id="modal-development" class="modal" aria-hidden="true">
+        <div class="modal-backdrop" data-modal-close></div>
+        <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modal-dev-title">
+            <button class="modal-close" aria-label="Close modal" data-modal-close>&times;</button>
+            <div class="modal-body">
+                <h2 id="modal-dev-title">Development Request</h2>
+                <p class="modal-sub">Tell us about your project needs</p>
+                <form id="development-form" class="modal-registration-form">
+                    <div class="form-group">
+                        <label for="dev-name">Full Name</label>
+                        <input type="text" id="dev-name" name="name" required placeholder="Your Name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dev-phone">Contact Number</label>
+                        <input type="tel" id="dev-phone" name="phone" required placeholder="Your Phone Number">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dev-email">Email ID</label>
+                        <input type="email" id="dev-email" name="email" required placeholder="Your Email Address">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dev-service">Service Needed</label>
+                        <select id="dev-service" name="service" required>
+                            <option value="">Select a Service</option>
+                            <option value="App Development">App Development</option>
+                            <option value="Website Development">Website Development</option>
+                            <option value="UI/UX Design">UI/UX Design</option>
+                            <option value="Backend Development">Backend Development</option>
+                            <option value="Full Stack Development">Full Stack Development</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dev-message">Additional Details</label>
+                        <textarea id="dev-message" name="message" rows="3"
+                            placeholder="Briefly describe your requirements..."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-submit" style="width: 100%; margin-top: 1rem;">
+                        <span>Send Request</span>
+                    </button>
+                </form>
             </div>
         </div>
     </div>

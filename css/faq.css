@@ -197,3 +197,67 @@
         right: 20px;
     }
 }
+
+/* FAQ Tooltip Styles */
+.faq-tooltip {
+    position: fixed;
+    bottom: 42px;
+    right: 100px;
+    background: white;
+    color: var(--faq-primary);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    white-space: nowrap;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-10px);
+    animation: tooltipFade 6s ease-out forwards;
+    animation-delay: 1s;
+}
+
+.faq-tooltip::after {
+    content: '';
+    position: absolute;
+    right: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-left: 6px solid white;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+}
+
+@keyframes tooltipFade {
+    0% {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+
+    10% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    85% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateX(0);
+        visibility: hidden;
+        /* Ensure it's gone */
+    }
+}
+
+/* Hide on mobile if screen is too small */
+@media (max-width: 480px) {
+    .faq-tooltip {
+        display: none;
+    }
+}

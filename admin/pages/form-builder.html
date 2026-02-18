@@ -900,6 +900,8 @@
                         type: type,
                         required: required,
                         placeholder: '',
+                        instruction: '',
+                        showInstruction: false,
                         options: (type === 'select' || type === 'radio' || type === 'checkbox') ? ['Option 1'] : []
                     };
 
@@ -959,18 +961,41 @@
                                 </select>
                             </div>
                             
+                            ${field.showInstruction ? `
+                            <div class="form-field-instruction-container" style="margin-bottom: 1rem;">
+                                <textarea 
+                                       class="form-field-instruction-input" 
+                                       placeholder="Instruction (e.g. Type carefully...)"
+                                       data-field-index="${index}"
+                                       rows="${Math.max(2, (field.instruction || '').split('\n').length)}"
+                                       style="width: 100%; border: none; border-bottom: 1px dashed var(--admin-text-muted); background: transparent; padding: 0.5rem 0; font-size: 0.85rem; color: var(--admin-text-muted); font-style: italic; font-family: inherit; resize: vertical; min-height: 2.4em;">${(field.instruction || '').replace(/</g, '&lt;')}</textarea>
+                            </div>
+                            ` : ''}
+                            
                             ${hasOptions ? this.renderFieldOptions(field, index) : this.renderFieldPreview(field)}
                             
                             <div class="form-field-footer">
                                 <div class="form-field-required">
-                                    <span>Required</span>
-                                    <label class="toggle-switch">
-                                        <input type="checkbox" 
-                                               class="field-required-toggle"
-                                               ${field.required ? 'checked' : ''} 
-                                               data-field-index="${index}">
-                                        <span class="toggle-slider"></span>
-                                    </label>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-right: 1.5rem;">
+                                        <span style="font-size: 0.875rem; color: var(--admin-text-muted);">Instruction</span>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" 
+                                                   class="field-instruction-toggle"
+                                                   ${field.showInstruction ? 'checked' : ''} 
+                                                   data-field-index="${index}">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <span>Required</span>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" 
+                                                   class="field-required-toggle"
+                                                   ${field.required ? 'checked' : ''} 
+                                                   data-field-index="${index}">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
                                 </div>
                                 <div class="form-field-actions">
                                     <button class="form-field-action-btn btn-move-up" 
@@ -1104,6 +1129,11 @@
                         const optIndex = parseInt(e.target.dataset.optionIndex);
                         this.updateFieldOption(fieldIndex, optIndex, e.target.value);
                     }
+
+                    if (e.target.classList.contains('form-field-instruction-input')) {
+                        const index = parseInt(e.target.dataset.fieldIndex);
+                        this.updateFieldInstruction(index, e.target.value);
+                    }
                 });
 
                 // Type select changes
@@ -1116,6 +1146,11 @@
                     if (e.target.classList.contains('field-required-toggle')) {
                         const index = parseInt(e.target.dataset.fieldIndex);
                         this.toggleFieldRequired(index, e.target.checked);
+                    }
+
+                    if (e.target.classList.contains('field-instruction-toggle')) {
+                        const index = parseInt(e.target.dataset.fieldIndex);
+                        this.toggleFieldInstruction(index, e.target.checked);
                     }
                 });
 
@@ -1215,6 +1250,25 @@
 
             toggleFieldRequired(index, required) {
                 this.fields[index].required = required;
+                this.markAsChanged();
+            },
+
+            toggleFieldInstruction(index, show) {
+                this.fields[index].showInstruction = show;
+                this.markAsChanged();
+                this.renderFields();
+
+                // Focus the input if showing
+                if (show) {
+                    setTimeout(() => {
+                        const input = document.querySelector(`.form-field-instruction-input[data-field-index="${index}"]`);
+                        if (input) input.focus();
+                    }, 50);
+                }
+            },
+
+            updateFieldInstruction(index, value) {
+                this.fields[index].instruction = value;
                 this.markAsChanged();
             },
 

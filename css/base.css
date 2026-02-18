@@ -95,7 +95,7 @@ img {
     background: var(--color-accent);
     border-radius: 50%;
     pointer-events: none;
-    z-index: 9999;
+    z-index: 20002;
     mix-blend-mode: difference;
     transition: transform 0.1s ease;
 }
@@ -105,10 +105,9 @@ img {
     width: 40px;
     height: 40px;
     border: 1px solid var(--color-accent);
-    z-index: 9998;
     border-radius: 50%;
     pointer-events: none;
-    z-index: 10001;
+    z-index: 20001;
     transition: transform 0.3s ease, width 0.3s ease, height 0.3s ease;
 }
 

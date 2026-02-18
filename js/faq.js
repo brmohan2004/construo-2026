@@ -41,6 +41,11 @@ class FAQWidget {
                 </div>
             </div>
 
+            <!-- Tooltip -->
+            <div class="faq-tooltip" id="faqTooltip">
+                Ask your question
+            </div>
+
             <!-- FAB -->
             <div class="faq-fab" id="faqFab" title="FAQ & Support">
                 <div class="faq-icon-wrapper">
