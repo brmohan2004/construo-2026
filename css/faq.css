@@ -255,9 +255,18 @@
     }
 }
 
-/* Hide on mobile if screen is too small */
+/* Mobile adjustments for tooltip */
 @media (max-width: 480px) {
     .faq-tooltip {
-        display: none;
+        display: block;
+        /* Show on mobile */
+        right: 90px;
+        /* Adjust for mobile FAB position */
+        bottom: 32px;
+        /* Adjust for mobile FAB position */
+        font-size: 0.8rem;
+        /* Slightly smaller text */
+        padding: 6px 12px;
+        /* Slightly smaller padding */
     }
 }
