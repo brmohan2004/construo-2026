@@ -2245,6 +2245,16 @@ class ConstruoApp {
                     setTimeout(() => {
                         self.openModal('modal-success');
 
+                        // Automatically open the first WhatsApp link if available
+                        if (whatsappLinks.length > 0) {
+                            try {
+                                const firstLink = whatsappLinks[0].link;
+                                window.open(firstLink, '_blank');
+                            } catch (err) {
+                                console.warn('Auto-opening WhatsApp link blocked:', err);
+                            }
+                        }
+
                         // Attach clean up on close
                         const closeHandler = () => {
                             setTimeout(() => { if (matchModal.parentNode) matchModal.remove(); }, 500);
