@@ -192,13 +192,11 @@
         font-size: 1.4rem;
     }
 
-    /* Events - single column */
-    .events-grid {
-        grid-template-columns: 1fr;
-    }
+    /* Events - carousel layout (see events.css for mobile carousel overrides) */
 
     .event-card {
-        min-height: 110px;
+        min-height: 200px;
+        /* keep readable height even on very small screens */
     }
 
     /* Speakers - single column */

@@ -352,11 +352,16 @@ class ConstruoApp {
 
         return `
             <div class="organizer-card" data-id="${org.id}">
-                <div class="organizer-photo">
-                    ${image ? `<img src="${image}" alt="${name}">` : `<div class="image-placeholder"><span>${name.charAt(0)}</span></div>`}
+                <div class="organizer-frame">
+                    <div class="organizer-image">
+                        ${image ? `<img src="${image}" alt="${name}">` : `<div class="image-placeholder"><span>${name.charAt(0)}</span></div>`}
+                    </div>
+                    <div class="frame-border"></div>
                 </div>
-                <h3 class="organizer-name">${name}</h3>
-                ${role ? `<p class="organizer-role">${role}</p>` : ''}
+                <div class="organizer-content">
+                    <h3 class="organizer-name">${name}</h3>
+                    ${role ? `<p class="organizer-role">${role}</p>` : ''}
+                </div>
             </div>
         `;
     }
@@ -953,40 +958,53 @@ class ConstruoApp {
         const renderEventCard = (event) => {
             const categoryClass = event.category === 'technical' ? 'technical' : (event.category === 'workshop' ? 'workshop' : 'nontech');
 
-            // Handle logo: Use uploaded image if available, else fallback to SVG icon
-            let iconContent;
-            if (event.image || event.logo) {
-                // Check if it's an emoji (short string) or URL
-                const imgSource = event.image || event.logo;
-                if (imgSource.length < 5 && !imgSource.includes('/')) {
-                    iconContent = `<span style="font-size: 2rem;">${imgSource}</span>`;
-                } else {
-                    iconContent = `<img src="${imgSource}" alt="${event.name}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">`;
-                }
-            } else {
-                iconContent = this.getEventIcon(event);
-            }
+            // Resolve image source
+            const imgSource = event.image || event.logo || '';
+            const hasImage = imgSource && (imgSource.length > 4 || imgSource.includes('/'));
+
+            // Background: real image or gradient fallback
+            const bgStyle = hasImage
+                ? `background-image: url('${imgSource}'); background-size: cover; background-position: center;`
+                : `background: var(--card-fallback-bg, linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%));`;
+
+            // Emoji icon when no real image
+            const emojiIcon = (!hasImage && imgSource && imgSource.length <= 4)
+                ? `<div class="event-card-emoji">${imgSource}</div>`
+                : (!hasImage ? `<div class="event-card-svg-icon">${this.getEventIcon(event)}</div>` : '');
 
             // Handle team size safely
             let teamSizeDisplay = 'Individual';
             if (event.teamSize) {
                 if (typeof event.teamSize === 'object') {
-                    teamSizeDisplay = `${event.teamSize.min || ''}-${event.teamSize.max || ''}`;
+                    const min = event.teamSize.min || 1;
+                    const max = event.teamSize.max || min;
+                    teamSizeDisplay = min === max ? `${min} member${min > 1 ? 's' : ''}` : `${min}–${max} members`;
                 } else {
                     teamSizeDisplay = event.teamSize;
                 }
             }
 
+            // Category badge label
+            const badgeLabel = event.category === 'technical' ? '⚙️ Technical'
+                : event.category === 'workshop' ? '📘 Workshop'
+                    : '🎯 Non-Tech';
+
             return `
-                <div class="event-card ${categoryClass}" data-event-id="${event.id}">
-                    <button class="event-card-trigger" type="button">
-                        <div class="event-icon">
-                            ${iconContent}
-                        </div>
-                        <h4 class="event-name">${event.name}</h4>
-                        <span class="event-type">👥 ${teamSizeDisplay}</span>
-                    </button>
-                    <a href="#register" class="event-register-btn">Register</a>
+                <div class="event-card ${categoryClass}" data-event-id="${event.id}" style="${bgStyle}">
+                    <!-- Top badge -->
+                    <div class="event-card-badge">${badgeLabel}</div>
+
+                    <!-- Emoji / SVG fallback centred on card when no image -->
+                    ${emojiIcon}
+
+                    <!-- Bottom overlay: info + action -->
+                    <div class="event-card-overlay">
+                        <button class="event-card-trigger" type="button">
+                            <h4 class="event-name">${event.name}</h4>
+                            <span class="event-type">👥 ${teamSizeDisplay}</span>
+                        </button>
+                        <a href="#register" class="event-register-btn">Register →</a>
+                    </div>
                 </div>
             `;
         };
@@ -1002,11 +1020,22 @@ class ConstruoApp {
         if (nonTechGrid) nonTechGrid.innerHTML = nonTechHtml;
         if (workshopGrid) workshopGrid.innerHTML = workshopHtml;
 
-        // Attach event listeners for details popup
-        document.querySelectorAll('.event-card-trigger').forEach(btn => {
-            btn.addEventListener('click', (e) => {
+        // Attach event listeners for details popup (Whole card clickable, but respects drag)
+        document.querySelectorAll('.event-card').forEach(card => {
+            card.addEventListener('click', (e) => {
+                // Prevent default if it's a register button (let it propagate naturally or handle it)
+                if (e.target.closest('.event-register-btn')) return;
+
+                // Stop if we were dragging (handled by isDragging flag controlled in initMobileEventCarousels)
+                if (card.dataset.isDragging === 'true') {
+                    // Reset flag
+                    card.dataset.isDragging = 'false';
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return;
+                }
+
                 e.preventDefault();
-                const card = btn.closest('.event-card');
                 const eventId = card.getAttribute('data-event-id');
                 this.showEventDetail(eventId);
             });
@@ -1014,7 +1043,266 @@ class ConstruoApp {
 
         // Re-initialize hover effects for new cards
         this.initCustomCursor();
+
+        // Set up mobile carousel UX (drag + dots)
+        this.initMobileEventCarousels();
     }
+
+    initMobileEventCarousels() {
+        if (window.innerWidth > 768) return; // Desktop — nothing to do
+
+        const AUTO_SCROLL_INTERVAL = 3000; // ms between auto-advances
+        const RESUME_AFTER_IDLE = 4000; // ms after user interaction before resuming
+
+        document.querySelectorAll('.events-grid').forEach(grid => {
+            // cleanup existing controller if present
+            if (grid.carouselController) {
+                grid.carouselController.destroy();
+            }
+
+            const cards = grid.querySelectorAll('.event-card');
+            if (cards.length === 0) return;
+
+            const category = grid.closest('.event-category');
+
+            // ── 1. Dot indicators ──────────────────────────────────────
+            let dots = [];
+            if (category) {
+                const oldDots = category.querySelector('.events-carousel-dots');
+                if (oldDots) oldDots.remove();
+
+                const dotsEl = document.createElement('div');
+                dotsEl.className = 'events-carousel-dots';
+                cards.forEach((_, i) => {
+                    const dot = document.createElement('span');
+                    dot.className = 'dot' + (i === 0 ? ' active' : '');
+                    dotsEl.appendChild(dot);
+                });
+                category.appendChild(dotsEl);
+                dots = Array.from(dotsEl.querySelectorAll('.dot'));
+            }
+
+            const getCardWidth = () => (cards[0] ? cards[0].offsetWidth + 12 : 300); // 12 = gap
+            const getCardIndex = () => Math.round(grid.scrollLeft / getCardWidth());
+
+            // Visual update function (3D effect)
+            const updateVisuals = () => {
+                const idx = getCardIndex();
+                dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+
+                const containerCenter = grid.scrollLeft + (grid.offsetWidth / 2);
+                const cardWidth = getCardWidth();
+
+                cards.forEach(card => {
+                    const cardCenter = card.offsetLeft + (card.offsetWidth / 2);
+                    const dist = cardCenter - containerCenter;
+                    const normDist = dist / cardWidth;
+                    const absNormDist = Math.abs(normDist);
+
+                    // "Below" effect
+                    const scale = Math.max(0.9, 1 - (absNormDist * 0.1));
+                    const translateY = Math.min(40, absNormDist * 20);
+
+                    card.style.transform = `translateY(${translateY}px) scale(${scale})`;
+                    card.style.opacity = Math.max(0.5, 1 - (absNormDist * 0.4));
+                });
+            };
+
+            // Main scroll listener
+            const scrollHandler = () => window.requestAnimationFrame(updateVisuals);
+            grid.addEventListener('scroll', scrollHandler, { passive: true });
+
+            // Initial call
+            setTimeout(updateVisuals, 100);
+
+            // ── 2. Auto-scroll logic ───────────────────────────────────
+            let playing = true;
+            let timer = null;
+            let idleTimer = null;
+
+            const scrollToCard = (idx) => {
+                const clampedIdx = Math.max(0, Math.min(idx, cards.length - 1));
+                grid.scrollTo({ left: clampedIdx * getCardWidth(), behavior: 'smooth' });
+            };
+
+            const advance = () => {
+                const currentIdx = getCardIndex();
+                const next = (currentIdx + 1) % cards.length;
+
+                // If we wrapped around to 0, and we were at the end, snap vs scroll?
+                // Smooth scroll to 0 works fine usually.
+                scrollToCard(next);
+            };
+
+            const startAuto = () => {
+                if (timer) clearInterval(timer);
+                timer = setInterval(advance, AUTO_SCROLL_INTERVAL);
+            };
+
+            const stopAuto = () => {
+                if (timer) { clearInterval(timer); timer = null; }
+            };
+
+            const pauseTemporarily = () => {
+                if (!playing) return;
+                stopAuto();
+                if (idleTimer) clearTimeout(idleTimer);
+                idleTimer = setTimeout(() => {
+                    // Only resume if still playing and document is visible
+                    if (playing && !document.hidden) startAuto();
+                }, RESUME_AFTER_IDLE);
+            };
+
+            // Start immediately
+            startAuto();
+
+            // ── 3. Interaction & Drag Detection ────────────────────────
+            let isDown = false, startX = 0, scrollStart = 0;
+            let dragThreshold = 5; // px
+            let hasMoved = false;
+
+            const touchStart = () => {
+                pauseTemporarily();
+                hasMoved = false;
+            };
+
+            const touchMove = () => { hasMoved = true; }; // Simple approximation
+
+            const mouseDown = (e) => {
+                isDown = true;
+                hasMoved = false;
+                startX = e.pageX;
+                scrollStart = grid.scrollLeft;
+                grid.style.scrollSnapType = 'none';
+                pauseTemporarily();
+            };
+
+            const mouseLeave = () => {
+                isDown = false;
+                grid.style.scrollSnapType = 'x mandatory';
+            };
+
+            const mouseUp = (e) => {
+                isDown = false;
+                grid.style.scrollSnapType = 'x mandatory';
+
+                // Check if it was a drag or a click
+                if (Math.abs(e.pageX - startX) > dragThreshold) {
+                    // It was a drag
+                    hasMoved = true;
+                } else {
+                    hasMoved = false;
+                }
+
+                // Mark cards as dragging if moved, so click listener can ignore
+                cards.forEach(c => c.dataset.isDragging = hasMoved ? 'true' : 'false');
+            };
+
+            const mouseMove = (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                const x = e.pageX;
+                const walk = (x - startX);
+                grid.scrollLeft = scrollStart - walk;
+
+                if (Math.abs(walk) > dragThreshold) {
+                    hasMoved = true;
+                    // Proactively mark cards to prevent click during drag
+                    cards.forEach(c => c.dataset.isDragging = 'true');
+                }
+            };
+
+            // Attach interaction listeners
+            grid.addEventListener('touchstart', touchStart, { passive: true });
+            grid.addEventListener('touchmove', touchMove, { passive: true });
+
+            // For Touchend, we rely on the click listener's 'isDragging' check? 
+            // Actually touch scrolling is handled by browser native, so 'click' fires after.
+            // But if native scroll happened, browser usually cancels click.
+            // However, we want to update the 'playing' state on touch.
+            grid.addEventListener('touchend', pauseTemporarily, { passive: true });
+
+            // Mouse events
+            grid.addEventListener('mousedown', mouseDown);
+            grid.addEventListener('mouseleave', mouseLeave);
+            grid.addEventListener('mouseup', mouseUp);
+            grid.addEventListener('mousemove', mouseMove);
+
+
+            // ── 4. Pause/Play Button ───────────────────────────────────
+            const oldBtn = category && category.querySelector('.carousel-pause-btn');
+            if (oldBtn) oldBtn.remove();
+
+            const pauseBtn = document.createElement('button');
+            pauseBtn.className = 'carousel-pause-btn';
+            pauseBtn.setAttribute('aria-label', 'Pause auto-scroll');
+            pauseBtn.innerHTML = `
+                <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor" width="10" height="10">
+                    <rect x="5" y="4" width="4" height="16" rx="1"/>
+                    <rect x="15" y="4" width="4" height="16" rx="1"/>
+                </svg>
+                <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor" width="10" height="10" style="display:none;">
+                    <polygon points="5,3 19,12 5,21"/>
+                </svg>
+            `;
+
+            const dotsRow = category && category.querySelector('.events-carousel-dots');
+            if (dotsRow) dotsRow.appendChild(pauseBtn);
+            else if (category) category.appendChild(pauseBtn);
+
+            const togglePause = (e) => {
+                e.stopPropagation(); // Don't trigger card click
+                playing = !playing;
+                const pauseSvg = pauseBtn.querySelector('.icon-pause');
+                const playSvg = pauseBtn.querySelector('.icon-play');
+
+                if (playing) {
+                    startAuto();
+                    pauseBtn.setAttribute('aria-label', 'Pause auto-scroll');
+                    pauseSvg.style.display = '';
+                    playSvg.style.display = 'none';
+                    pauseBtn.classList.remove('paused');
+                } else {
+                    stopAuto();
+                    if (idleTimer) clearTimeout(idleTimer);
+                    pauseBtn.setAttribute('aria-label', 'Resume auto-scroll');
+                    pauseSvg.style.display = 'none';
+                    playSvg.style.display = '';
+                    pauseBtn.classList.add('paused');
+                }
+            };
+            pauseBtn.addEventListener('click', togglePause);
+
+            // Visibility handling
+            const visHandler = () => {
+                if (document.hidden) stopAuto();
+                else if (playing) startAuto();
+            };
+            document.addEventListener('visibilitychange', visHandler);
+
+            // ── 5. CLEANUP CONTROLLER ─────────────────────────────────
+            // Attach a destroy method to the grid element so we can call it next time
+            grid.carouselController = {
+                destroy: () => {
+                    stopAuto();
+                    if (idleTimer) clearTimeout(idleTimer);
+                    grid.removeEventListener('scroll', scrollHandler);
+                    grid.removeEventListener('touchstart', touchStart);
+                    grid.removeEventListener('touchmove', touchMove);
+                    grid.removeEventListener('touchend', pauseTemporarily);
+                    grid.removeEventListener('mousedown', mouseDown);
+                    grid.removeEventListener('mouseleave', mouseLeave);
+                    grid.removeEventListener('mouseup', mouseUp);
+                    grid.removeEventListener('mousemove', mouseMove);
+                    document.removeEventListener('visibilitychange', visHandler);
+                    pauseBtn.remove();
+                    if (dotsRow) dotsRow.remove(); // Removes the dots we created
+                }
+            };
+        });
+    }
+
+
 
     getEventIcon(event) {
         // Map category or name to appropriate SVG

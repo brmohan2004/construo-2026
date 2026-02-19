@@ -73,8 +73,25 @@ const Auth = {
         if (session) {
             const profile = await this.getProfile(session.user.id);
             if (profile && isLoginPage) {
-                console.log('[Auth] Redirecting to dashboard');
-                window.location.href = this.config.redirectAfterLogin;
+                console.log('[Auth] Redirecting based on role');
+                if (profile.role === 'viewer') {
+                    window.location.href = 'pages/registration-view-only.html';
+                    return;
+                } else {
+                    window.location.href = this.config.redirectAfterLogin;
+                    return;
+                }
+            }
+
+            // Viewer Jail: Redirect back to view-only page if trying to access other pages
+            if (profile && profile.role === 'viewer' && !currentPath.includes('registration-view-only.html')) {
+                console.warn('[Auth] Access restricted for viewer');
+                if (currentPath.includes('/pages/')) {
+                    window.location.href = 'registration-view-only.html';
+                } else {
+                    window.location.href = 'pages/registration-view-only.html';
+                }
+                return;
             }
         } else {
             if (!isLoginPage && currentPath.includes('/admin/')) {
@@ -144,25 +161,71 @@ const Auth = {
         errorDiv.style.display = 'none';
 
         try {
-            const profile = await this.getProfileByUsername(username);
+            // Check if input is email or username
+            let profile = null;
+            if (username.includes('@')) {
+                // Input is likely an email, try to fetch profile by email
+                const { data, error } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('email', username)
+                    .single();
+
+                if (!error && data) {
+                    profile = data;
+                }
+            }
+
+            // If not found by email or input wasn't email, try username
             if (!profile) {
-                throw new Error('Invalid username or password');
+                profile = await this.getProfileByUsername(username);
+            }
+
+            // If still no profile, we can't proceed (but we could try direct auth if we wanted, though app logic relies on profile)
+            if (!profile) {
+                // Fallback: Try direct Supabase auth with email just in case (for users without profile setup correctly but valid auth)
+                if (username.includes('@')) {
+                    const { data, error } = await supabase.auth.signInWithPassword({
+                        email: username,
+                        password: password
+                    });
+                    if (data.session) {
+                        // Session created, fetch profile using user ID
+                        const userProfile = await this.getProfile(data.user.id);
+                        if (userProfile) {
+                            profile = userProfile;
+                        } else {
+                            // No profile exists for this authorized user, create one or error out?
+                            // Better to let it fail or handle it. For now, let's treat it as valid auth.
+                            console.warn('User logged in but has no profile');
+                            // We need 'profile' for role-based redirect.
+                        }
+                    }
+                }
+
+                if (!profile) throw new Error('Invalid username or password');
             }
 
             const { data, error } = await supabase.auth.signInWithPassword({
-                email: profile.email,
+                email: profile.email, // Use the email from the found profile
                 password: password
             });
 
             if (error) throw error;
 
             if (data.session) {
-                await this.logActivity('login', 'auth', `User ${username} logged in`);
+                await this.logActivity('login', 'auth', `User ${profile.username || username} logged in`);
 
-                this.showToast('success', 'Login Successful', 'Redirecting to dashboard...');
+                this.showToast('success', 'Login Successful', 'Redirecting...');
 
                 await this.delay(500);
-                window.location.href = this.config.redirectAfterLogin;
+
+                // Role-based redirect
+                if (profile.role === 'viewer') {
+                    window.location.href = 'pages/registration-view-only.html';
+                } else {
+                    window.location.href = this.config.redirectAfterLogin;
+                }
             }
         } catch (error) {
             console.error('Login error:', error);
