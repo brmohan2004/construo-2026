@@ -84,7 +84,7 @@ const Auth = {
             }
 
             // Viewer Jail: Redirect back to view-only page if trying to access other pages
-            if (profile && profile.role === 'viewer' && !currentPath.includes('registration-view-only.html')) {
+            if (profile && profile.role === 'viewer' && !currentPath.includes('registration-view-only')) {
                 console.warn('[Auth] Access restricted for viewer');
                 if (currentPath.includes('/pages/')) {
                     window.location.href = 'registration-view-only.html';

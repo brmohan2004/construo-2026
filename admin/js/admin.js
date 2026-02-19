@@ -1555,7 +1555,7 @@ const Admin = {
 
 document.addEventListener('DOMContentLoaded', () => {
     // Prevent Admin.init from running on view-only page to avoid conflicts
-    if (!window.location.pathname.includes('registration-view-only.html')) {
+    if (!window.location.pathname.includes('registration-view-only')) {
         Admin.init();
     }
 });
