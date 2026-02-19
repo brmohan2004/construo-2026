@@ -396,63 +396,12 @@
             }
         }
 
-        .mobile-only-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: var(--bg-primary);
-            z-index: 9999;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 2rem;
-            color: var(--text-primary);
-        }
-
-        .mobile-only-overlay svg {
-            width: 64px;
-            height: 64px;
-            margin-bottom: 1.5rem;
-            color: var(--text-secondary);
-        }
-
-        .mobile-only-overlay h2 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-            color: var(--primary);
-        }
-
-        .mobile-only-overlay p {
-            color: var(--text-secondary);
-            line-height: 1.5;
-        }
-
-        /* Show overlay on screens larger than mobile (tablet/desktop) ONLY if restriction class is present */
-        @media (min-width: 769px) {
-            body.restrict-desktop .admin-layout {
-                display: none !important;
-            }
-
-            body.restrict-desktop .mobile-only-overlay {
-                display: flex !important;
-            }
-        }
+        /* Removed mobile restriction styles */
     </style>
 </head>
 
 <body>
-    <div class="mobile-only-overlay">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
-            <line x1="12" y1="18" x2="12.01" y2="18"></line>
-        </svg>
-        <h2>Mobile Access Only</h2>
-        <p>This view is optimized for mobile devices.<br>Please access this page on your phone.</p>
-    </div>
+    <!-- Mobile restrictions removed -->
 
     <div class="admin-layout">
         <main class="admin-main" style="margin-left: 0; width: 100%;">
@@ -480,14 +429,7 @@
                                 </svg>
                             </button>
                         </div>
-                        <button class="btn btn-secondary" onclick="exportToCSV()">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                                <polyline points="7 10 12 15 17 10" />
-                                <line x1="12" y1="15" x2="12" y2="3" />
-                            </svg>
-                            <span>Export CSV</span>
-                        </button>
+                        <!-- Export CSV Removed -->
                         <button class="btn btn-primary" onclick="refreshData()">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <polyline points="23 4 23 10 17 10" />
@@ -600,7 +542,10 @@
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        import Auth from '../js/auth.js';
+        import Admin from '../js/admin.js';
+
         let allRegistrations = [];
         let filteredRegistrations = [];
         let currentFormId = null;
@@ -609,12 +554,20 @@
         let currentFontSize = 100;
         let isAutoFontSize = true;
 
+        // Expose functions to window for onclick handlers
+        window.increaseFontSize = increaseFontSize;
+        window.decreaseFontSize = decreaseFontSize;
+        window.resetFontSize = resetFontSize;
+        window.refreshData = refreshData;
+        window.clearFilters = clearFilters;
+        window.viewDetails = viewDetails; // Assuming this is called internally or via click listeners
+
         function calculateAutoFontSize(columnCount) {
+            // Logic adjusted for cleaner view
             if (columnCount <= 5) return 100;
             else if (columnCount <= 8) return 90;
-            else if (columnCount <= 10) return 80;
-            else if (columnCount <= 12) return 75;
-            else return 70;
+            else if (columnCount <= 10) return 85;
+            else return 80;
         }
 
         function increaseFontSize() {
@@ -642,9 +595,11 @@
 
         function applyFontSize(isAuto = false) {
             const table = document.getElementById('submissionsTable');
-            table.style.fontSize = `${currentFontSize}%`;
+            if (table) table.style.fontSize = `${currentFontSize}%`;
             const displayText = isAutoFontSize ? `${currentFontSize}% (Auto)` : `${currentFontSize}%`;
-            document.getElementById('fontSizeDisplay').textContent = displayText;
+            const displayEl = document.getElementById('fontSizeDisplay');
+            if (displayEl) displayEl.textContent = displayText;
+
             localStorage.setItem('tableFontSize', currentFontSize);
             localStorage.setItem('tableAutoFontSize', isAutoFontSize);
         }
@@ -668,11 +623,13 @@
         }
 
         document.addEventListener('DOMContentLoaded', async () => {
-            // Check auth and apply restriction
+            // Check auth only (removed restriction logic)
             try {
+                // Ensure auth is checked but allow viewers on desktop
                 const user = await Auth.getCurrentUser();
-                if (user && user.role === 'viewer') {
-                    document.body.classList.add('restrict-desktop');
+                if (!user) {
+                    console.warn('No user session, might need login');
+                    // Auth.js handles redirect to login if session missing
                 }
             } catch (err) {
                 console.error('Error checking role:', err);
@@ -686,18 +643,24 @@
         });
 
         function setupEventListeners() {
-            document.getElementById('searchInput').addEventListener('input', applyFilters);
-            document.getElementById('statusFilter').addEventListener('change', applyFilters);
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) searchInput.addEventListener('input', applyFilters);
 
-            document.getElementById('submissionsTable').addEventListener('click', (e) => {
-                const tr = e.target.closest('tr');
-                if (!tr) return;
-                const regId = tr.dataset.id;
-                if (regId) {
-                    const reg = allRegistrations.find(r => r.id === regId || r._id === regId);
-                    if (reg) viewDetails(reg);
-                }
-            });
+            const statusFilter = document.getElementById('statusFilter');
+            if (statusFilter) statusFilter.addEventListener('change', applyFilters);
+
+            const table = document.getElementById('submissionsTable');
+            if (table) {
+                table.addEventListener('click', (e) => {
+                    const tr = e.target.closest('tr');
+                    if (!tr) return;
+                    const regId = tr.dataset.id;
+                    if (regId) {
+                        const reg = allRegistrations.find(r => r.id === regId || r._id === regId);
+                        if (reg) viewDetails(reg);
+                    }
+                });
+            }
 
             document.addEventListener('click', (e) => {
                 const btn = e.target.closest('[data-action]');
@@ -713,6 +676,16 @@
 
         async function loadRegistrations() {
             try {
+                // Determine active form if formId not provided
+                if (!currentFormId) {
+                    const { forms } = await Admin.getRegistrationForms();
+                    const activeForm = forms.find(f => f.isActive);
+                    if (activeForm) {
+                        currentFormId = activeForm.id;
+                        console.log('Using active form:', activeForm.title);
+                    }
+                }
+
                 const data = currentFormId
                     ? await Admin.getFormSubmissions(currentFormId)
                     : await Admin.getRegistrations();
@@ -725,13 +698,15 @@
                         document.querySelector('.page-title').textContent = (data.form.title || 'Registration Submissions') + " (View Only)";
                         const fieldNames = currentFormFields.slice(0, 3).map(f => f.label).join(', ');
                         const placeholder = fieldNames ? `Search by Reg No., Name, ${fieldNames}...` : 'Search inputs...';
-                        document.getElementById('searchInput').placeholder = placeholder;
+                        const searchInput = document.getElementById('searchInput');
+                        if (searchInput) searchInput.placeholder = placeholder;
                     }
                 } else {
                     allRegistrations = data.registrations || [];
                     currentFormFields = [];
                     updateStats(data.stats || { total: 0, pending: 0, confirmed: 0, cancelled: 0 });
-                    document.getElementById('searchInput').placeholder = "Search by name, email, reg number...";
+                    const searchInput = document.getElementById('searchInput');
+                    if (searchInput) searchInput.placeholder = "Search by name, email, reg number...";
                 }
 
                 filteredRegistrations = [...allRegistrations];
@@ -745,25 +720,32 @@
         }
 
         function updateStats(stats) {
-            document.getElementById('totalSubmissions').textContent = stats.total || 0;
-            document.getElementById('pendingCount').textContent = stats.pending || 0;
-            document.getElementById('confirmedCount').textContent = stats.confirmed || 0;
-            document.getElementById('cancelledCount').textContent = stats.cancelled || 0;
+            const setStat = (id, val) => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = val || 0;
+            };
+            setStat('totalSubmissions', stats.total);
+            setStat('pendingCount', stats.pending);
+            setStat('confirmedCount', stats.confirmed);
+            setStat('cancelledCount', stats.cancelled);
         }
 
         function applyFilters() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const statusFilter = document.getElementById('statusFilter').value;
+            const searchInput = document.getElementById('searchInput');
+            const statusFilterInput = document.getElementById('statusFilter');
+
+            const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+            const statusFilter = statusFilterInput ? statusFilterInput.value : '';
 
             filteredRegistrations = allRegistrations.filter(reg => {
                 let matchesSearch = !searchTerm;
                 if (!matchesSearch) {
                     const standardMatch =
-                        reg.registrationNumber.toLowerCase().includes(searchTerm) ||
-                        reg.participant.name?.toLowerCase().includes(searchTerm) ||
-                        reg.participant.email?.toLowerCase().includes(searchTerm) ||
-                        reg.participant.phone?.toLowerCase().includes(searchTerm) ||
-                        reg.participant.college?.toLowerCase().includes(searchTerm);
+                        (reg.registrationNumber && reg.registrationNumber.toLowerCase().includes(searchTerm)) ||
+                        (reg.participant && reg.participant.name && reg.participant.name.toLowerCase().includes(searchTerm)) ||
+                        (reg.participant && reg.participant.email && reg.participant.email.toLowerCase().includes(searchTerm)) ||
+                        (reg.participant && reg.participant.phone && reg.participant.phone.toLowerCase().includes(searchTerm)) ||
+                        (reg.participant && reg.participant.college && reg.participant.college.toLowerCase().includes(searchTerm));
 
                     if (standardMatch) matchesSearch = true;
                     else if (currentFormFields && currentFormFields.length > 0) {
@@ -781,13 +763,17 @@
         }
 
         function clearFilters() {
-            document.getElementById('searchInput').value = '';
-            document.getElementById('statusFilter').value = '';
+            const searchInput = document.getElementById('searchInput');
+            const statusFilterInput = document.getElementById('statusFilter');
+            if (searchInput) searchInput.value = '';
+            if (statusFilterInput) statusFilterInput.value = '';
             applyFilters();
         }
 
         function renderTableHeaders() {
             const thead = document.querySelector('#submissionsTable thead tr');
+            if (!thead) return;
+
             if (currentFormFields.length > 0) {
                 let headers = '<th>Reg. Number</th>';
                 currentFormFields.forEach(field => {
@@ -821,6 +807,7 @@
         function renderTable() {
             const tbody = document.getElementById('tableBody');
             const emptyState = document.getElementById('emptyState');
+            if (!tbody || !emptyState) return;
 
             if (filteredRegistrations.length === 0) {
                 tbody.innerHTML = '';
@@ -834,18 +821,19 @@
                 let rowContent = '';
 
                 if (currentFormFields.length > 0) {
-                    rowContent += `<td><strong>${reg.registrationNumber}</strong></td>`;
+                    rowContent += `<td><strong>${reg.registrationNumber || 'N/A'}</strong></td>`;
                     currentFormFields.forEach(field => {
                         const rawValue = reg.data?.[field.id];
                         rowContent += `<td>${formatValue(rawValue)}</td>`;
                     });
                 } else {
+                    const participant = reg.participant || {};
                     rowContent += `
-                        <td><strong>${reg.registrationNumber}</strong></td>
-                        <td>${reg.participant.name || 'N/A'}</td>
-                        <td>${reg.participant.email || 'N/A'}</td>
-                        <td>${reg.participant.phone || 'N/A'}</td>
-                        <td>${reg.participant.college || 'N/A'}</td>
+                        <td><strong>${reg.registrationNumber || 'N/A'}</strong></td>
+                        <td>${participant.name || 'N/A'}</td>
+                        <td>${participant.email || 'N/A'}</td>
+                        <td>${participant.phone || 'N/A'}</td>
+                        <td>${participant.college || 'N/A'}</td>
                     `;
                 }
 
@@ -867,8 +855,13 @@
 
         function viewDetails(registration) {
             lastActiveElement = document.activeElement;
-            document.getElementById('detailsTitle').textContent = `Registration Details`;
-            document.getElementById('detailsSubtitle').innerHTML = `${registration.registrationNumber} &nbsp; <span class="status-badge ${registration.status}">${registration.status}</span>`;
+            const titleEl = document.getElementById('detailsTitle');
+            const subtitleEl = document.getElementById('detailsSubtitle');
+
+            if (titleEl) titleEl.textContent = `Registration Details`;
+            if (subtitleEl) subtitleEl.innerHTML = `${registration.registrationNumber} &nbsp; <span class="status-badge ${registration.status}">${registration.status}</span>`;
+
+            const participant = registration.participant || {};
 
             let leftHtml = `
                 <div class="section-card">
@@ -882,10 +875,10 @@
                 <div class="section-card">
                     <div class="section-title">Participant Details</div>
                     <div class="detail-grid">
-                        <div class="detail-item"><div class="detail-label">Name</div><div class="detail-value">${registration.participant.name || 'N/A'}</div></div>
-                        <div class="detail-item"><div class="detail-label">Email</div><div class="detail-value">${registration.participant.email || 'N/A'}</div></div>
-                        <div class="detail-item"><div class="detail-label">Phone</div><div class="detail-value">${registration.participant.phone || 'N/A'}</div></div>
-                        <div class="detail-item"><div class="detail-label">College</div><div class="detail-value">${registration.participant.college || 'N/A'}</div></div>
+                        <div class="detail-item"><div class="detail-label">Name</div><div class="detail-value">${participant.name || 'N/A'}</div></div>
+                        <div class="detail-item"><div class="detail-label">Email</div><div class="detail-value">${participant.email || 'N/A'}</div></div>
+                        <div class="detail-item"><div class="detail-label">Phone</div><div class="detail-value">${participant.phone || 'N/A'}</div></div>
+                        <div class="detail-item"><div class="detail-label">College</div><div class="detail-value">${participant.college || 'N/A'}</div></div>
                     </div>
                 </div>
             `;
@@ -930,14 +923,19 @@
                 `;
             }
 
-            document.getElementById('modalBody').innerHTML = `<div class="modal-grid"><div class="left-panel">${leftHtml}</div><aside class="right-panel">${rightHtml}</aside></div>`;
-            document.getElementById('detailsModal').classList.add('active');
+            const modalBody = document.getElementById('modalBody');
+            if (modalBody) modalBody.innerHTML = `<div class="modal-grid"><div class="left-panel">${leftHtml}</div><aside class="right-panel">${rightHtml}</aside></div>`;
+
+            const modal = document.getElementById('detailsModal');
+            if (modal) modal.classList.add('active');
+
             const closeBtn = document.querySelector('[data-action="close"]');
             if (closeBtn) closeBtn.focus();
         }
 
         function closeModal() {
-            document.getElementById('detailsModal').classList.remove('active');
+            const modal = document.getElementById('detailsModal');
+            if (modal) modal.classList.remove('active');
             if (lastActiveElement && lastActiveElement.focus) lastActiveElement.focus();
         }
 
@@ -962,47 +960,10 @@
             }, 5000);
         }
 
-        function exportToCSV() {
-            let headers, rows;
-            if (currentFormFields.length > 0) {
-                headers = ['Reg. Number'];
-                currentFormFields.forEach(field => headers.push(field.label));
-                headers.push('Status', 'Submitted');
-                rows = filteredRegistrations.map(reg => {
-                    const row = [reg.registrationNumber];
-                    currentFormFields.forEach(field => row.push(reg.data?.[field.id] || ''));
-                    row.push(reg.status, formatDate(reg.createdAt));
-                    return row;
-                });
-            } else {
-                headers = ['Reg. Number', 'Name', 'Email', 'Phone', 'College', 'Status', 'Submitted'];
-                rows = filteredRegistrations.map(reg => [
-                    reg.registrationNumber,
-                    reg.participant.name || '',
-                    reg.participant.email || '',
-                    reg.participant.phone || '',
-                    reg.participant.college || '',
-                    reg.status,
-                    formatDate(reg.createdAt)
-                ]);
-            }
-            const csv = [headers, ...rows].map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `registrations_viewonly_${new Date().toISOString().split('T')[0]}.csv`;
-            a.click();
-            URL.revokeObjectURL(url);
-        }
-
         function refreshData() {
             loadRegistrations();
         }
     </script>
-    <script type="module" src="../js/supabase-config.js"></script>
-    <script type="module" src="../js/auth.js"></script>
-    <script type="module" src="../js/admin.js"></script>
 </body>
 
 </html>

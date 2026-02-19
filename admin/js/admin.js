@@ -1554,7 +1554,10 @@ const Admin = {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-    Admin.init();
+    // Prevent Admin.init from running on view-only page to avoid conflicts
+    if (!window.location.pathname.includes('registration-view-only.html')) {
+        Admin.init();
+    }
 });
 
 window.Admin = Admin;
