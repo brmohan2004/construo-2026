@@ -902,6 +902,7 @@
                         placeholder: '',
                         instruction: '',
                         showInstruction: false,
+                        showInSummary: false,
                         options: (type === 'select' || type === 'radio' || type === 'checkbox') ? ['Option 1'] : []
                     };
 
@@ -996,6 +997,18 @@
                                             <span class="toggle-slider"></span>
                                         </label>
                                     </div>
+                                    ${hasOptions ? `
+                                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-left: 1.5rem; border-left: 1px solid var(--admin-border); padding-left: 1.5rem;">
+                                        <span style="font-size: 0.875rem; color: var(--admin-text-muted);">Card View</span>
+                                        <label class="toggle-switch" title="Show summary cards for this field in View Only page">
+                                            <input type="checkbox" 
+                                                   class="field-summary-toggle"
+                                                   ${field.showInSummary ? 'checked' : ''} 
+                                                   data-field-index="${index}">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                    ` : ''}
                                 </div>
                                 <div class="form-field-actions">
                                     <button class="form-field-action-btn btn-move-up" 
@@ -1152,6 +1165,11 @@
                         const index = parseInt(e.target.dataset.fieldIndex);
                         this.toggleFieldInstruction(index, e.target.checked);
                     }
+
+                    if (e.target.classList.contains('field-summary-toggle')) {
+                        const index = parseInt(e.target.dataset.fieldIndex);
+                        this.toggleFieldSummary(index, e.target.checked);
+                    }
                 });
 
                 // Drag and drop
@@ -1250,6 +1268,11 @@
 
             toggleFieldRequired(index, required) {
                 this.fields[index].required = required;
+                this.markAsChanged();
+            },
+
+            toggleFieldSummary(index, show) {
+                this.fields[index].showInSummary = show;
                 this.markAsChanged();
             },
 

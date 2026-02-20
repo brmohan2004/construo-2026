@@ -12,351 +12,69 @@
         rel="stylesheet">
     <link rel="stylesheet" href="../css/admin.css">
     <style>
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
+        /* Card View Styles */
+        .field-section {
+            margin-bottom: 2rem;
+            animation: fadeIn 0.3s ease-in-out;
         }
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .stat-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 1rem;
-        }
-
-        .stat-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary);
-            display: block;
-        }
-
-        .stat-label {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            display: block;
-            margin-top: 0.5rem;
-        }
-
-        .filters-section {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .filters-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr auto;
-            gap: 1rem;
-            align-items: end;
-        }
-
-        .table-container {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            overflow: auto;
-            height: calc(100vh - 300px);
-            padding-bottom: 30px;
-        }
-
-        .font-size-controls {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: var(--bg-secondary);
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            border: 1px solid var(--border-color);
-        }
-
-        .font-size-label {
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-            margin-right: 0.5rem;
-        }
-
-        .font-size-btn {
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--bg-primary);
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.2s;
+        .field-section h3 {
+            font-size: 1.1rem;
             font-weight: 600;
             color: var(--text-primary);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
         }
 
-        .font-size-btn:hover {
-            background: var(--primary);
-            color: white;
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .summary-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .summary-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             border-color: var(--primary);
         }
 
-        .font-size-btn:active {
-            transform: scale(0.95);
+        .card-content {
+            flex: 1;
         }
 
-        .font-size-display {
-            min-width: 50px;
-            text-align: center;
-            font-size: 0.875rem;
+        .card-title {
+            font-size: 1.1rem;
             font-weight: 600;
             color: var(--text-primary);
-        }
-
-        .admin-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 30px;
-        }
-
-        .admin-table thead {
-            background: var(--bg-secondary);
-            border-bottom: 2px solid var(--border-color);
-        }
-
-        .admin-table th {
-            padding: 1rem;
-            text-align: left;
-            font-weight: 600;
-            color: var(--text-primary);
-            font-size: 0.875rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .admin-table td {
-            padding: 1rem;
-            border-bottom: 1px solid var(--border-color);
-            color: var(--text-primary);
-        }
-
-        .admin-table tbody tr:hover {
-            background: var(--bg-secondary);
-        }
-
-        .admin-table tbody tr:last-child td {
-            padding-bottom: 2rem;
-        }
-
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.25rem 0.75rem;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .status-badge.pending {
-            background: #fff3cd;
-            color: #856404;
-        }
-
-        .status-badge.confirmed {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .status-badge.cancelled {
-            background: #f8d7da;
-            color: #721c24;
-        }
-
-        .payment-badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.25rem 0.75rem;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        .payment-badge.completed {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .payment-badge.pending {
-            background: #fff3cd;
-            color: #856404;
-        }
-
-        .payment-badge.failed {
-            background: #f8d7da;
-            color: #721c24;
-        }
-
-        .btn-icon {
-            padding: 0.5rem;
-            background: transparent;
-            border: 1px solid var(--admin-border);
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.15s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 36px;
-            min-height: 36px;
-        }
-
-        .btn-icon:hover {
-            background: var(--admin-card-hover);
-        }
-
-        .btn-icon svg {
-            width: 18px;
-            height: 18px;
-            stroke: var(--admin-text);
-            stroke-width: 2;
-        }
-
-        .modal {
-            display: none;
-            position: absolute;
-            top: 40px;
-            left: 0;
-            right: 0;
-            background: transparent;
-            z-index: 1000;
-            padding: 24px;
-        }
-
-        .modal.active {
             display: block;
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
         }
 
-        .modal-content {
-            background: var(--admin-card);
-            border-radius: 12px;
-            max-width: 900px;
-            width: calc(100% - 48px);
-            margin: 0 auto;
-            max-height: none;
-            overflow: visible;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-            padding: 0;
+        .card-count {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            background: var(--bg-secondary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            display: inline-block;
         }
 
-        .modal-header {
-            padding: 1rem 1.25rem;
-            border-bottom: 1px solid var(--admin-border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1rem;
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent);
-        }
-
-        .modal-title {
-            font-size: 1.125rem;
-            font-weight: 700;
-            color: var(--admin-text);
-            letter-spacing: 0.2px;
-        }
-
-        .modal-subtitle {
-            font-size: 0.85rem;
-            color: var(--admin-text-secondary);
-            margin-top: 4px;
-            font-weight: 500;
-        }
-
-        .modal-body {
-            padding: 1.25rem;
-        }
-
-        .modal-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1rem;
-            align-items: start;
-        }
-
-        .section-card {
-            background: transparent;
-            border: none;
-            border-radius: 6px;
-            padding: 0.75rem 0;
-            margin-bottom: 1rem;
-        }
-
-        .section-title {
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: var(--admin-text);
-            margin-bottom: 0.75rem;
-        }
-
-        .detail-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.75rem 1.25rem;
-        }
-
-        .detail-item {
-            padding: 0.5rem 0;
-        }
-
-        .detail-label {
-            font-size: 0.725rem;
-            color: var(--admin-text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 0.25rem;
-        }
-
-        .detail-value {
-            font-size: 0.95rem;
-            color: var(--admin-text);
-            font-weight: 700;
-        }
-
-        .modal-actions {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            position: sticky;
-            top: 1.25rem;
-        }
-
-        .modal-actions .btn {
+        .view-btn {
             width: 100%;
-        }
-
-        @media (max-width: 520px) {
-            .modal-content {
-                max-width: 100%;
-                height: 100vh;
-                border-radius: 0;
-            }
-
-            .modal-body {
-                padding: 1rem;
-            }
-
-            .modal-header {
-                padding: 0.75rem 1rem;
-            }
+            justify-content: center;
         }
 
         .empty-state {
@@ -365,71 +83,30 @@
             color: var(--text-secondary);
         }
 
-        .empty-state svg {
-            width: 64px;
-            height: 64px;
-            margin-bottom: 1rem;
-            stroke: var(--text-tertiary);
-        }
-
-        @keyframes slideIn {
+        @keyframes fadeIn {
             from {
-                transform: translateX(100%);
                 opacity: 0;
+                transform: translateY(10px);
             }
 
             to {
-                transform: translateX(0);
                 opacity: 1;
+                transform: translateY(0);
             }
         }
-
-        @keyframes slideOut {
-            from {
-                transform: translateX(0);
-                opacity: 1;
-            }
-
-            to {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-        }
-
-        /* Removed mobile restriction styles */
     </style>
 </head>
 
 <body>
-    <!-- Mobile restrictions removed -->
-
     <div class="admin-layout">
         <main class="admin-main" style="margin-left: 0; width: 100%;">
             <div class="admin-container">
                 <div class="page-header">
                     <div>
                         <h1 class="page-title">Registration View Only</h1>
-                        <p class="page-description">View all submitted registration details (Read Only)</p>
+                        <p class="page-description">View specific field summaries (Read Only)</p>
                     </div>
                     <div style="display: flex; gap: 1rem; align-items: center;">
-                        <div class="font-size-controls">
-                            <span class="font-size-label">Font Size:</span>
-                            <button class="font-size-btn" onclick="decreaseFontSize()" title="Decrease font size">
-                                <span>A-</span>
-                            </button>
-                            <span class="font-size-display" id="fontSizeDisplay">100%</span>
-                            <button class="font-size-btn" onclick="increaseFontSize()" title="Increase font size">
-                                <span>A+</span>
-                            </button>
-                            <button class="font-size-btn" onclick="resetFontSize()" title="Reset font size">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    style="width: 16px; height: 16px;">
-                                    <polyline points="1 4 1 10 7 10" />
-                                    <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
-                                </svg>
-                            </button>
-                        </div>
-                        <!-- Export CSV Removed -->
                         <button class="btn btn-primary" onclick="refreshData()">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <polyline points="23 4 23 10 17 10" />
@@ -468,8 +145,9 @@
                     </div>
                 </div>
 
-                <div class="filters-section">
-                    <div class="filters-row" style="grid-template-columns: 1fr 1fr 1fr auto;">
+                <div class="filters-section" style="margin-bottom: 2rem;">
+                    <div class="filters-row"
+                        style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 1rem; align-items: end;">
                         <div class="form-group">
                             <label class="form-label">Search</label>
                             <input type="text" class="form-input" id="searchInput"
@@ -490,57 +168,19 @@
                     </div>
                 </div>
 
-                <div class="card">
-                    <div class="table-container">
-                        <table class="admin-table" id="submissionsTable">
-                            <thead>
-                                <tr>
-                                    <th>Reg. Number</th>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Phone</th>
-                                    <th>College</th>
-                                    <th>Status</th>
-                                    <th>Submitted</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tableBody">
-                                <!-- Will be populated dynamically -->
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="empty-state" id="emptyState" style="display: none;">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" />
-                            <rect x="9" y="3" width="6" height="4" rx="1" />
-                        </svg>
-                        <h3>No Submissions Found</h3>
-                        <p>There are no registration submissions to display yet.</p>
+                <div id="viewOnlyContainer">
+                    <div class="empty-state">
+                        <div class="loader-spinner">
+                            <div class="spinner"></div>
+                        </div>
+                        <p>Loading summary data...</p>
                     </div>
                 </div>
+            </div>
         </main>
     </div>
 
-    <!-- View Details Modal (View Only) -->
-    <div class="modal" id="detailsModal" role="dialog" aria-modal="true" aria-labelledby="detailsTitle">
-        <div class="modal-content" role="document">
-            <div class="modal-header">
-                <div>
-                    <h2 class="modal-title" id="detailsTitle">Registration Details</h2>
-                    <div class="modal-subtitle" id="detailsSubtitle">&nbsp;</div>
-                </div>
-                <button class="btn-icon" data-action="close" aria-label="Close details">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="18" y1="6" x2="6" y2="18" />
-                        <line x1="6" y1="6" x2="18" y2="18" />
-                    </svg>
-                </button>
-            </div>
-            <div class="modal-body" id="modalBody">
-                <!-- Modal content will be injected here -->
-            </div>
-        </div>
-    </div>
+    <!-- Modals removed as they are not used in this view -->
 
     <script type="module">
         import Auth from '../js/auth.js';
@@ -550,86 +190,17 @@
         let filteredRegistrations = [];
         let currentFormId = null;
         let currentFormFields = [];
-        let lastActiveElement = null;
-        let currentFontSize = 100;
-        let isAutoFontSize = true;
 
-        // Expose functions to window for onclick handlers
-        window.increaseFontSize = increaseFontSize;
-        window.decreaseFontSize = decreaseFontSize;
-        window.resetFontSize = resetFontSize;
+        // Expose functions to window
         window.refreshData = refreshData;
         window.clearFilters = clearFilters;
-        window.viewDetails = viewDetails; // Assuming this is called internally or via click listeners
-
-        function calculateAutoFontSize(columnCount) {
-            // Logic adjusted for cleaner view
-            if (columnCount <= 5) return 100;
-            else if (columnCount <= 8) return 90;
-            else if (columnCount <= 10) return 85;
-            else return 80;
-        }
-
-        function increaseFontSize() {
-            isAutoFontSize = false;
-            if (currentFontSize < 150) {
-                currentFontSize += 10;
-                applyFontSize(false);
-            }
-        }
-
-        function decreaseFontSize() {
-            isAutoFontSize = false;
-            if (currentFontSize > 70) {
-                currentFontSize -= 10;
-                applyFontSize(false);
-            }
-        }
-
-        function resetFontSize() {
-            isAutoFontSize = true;
-            const columnCount = document.querySelectorAll('#submissionsTable thead th').length;
-            currentFontSize = calculateAutoFontSize(columnCount);
-            applyFontSize(true);
-        }
-
-        function applyFontSize(isAuto = false) {
-            const table = document.getElementById('submissionsTable');
-            if (table) table.style.fontSize = `${currentFontSize}%`;
-            const displayText = isAutoFontSize ? `${currentFontSize}% (Auto)` : `${currentFontSize}%`;
-            const displayEl = document.getElementById('fontSizeDisplay');
-            if (displayEl) displayEl.textContent = displayText;
-
-            localStorage.setItem('tableFontSize', currentFontSize);
-            localStorage.setItem('tableAutoFontSize', isAutoFontSize);
-        }
-
-        function loadFontSize() {
-            const savedSize = localStorage.getItem('tableFontSize');
-            const savedAuto = localStorage.getItem('tableAutoFontSize');
-            if (savedAuto !== null) isAutoFontSize = savedAuto === 'true';
-            if (savedSize && !isAutoFontSize) {
-                currentFontSize = parseInt(savedSize);
-                applyFontSize(false);
-            }
-        }
-
-        function applyAutoFontSize() {
-            if (isAutoFontSize) {
-                const columnCount = document.querySelectorAll('#submissionsTable thead th').length;
-                currentFontSize = calculateAutoFontSize(columnCount);
-                applyFontSize(true);
-            }
-        }
 
         document.addEventListener('DOMContentLoaded', async () => {
-            // Check auth only (removed restriction logic)
+            // Basic Auth Check
             try {
-                // Ensure auth is checked but allow viewers on desktop
                 const user = await Auth.getCurrentUser();
                 if (!user) {
-                    console.warn('No user session, might need login');
-                    // Auth.js handles redirect to login if session missing
+                    console.warn('No user session.');
                 }
             } catch (err) {
                 console.error('Error checking role:', err);
@@ -637,42 +208,20 @@
 
             const urlParams = new URLSearchParams(window.location.search);
             currentFormId = urlParams.get('formId');
-            loadFontSize();
             loadRegistrations();
-            setupEventListeners();
-        });
 
-        function setupEventListeners() {
+            // Logout handler
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', () => Auth.handleLogout());
+            }
+
             const searchInput = document.getElementById('searchInput');
             if (searchInput) searchInput.addEventListener('input', applyFilters);
 
             const statusFilter = document.getElementById('statusFilter');
             if (statusFilter) statusFilter.addEventListener('change', applyFilters);
-
-            const table = document.getElementById('submissionsTable');
-            if (table) {
-                table.addEventListener('click', (e) => {
-                    const tr = e.target.closest('tr');
-                    if (!tr) return;
-                    const regId = tr.dataset.id;
-                    if (regId) {
-                        const reg = allRegistrations.find(r => r.id === regId || r._id === regId);
-                        if (reg) viewDetails(reg);
-                    }
-                });
-            }
-
-            document.addEventListener('click', (e) => {
-                const btn = e.target.closest('[data-action]');
-                if (!btn) return;
-                const action = btn.getAttribute('data-action');
-                if (action === 'close') closeModal();
-            });
-
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') closeModal();
-            });
-        }
+        });
 
         async function loadRegistrations() {
             try {
@@ -682,7 +231,6 @@
                     const activeForm = forms.find(f => f.isActive);
                     if (activeForm) {
                         currentFormId = activeForm.id;
-                        console.log('Using active form:', activeForm.title);
                     }
                 }
 
@@ -696,26 +244,22 @@
                     updateStats(data.stats || { total: 0, pending: 0, confirmed: 0, cancelled: 0 });
                     if (data.form) {
                         document.querySelector('.page-title').textContent = (data.form.title || 'Registration Submissions') + " (View Only)";
-                        const fieldNames = currentFormFields.slice(0, 3).map(f => f.label).join(', ');
-                        const placeholder = fieldNames ? `Search by Reg No., Name, ${fieldNames}...` : 'Search inputs...';
-                        const searchInput = document.getElementById('searchInput');
-                        if (searchInput) searchInput.placeholder = placeholder;
                     }
                 } else {
                     allRegistrations = data.registrations || [];
                     currentFormFields = [];
                     updateStats(data.stats || { total: 0, pending: 0, confirmed: 0, cancelled: 0 });
-                    const searchInput = document.getElementById('searchInput');
-                    if (searchInput) searchInput.placeholder = "Search by name, email, reg number...";
                 }
 
                 filteredRegistrations = [...allRegistrations];
-                renderTableHeaders();
-                renderTable();
-                applyAutoFontSize();
+                renderCards();
             } catch (error) {
                 console.error('Error loading registrations:', error);
-                showNotification(`Failed to load registrations: ${error.message}`, 'error');
+                const container = document.getElementById('viewOnlyContainer');
+                container.innerHTML = `<div class="empty-state">
+                    <h3>Error</h3>
+                    <p>Failed to load registrations: ${error.message}</p>
+                </div>`;
             }
         }
 
@@ -742,10 +286,7 @@
                 if (!matchesSearch) {
                     const standardMatch =
                         (reg.registrationNumber && reg.registrationNumber.toLowerCase().includes(searchTerm)) ||
-                        (reg.participant && reg.participant.name && reg.participant.name.toLowerCase().includes(searchTerm)) ||
-                        (reg.participant && reg.participant.email && reg.participant.email.toLowerCase().includes(searchTerm)) ||
-                        (reg.participant && reg.participant.phone && reg.participant.phone.toLowerCase().includes(searchTerm)) ||
-                        (reg.participant && reg.participant.college && reg.participant.college.toLowerCase().includes(searchTerm));
+                        (reg.participant && reg.participant.name && reg.participant.name.toLowerCase().includes(searchTerm));
 
                     if (standardMatch) matchesSearch = true;
                     else if (currentFormFields && currentFormFields.length > 0) {
@@ -759,7 +300,7 @@
                 return matchesSearch && matchesStatus;
             });
 
-            renderTable();
+            renderCards();
         }
 
         function clearFilters() {
@@ -770,194 +311,95 @@
             applyFilters();
         }
 
-        function renderTableHeaders() {
-            const thead = document.querySelector('#submissionsTable thead tr');
-            if (!thead) return;
-
-            if (currentFormFields.length > 0) {
-                let headers = '<th>Reg. Number</th>';
-                currentFormFields.forEach(field => {
-                    headers += `<th>${field.label}</th>`;
-                });
-                headers += '<th>Status</th><th>Submitted</th>';
-                thead.innerHTML = headers;
-                applyAutoFontSize();
-            } else {
-                thead.innerHTML = `
-                    <th>Reg. Number</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>College</th>
-                    <th>Status</th>
-                    <th>Submitted</th>
-                `;
-            }
-        }
-
-        function formatValue(value) {
-            if (value === null || value === undefined || value === '') return 'N/A';
-            const strVal = String(value);
-            if (strVal.startsWith('http://') || strVal.startsWith('https://')) {
-                return `<a href="${strVal}" target="_blank" rel="noopener noreferrer" style="color: var(--admin-info); text-decoration: underline; word-break: break-all;">Open Link</a>`;
-            }
-            return strVal;
-        }
-
-        function renderTable() {
-            const tbody = document.getElementById('tableBody');
-            const emptyState = document.getElementById('emptyState');
-            if (!tbody || !emptyState) return;
+        function renderCards() {
+            const container = document.getElementById('viewOnlyContainer');
+            if (!container) return;
+            container.innerHTML = '';
 
             if (filteredRegistrations.length === 0) {
-                tbody.innerHTML = '';
-                emptyState.style.display = 'block';
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" />
+                            <rect x="9" y="3" width="6" height="4" rx="1" />
+                        </svg>
+                        <h3>No Submissions Found</h3>
+                        <p>No records match your filters.</p>
+                    </div>`;
                 return;
             }
 
-            emptyState.style.display = 'none';
+            // Identify target fields (Only those enabled for summary view)
+            let targetFields = currentFormFields.filter(f =>
+                f.showInSummary === true &&
+                (f.type === 'select' || f.type === 'radio' || f.type === 'checkbox') &&
+                f.options && f.options.length > 0
+            );
 
-            tbody.innerHTML = filteredRegistrations.map(reg => {
-                let rowContent = '';
+            if (targetFields.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>No Summary Fields Configured</h3>
+                        <p>No card view fields found. Please go to the Form Builder and enable "Card View" for the fields you want to summarize.</p>
+                    </div>`;
+                return;
+            }
 
-                if (currentFormFields.length > 0) {
-                    rowContent += `<td><strong>${reg.registrationNumber || 'N/A'}</strong></td>`;
-                    currentFormFields.forEach(field => {
-                        const rawValue = reg.data?.[field.id];
-                        rowContent += `<td>${formatValue(rawValue)}</td>`;
-                    });
-                } else {
-                    const participant = reg.participant || {};
-                    rowContent += `
-                        <td><strong>${reg.registrationNumber || 'N/A'}</strong></td>
-                        <td>${participant.name || 'N/A'}</td>
-                        <td>${participant.email || 'N/A'}</td>
-                        <td>${participant.phone || 'N/A'}</td>
-                        <td>${participant.college || 'N/A'}</td>
-                    `;
-                }
+            targetFields.forEach(field => {
+                const counts = {};
 
-                return `
-                    <tr style="cursor: pointer;" data-id="${reg.id || reg._id}" title="Click to view details">
-                        ${rowContent}
-                        <td><span class="status-badge ${reg.status}">${reg.status}</span></td>
-                        <td>${formatDate(reg.createdAt)}</td>
-                    </tr>`;
-            }).join('');
-        }
+                // Initialize counts with 0 for all defined options
+                field.options.forEach(opt => {
+                    const label = typeof opt === 'object' ? opt.label : opt;
+                    counts[label] = 0;
+                });
 
-        function formatDate(dateString) {
-            if (!dateString) return 'N/A';
-            return new Date(dateString).toLocaleString('en-IN', {
-                year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
-            });
-        }
+                filteredRegistrations.forEach(reg => {
+                    const val = reg.data?.[field.id];
+                    if (!val) return;
 
-        function viewDetails(registration) {
-            lastActiveElement = document.activeElement;
-            const titleEl = document.getElementById('detailsTitle');
-            const subtitleEl = document.getElementById('detailsSubtitle');
-
-            if (titleEl) titleEl.textContent = `Registration Details`;
-            if (subtitleEl) subtitleEl.innerHTML = `${registration.registrationNumber} &nbsp; <span class="status-badge ${registration.status}">${registration.status}</span>`;
-
-            const participant = registration.participant || {};
-
-            let leftHtml = `
-                <div class="section-card">
-                    <div class="section-title">Basic Information</div>
-                    <div class="detail-grid">
-                        <div class="detail-item"><div class="detail-label">Registration Number</div><div class="detail-value">${registration.registrationNumber}</div></div>
-                        <div class="detail-item"><div class="detail-label">Submitted At</div><div class="detail-value">${formatDate(registration.createdAt)}</div></div>
-                        <div class="detail-item"><div class="detail-label">Status</div><div class="detail-value"><span class="status-badge ${registration.status}">${registration.status}</span></div></div>
-                    </div>
-                </div>
-                <div class="section-card">
-                    <div class="section-title">Participant Details</div>
-                    <div class="detail-grid">
-                        <div class="detail-item"><div class="detail-label">Name</div><div class="detail-value">${participant.name || 'N/A'}</div></div>
-                        <div class="detail-item"><div class="detail-label">Email</div><div class="detail-value">${participant.email || 'N/A'}</div></div>
-                        <div class="detail-item"><div class="detail-label">Phone</div><div class="detail-value">${participant.phone || 'N/A'}</div></div>
-                        <div class="detail-item"><div class="detail-label">College</div><div class="detail-value">${participant.college || 'N/A'}</div></div>
-                    </div>
-                </div>
-            `;
-
-            if (registration.data && Object.keys(registration.data).length) {
-                let responsesHtml = `<div class="section-card"><div class="section-title">Form Responses</div><div class="detail-grid">`;
-                if (currentFormFields && currentFormFields.length) {
-                    currentFormFields.forEach(f => {
-                        const rawValue = registration.data[f.id];
-                        responsesHtml += `<div class="detail-item"><div class="detail-label">${f.label}</div><div class="detail-value">${formatValue(rawValue)}</div></div>`;
-                    });
-                } else {
-                    Object.entries(registration.data).forEach(([k, v]) => {
-                        const label = k.replace(/[_-]+/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-                        let displayVal = 'N/A';
-                        if (v !== null && v !== undefined) {
-                            displayVal = (typeof v === 'string' || typeof v === 'number') ? formatValue(v) : JSON.stringify(v);
+                    const values = Array.isArray(val) ? val : [val];
+                    values.forEach(v => {
+                        // Attempt to match value to label if options are objects
+                        let label = v;
+                        // finding matching option if v is a value key
+                        if (typeof field.options[0] === 'object') {
+                            const match = field.options.find(o => o.value === v || o.label === v);
+                            if (match) label = match.label;
                         }
-                        responsesHtml += `<div class="detail-item"><div class="detail-label">${label}</div><div class="detail-value">${displayVal}</div></div>`;
+
+                        counts[label] = (counts[label] || 0) + 1;
                     });
-                }
-                responsesHtml += `</div></div>`;
-                leftHtml += responsesHtml;
-            }
+                });
 
-            let rightHtml = '';
-            if (registration.events && registration.events.length) {
-                rightHtml += `
-                    <div class="section-card">
-                        <div class="section-title">Events</div>
-                        <div class="detail-value">${registration.events.join(', ')}</div>
-                    </div>
-                `;
-            }
+                const section = document.createElement('div');
+                section.className = 'field-section';
+                section.innerHTML = `<h3>${field.label}</h3>`;
 
-            if (registration.teamMembers && registration.teamMembers.length) {
-                rightHtml += `
-                    <div class="section-card">
-                        <div class="section-title">Team Members</div>
-                        ${registration.teamMembers.map((m, idx) => `<div class="detail-item"><div class="detail-label">Member ${idx + 1}</div><div class="detail-value">${m.name} — ${m.email}</div></div>`).join('')}
-                    </div>
-                `;
-            }
+                const grid = document.createElement('div');
+                grid.className = 'cards-grid';
 
-            const modalBody = document.getElementById('modalBody');
-            if (modalBody) modalBody.innerHTML = `<div class="modal-grid"><div class="left-panel">${leftHtml}</div><aside class="right-panel">${rightHtml}</aside></div>`;
+                Object.entries(counts).forEach(([name, count]) => {
+                    const card = document.createElement('div');
+                    card.className = 'summary-card';
+                    card.innerHTML = `
+                        <div class="card-content">
+                            <span class="card-title">${name}</span>
+                            <span class="card-count">${count} Submissions</span>
+                        </div>
+                        <button class="btn btn-primary btn-sm view-btn">View</button>
+                    `;
 
-            const modal = document.getElementById('detailsModal');
-            if (modal) modal.classList.add('active');
+                    card.querySelector('.view-btn').addEventListener('click', () => {
+                        alert('you want to upgrage supabase plan text');
+                    });
 
-            const closeBtn = document.querySelector('[data-action="close"]');
-            if (closeBtn) closeBtn.focus();
-        }
+                    grid.appendChild(card);
+                });
 
-        function closeModal() {
-            const modal = document.getElementById('detailsModal');
-            if (modal) modal.classList.remove('active');
-            if (lastActiveElement && lastActiveElement.focus) lastActiveElement.focus();
-        }
-
-        function showNotification(message, type = 'info') {
-            const existingToast = document.querySelector('.custom-toast');
-            if (existingToast) existingToast.remove();
-
-            const toast = document.createElement('div');
-            toast.className = `custom-toast custom-toast-${type}`;
-            toast.style.cssText = `
-                position: fixed; top: 20px; right: 20px;
-                background: ${type === 'error' ? '#dc3545' : type === 'success' ? '#28a745' : '#17a2b8'};
-                color: white; padding: 1rem 1.5rem; border-radius: 8px;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 10000;
-                max-width: 400px; animation: slideIn 0.3s ease;
-            `;
-            toast.textContent = message;
-            document.body.appendChild(toast);
-            setTimeout(() => {
-                toast.style.animation = 'slideOut 0.3s ease';
-                setTimeout(() => toast.remove(), 300);
-            }, 5000);
+                section.appendChild(grid);
+                container.appendChild(section);
+            });
         }
 
         function refreshData() {

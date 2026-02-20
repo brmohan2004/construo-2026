@@ -220,6 +220,11 @@
                             </div>
                             <div class="card-body">
                                 <div class="form-group">
+                                    <label class="form-label">WhatsApp Community Link (Button above FAQ)</label>
+                                    <input type="url" class="form-input" id="whatsappCommunity"
+                                        placeholder="https://chat.whatsapp.com/...">
+                                </div>
+                                <div class="form-group">
                                     <label class="form-label">Instagram</label>
                                     <input type="url" class="form-input" id="socialInstagram"
                                         placeholder="https://instagram.com/...">
@@ -339,6 +344,7 @@
 
                 document.getElementById('copyright').value = f.copyright || '';
                 document.getElementById('credits').value = f.credits || '';
+                document.getElementById('whatsappCommunity').value = f.social?.whatsappCommunity || '';
                 document.getElementById('socialInstagram').value = f.social?.instagram || '';
                 document.getElementById('socialFacebook').value = f.social?.facebook || '';
                 document.getElementById('socialTwitter').value = f.social?.twitter || '';
@@ -445,6 +451,7 @@
                     copyright: document.getElementById('copyright').value,
                     credits: document.getElementById('credits').value,
                     social: {
+                        whatsappCommunity: document.getElementById('whatsappCommunity').value,
                         instagram: document.getElementById('socialInstagram').value,
                         facebook: document.getElementById('socialFacebook').value,
                         twitter: document.getElementById('socialTwitter').value,
