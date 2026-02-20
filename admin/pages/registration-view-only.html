@@ -95,6 +95,98 @@
             }
         }
     </style>
+    <style>
+        /* Modal Styles */
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+            /* Higher than sidebar */
+            backdrop-filter: blur(4px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-backdrop.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal {
+            background: var(--admin-card, #1e293b);
+            border: 1px solid var(--admin-border, #334155);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+            color: var(--admin-text, #f8fafc);
+        }
+
+        .modal-backdrop.show .modal {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--admin-border, #334155);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--admin-text, #f8fafc);
+        }
+
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: var(--admin-text-muted, #94a3b8);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 6px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--admin-text, #f8fafc);
+        }
+
+        .modal-close svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+            color: var(--admin-text-secondary, #cbd5e1);
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        .modal-footer {
+            padding: 1.5rem;
+            border-top: 1px solid var(--admin-border, #334155);
+            display: flex;
+            justify-content: center;
+        }
+    </style>
 </head>
 
 <body>
@@ -180,7 +272,26 @@
         </main>
     </div>
 
-    <!-- Modals removed as they are not used in this view -->
+    <!-- Upgrade Modal -->
+    <div id="upgradeModal" class="modal-backdrop">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Upgrade Required</h3>
+                <button class="modal-close" onclick="closeUpgradeModal()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>You want to upgrage supabase plan for more storage and advanced features</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="closeUpgradeModal()">OK</button>
+            </div>
+        </div>
+    </div>
 
     <script type="module">
         import Auth from '../js/auth.js';
@@ -194,6 +305,21 @@
         // Expose functions to window
         window.refreshData = refreshData;
         window.clearFilters = clearFilters;
+        window.closeUpgradeModal = closeUpgradeModal;
+
+        function showUpgradeModal() {
+            const modal = document.getElementById('upgradeModal');
+            if (modal) {
+                modal.classList.add('show');
+            }
+        }
+
+        function closeUpgradeModal() {
+            const modal = document.getElementById('upgradeModal');
+            if (modal) {
+                modal.classList.remove('show');
+            }
+        }
 
         document.addEventListener('DOMContentLoaded', async () => {
             // Basic Auth Check
@@ -391,7 +517,7 @@
                     `;
 
                     card.querySelector('.view-btn').addEventListener('click', () => {
-                        alert('you want to upgrage supabase plan for more storage and advanced features');
+                        showUpgradeModal();
                     });
 
                     grid.appendChild(card);
