@@ -346,8 +346,8 @@
 .mobile-menu {
     position: fixed;
     top: 0;
-    right: -100%;
-    width: 100%;
+    right: -70%;
+    width: 70%;
     height: 100vh;
     background: rgba(10, 15, 26, 0.98);
     backdrop-filter: blur(20px);
@@ -358,6 +358,8 @@
     align-items: center;
     justify-content: center;
     transition: right 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+    box-shadow: -5px 0 30px rgba(0, 0, 0, 0.5);
+    /* Shadow for depth */
 }
 
 .mobile-menu::before {

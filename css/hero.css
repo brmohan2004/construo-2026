@@ -428,3 +428,115 @@
         height: 16px;
     }
 }
+
+/* -------------------- Countdown Timer -------------------- */
+.countdown-container {
+    position: absolute;
+    top: calc(var(--nav-height) + 2rem);
+    left: 2rem;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 1.5rem;
+    background: rgba(255, 255, 255, 0.08); /* Glassmorphism */
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transition: all var(--transition-fast);
+    animation: fadeIn 0.5s ease-out 0.5s backwards;
+}
+
+.countdown-container:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.countdown-label {
+    font-size: 1rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+    font-family: var(--font-primary);
+}
+
+.countdown-timer {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.countdown-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.2); /* Darker inner box */
+    border-radius: 8px;
+    padding: 0.5rem 0.75rem;
+    min-width: 60px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.countdown-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-accent); /* Use site accent color */
+    font-family: var(--font-display);
+    line-height: 1;
+}
+
+.countdown-unit {
+    font-size: 0.6rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-family: var(--font-mono);
+    margin-top: 0.25rem;
+}
+
+/* Mobile Responsive Override */
+@media (max-width: 968px) {
+    /* Hide the desktop absolute one if needed, or adjust it */
+    /* Since we use the same HTML, we just change positioning */
+    .countdown-container {
+        position: relative;
+        top: auto;
+        left: auto;
+        margin-top: 1.5rem;
+        margin-bottom: 1rem;
+        width: 100%;
+        max-width: 320px; /* Constrain width on mobile */
+        padding: 0.75rem 1rem;
+        background: rgba(255, 255, 255, 0.05); /* Slightly lighter on mobile */
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .countdown-label {
+        font-size: 0.75rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .countdown-timer {
+        justify-content: center;
+        width: 100%;
+        gap: 0.5rem;
+    }
+
+    .countdown-box {
+        min-width: 50px;
+        padding: 0.4rem 0.5rem;
+    }
+
+    .countdown-value {
+        font-size: 1.25rem;
+    }
+
+    .countdown-unit {
+        font-size: 0.55rem;
+    }
+}

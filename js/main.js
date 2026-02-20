@@ -20,6 +20,48 @@ class ConstruoApp {
         this.initIntersectionObserver();
         this.initDataSync();
         this.initDevelopmentModal();
+        this.initCountdown();
+    }
+
+    initCountdown() {
+        const countdownContainer = document.getElementById('countdown-container');
+        if (!countdownContainer) return;
+
+        // Target Date: Feb 28, 2026
+        const targetDate = new Date('February 28, 2026 09:00:00').getTime();
+
+        const updateTimer = () => {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            if (distance < 0) {
+                // Expired
+                if (this.countdownInterval) clearInterval(this.countdownInterval);
+                const label = countdownContainer.querySelector('.countdown-label');
+                if (label) label.textContent = "Registration Closed";
+                const timer = countdownContainer.querySelector('.countdown-timer');
+                if (timer) timer.innerHTML = '<div style="font-size: 1.2rem; font-weight: 700; color: var(--color-danger);">CLOSED</div>';
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            const updateEl = (id, val) => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = val < 10 ? `0${val}` : val;
+            };
+
+            updateEl('cd-days', days);
+            updateEl('cd-hours', hours);
+            updateEl('cd-minutes', minutes);
+            updateEl('cd-seconds', seconds);
+        };
+
+        this.countdownInterval = setInterval(updateTimer, 1000);
+        updateTimer(); // Initial call
     }
 
     sanitizeUrl(url) {
