@@ -27,16 +27,16 @@ class ConstruoSupabaseData {
         try {
             console.log('Loading website data from Supabase...');
 
-            // Try to load everything from cache first for instant render
+            // Try to load any available parts from cache for partial instant render
             const cachedData = this.getAllFromCache();
+
             if (cachedData) {
                 console.log('Using cached data for instant render');
-                // Trigger background refresh
-                this.refreshAllData();
+                this.refreshAllData(); // Refresh in background
                 return cachedData;
             }
 
-            // Fallback to normal fetch if no cache
+            // If some parts are missing, fetchAllFresh will handle it
             return await this.fetchAllFresh();
         } catch (error) {
             console.error('Error loading data from Supabase:', error);
@@ -45,14 +45,17 @@ class ConstruoSupabaseData {
     }
 
     async fetchAllFresh() {
-        const [siteConfig, events, timeline, speakers, sponsors, organizers] = await Promise.all([
-            this.getSiteConfig(),
+        // Fetch smaller, critical assets first in parallel
+        const [events, timeline, speakers, sponsors, organizers] = await Promise.all([
             this.getEvents(),
             this.getTimeline(),
             this.getSpeakers(),
             this.getSponsors(),
             this.getOrganizers()
         ]);
+
+        // Fetch the large siteConfig independently so it doesn't block the rest
+        const siteConfig = await this.getSiteConfig();
 
         return {
             siteConfig,
@@ -156,15 +159,18 @@ class ConstruoSupabaseData {
     }
 
     getAllFromCache() {
-        const siteConfig = this.getFromCache('siteConfig');
-        const events = this.getFromCache('events');
-        const timeline = this.getFromCache('timeline');
-        const speakers = this.getFromCache('speakers');
-        const sponsors = this.getFromCache('sponsors');
-        const organizers = this.getFromCache('organizers');
+        const data = {
+            siteConfig: this.getFromCache('siteConfig'),
+            events: this.getFromCache('events'),
+            timeline: this.getFromCache('timeline'),
+            speakers: this.getFromCache('speakers'),
+            sponsors: this.getFromCache('sponsors'),
+            organizers: this.getFromCache('organizers')
+        };
 
-        if (siteConfig && events && timeline && speakers && organizers) {
-            return { siteConfig, events, timeline, speakers, sponsors, organizers };
+        // Return if at least some core data exists
+        if (data.events || data.siteConfig) {
+            return data;
         }
         return null;
     }
@@ -172,9 +178,7 @@ class ConstruoSupabaseData {
     // --- Data Fetchers ---
 
     async getSiteConfig() {
-        // Return in-memory cache if available
         if (this.cache.siteConfig) return this.cache.siteConfig;
-
         try {
             const { data, error } = await supabase
                 .from('site_config')
@@ -185,6 +189,7 @@ class ConstruoSupabaseData {
             if (error) throw error;
             this.cache.siteConfig = data;
             this.saveToCache('siteConfig', data);
+            this.dispatchPartialProgress();
             return data;
         } catch (error) {
             console.error('Error fetching site config:', error);
@@ -199,7 +204,6 @@ class ConstruoSupabaseData {
 
     async getEvents() {
         if (this.cache.events) return this.cache.events;
-
         try {
             const { data, error } = await supabase
                 .from('events')
@@ -209,7 +213,6 @@ class ConstruoSupabaseData {
 
             if (error) throw error;
 
-            // Map snake_case to camelCase for frontend compatibility
             const mappedData = data.map(event => ({
                 ...event,
                 id: event.event_id,
@@ -225,6 +228,7 @@ class ConstruoSupabaseData {
 
             this.cache.events = mappedData;
             this.saveToCache('events', mappedData);
+            this.dispatchPartialProgress();
             return mappedData;
         } catch (error) {
             console.error('Error fetching events:', error);
@@ -248,6 +252,7 @@ class ConstruoSupabaseData {
             if (error) throw error;
             this.cache.timeline = data;
             this.saveToCache('timeline', data);
+            this.dispatchPartialProgress();
             return data;
         } catch (error) {
             console.error('Error fetching timeline:', error);
@@ -267,6 +272,7 @@ class ConstruoSupabaseData {
             if (error) throw error;
             this.cache.speakers = data;
             this.saveToCache('speakers', data);
+            this.dispatchPartialProgress();
             return data;
         } catch (error) {
             console.error('Error fetching speakers:', error);
@@ -286,6 +292,7 @@ class ConstruoSupabaseData {
             if (error) throw error;
             this.cache.sponsors = data;
             this.saveToCache('sponsors', data);
+            this.dispatchPartialProgress();
             return data;
         } catch (error) {
             console.error('Error fetching sponsors:', error);
@@ -305,11 +312,20 @@ class ConstruoSupabaseData {
             if (error) throw error;
             this.cache.organizers = data;
             this.saveToCache('organizers', data);
+            this.dispatchPartialProgress();
             return data;
         } catch (error) {
             console.error('Error fetching organizers:', error);
             return this.getFromCache('organizers') || [];
         }
+    }
+
+    dispatchPartialProgress() {
+        if (!this.loadedModules) this.loadedModules = 0;
+        this.loadedModules++;
+        const totalModules = 6;
+        const percent = Math.round((this.loadedModules / totalModules) * 100);
+        window.dispatchEvent(new CustomEvent('construo-partial-load', { detail: { percent } }));
     }
 
     async getActiveForm() {

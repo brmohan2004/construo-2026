@@ -78,23 +78,20 @@ class ConstruoAnimations {
         const logoContainer = preloader.querySelector('.loader-logo');
         const logoUrl = s.loaderLogoUrl || s.logoUrl;
 
-        if (logoContainer) {
-            if (logoUrl) {
-                logoContainer.innerHTML = `<img src="${logoUrl}" alt="Logo">`;
-            } else if (s.siteName) {
-                logoContainer.innerHTML = `<span style="font-size:2rem; font-weight:700; color:#fff;">${s.siteName}</span>`;
-            }
+        if (logoContainer && logoUrl) {
+            // Only update if we have a dynamic logo to replace the default one with
+            logoContainer.innerHTML = `<img src="${logoUrl}" alt="Logo">`;
         }
 
-        // 2. Animate Bar
+        // 2. Animate Bar to exactly 3 seconds
         const barFill = preloader.querySelector('.loader-bar-fill');
-        const speed = s.loaderSpeed || 30;
-        let progress = 0;
+        const loadingDuration = 500; // 0.5 seconds
+        const startTime = Date.now();
 
-        // 3. Safety Timeout: Increased to 30 seconds to accommodate large asset downloads
+        // Safety Timeout
         setTimeout(() => {
             if (!this.dataReady) {
-                console.warn('Preloader safety timeout reached (30s). Forcing entrance.');
+                console.warn('Preloader safety timeout reached. Forcing entrance.');
                 this.markDataLoaded();
             }
         }, 30000);
@@ -103,32 +100,23 @@ class ConstruoAnimations {
         if (this.loaderInterval) clearInterval(this.loaderInterval);
 
         this.loaderInterval = setInterval(() => {
-            // Wait for data at 90%
-            if (progress > 90 && !this.dataReady) {
-                // Smoothly slow down progress but don't stop entirely
-                progress += (99.5 - progress) * 0.05;
-                if (barFill) barFill.style.width = `${progress}%`;
-                return;
-            }
-
-            // Faster increment: rapid loading
-            progress += Math.random() * 5 + 2;
+            const elapsed = Date.now() - startTime;
+            let progress = (elapsed / loadingDuration) * 100;
 
             if (progress >= 100) {
                 progress = 100;
-                clearInterval(this.loaderInterval);
-
-                // Finished
-                setTimeout(() => {
-                    this.hidePreloader();
-                }, 400); // short delay at 100%
+                if (this.dataReady) {
+                    clearInterval(this.loaderInterval);
+                    setTimeout(() => this.hidePreloader(), 400);
+                } else {
+                    progress = 99; // Hang at 99% until data is ready
+                }
             }
 
             if (barFill) {
                 barFill.style.width = `${progress}%`;
             }
-
-        }, speed);
+        }, 50);
     }
 
     hidePreloader() {
