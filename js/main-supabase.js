@@ -8,6 +8,19 @@ import supabase from './supabase-config.js';
 class ConstruoSupabaseData {
     constructor() {
         this.cache = {};
+        this.currentVersion = '1.2';
+        this.checkUrlParams();
+    }
+
+    checkUrlParams() {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('clearCache') === 'true' || urlParams.get('refresh') === 'true') {
+            console.log('Force clearing cache due to URL parameter');
+            this.clearAllCache();
+            // Clean up the URL
+            const newUrl = window.location.origin + window.location.pathname;
+            window.history.replaceState({}, document.title, newUrl);
+        }
     }
 
     async loadAll() {
@@ -70,11 +83,23 @@ class ConstruoSupabaseData {
             if (!cached) return null;
 
             const { data, timestamp, version } = JSON.parse(cached);
+
+            // Version check - invalidate if version mismatches
+            if (version !== this.currentVersion) {
+                console.log(`Cache version mismatch for ${key}: expected ${this.currentVersion}, got ${version}. Invalidating.`);
+                localStorage.removeItem(`construo_${key}`);
+                return null;
+            }
+
             // 1 hour cache validity
-            if (Date.now() - timestamp > 60 * 60 * 1000) return null;
+            if (Date.now() - timestamp > 60 * 60 * 1000) {
+                console.log(`Cache expired for ${key}`);
+                return null;
+            }
 
             return data;
         } catch (e) {
+            console.warn(`Error reading from cache for ${key}:`, e);
             return null;
         }
     }
@@ -84,11 +109,49 @@ class ConstruoSupabaseData {
             const cacheObj = {
                 data,
                 timestamp: Date.now(),
-                version: '1.0'
+                version: this.currentVersion
             };
-            localStorage.setItem(`construo_${key}`, JSON.stringify(cacheObj));
+            const serialized = JSON.stringify(cacheObj);
+
+            // Log large data saves for debugging
+            const sizeKB = Math.round(serialized.length / 1024);
+            if (sizeKB > 500) {
+                console.warn(`Large data block for cache: ${key} (${sizeKB} KB)`);
+            }
+
+            // STRICT LIMIT: Don't even TRY to save if it's over 2MB (most browser limits are 5-10MB total)
+            // Caching 11MB in localStorage is not recommended and causes QuotaExceededError
+            if (serialized.length > 2 * 1024 * 1024) { // 2MB limit per entry
+                console.warn(`Data block for ${key} is too large for LocalStorage (${sizeKB} KB). Skipping persistent cache, using memory only.`);
+                return;
+            }
+
+            localStorage.setItem(`construo_${key}`, serialized);
         } catch (e) {
-            console.warn('Cache save failed', e);
+            console.warn(`Cache save failed for ${key}:`, e);
+            if (e.name === 'QuotaExceededError' || e.code === 22) {
+                console.warn('LocalStorage quota exceeded. Attempting to clear old Construo cache to make room...');
+                this.clearAllCache();
+                // We don't retry for blocks over 1MB if we already hit quota once
+            }
+        }
+    }
+
+    clearAllCache() {
+        try {
+            const keysToRemove = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.startsWith('construo_')) {
+                    keysToRemove.push(key);
+                }
+            }
+            keysToRemove.forEach(key => localStorage.removeItem(key));
+            console.log(`Cleared ${keysToRemove.length} Construo cache keys`);
+            return true;
+        } catch (e) {
+            console.error('Failed to clear Construo cache:', e);
+            return false;
         }
     }
 
@@ -109,6 +172,9 @@ class ConstruoSupabaseData {
     // --- Data Fetchers ---
 
     async getSiteConfig() {
+        // Return in-memory cache if available
+        if (this.cache.siteConfig) return this.cache.siteConfig;
+
         try {
             const { data, error } = await supabase
                 .from('site_config')
@@ -122,15 +188,22 @@ class ConstruoSupabaseData {
             return data;
         } catch (error) {
             console.error('Error fetching site config:', error);
-            return this.getFromCache('siteConfig') || null;
+            const cached = this.getFromCache('siteConfig');
+            if (cached) {
+                this.cache.siteConfig = cached;
+                return cached;
+            }
+            return null;
         }
     }
 
     async getEvents() {
+        if (this.cache.events) return this.cache.events;
+
         try {
             const { data, error } = await supabase
                 .from('events')
-                .select('*') // Select only necessary fields if possible
+                .select('*')
                 .eq('status', 'active')
                 .order('created_at', { ascending: false });
 
@@ -139,14 +212,13 @@ class ConstruoSupabaseData {
             // Map snake_case to camelCase for frontend compatibility
             const mappedData = data.map(event => ({
                 ...event,
-                id: event.event_id, // Ensure ID is consistent
+                id: event.event_id,
                 teamSize: event.team_size,
                 prizeMoney: event.prize_money,
                 entryFee: event.entry_fee,
-                registrationFee: event.entry_fee, // Map entry_fee to registrationFee for frontend
+                registrationFee: event.entry_fee,
                 registrationLink: event.registration_link,
                 shortDescription: event.description,
-                // Ensure other potential camelCase fields are covered if needed
                 createdAt: event.created_at,
                 updatedAt: event.updated_at
             }));
@@ -156,11 +228,17 @@ class ConstruoSupabaseData {
             return mappedData;
         } catch (error) {
             console.error('Error fetching events:', error);
-            return this.getFromCache('events') || [];
+            const cached = this.getFromCache('events');
+            if (cached) {
+                this.cache.events = cached;
+                return cached;
+            }
+            return [];
         }
     }
 
     async getTimeline() {
+        if (this.cache.timeline) return this.cache.timeline;
         try {
             const { data, error } = await supabase
                 .from('timeline_days')
@@ -178,6 +256,7 @@ class ConstruoSupabaseData {
     }
 
     async getSpeakers() {
+        if (this.cache.speakers) return this.cache.speakers;
         try {
             const { data, error } = await supabase
                 .from('speakers')
@@ -196,6 +275,7 @@ class ConstruoSupabaseData {
     }
 
     async getSponsors() {
+        if (this.cache.sponsors) return this.cache.sponsors;
         try {
             const { data, error } = await supabase
                 .from('sponsors')
@@ -214,6 +294,7 @@ class ConstruoSupabaseData {
     }
 
     async getOrganizers() {
+        if (this.cache.organizers) return this.cache.organizers;
         try {
             const { data, error } = await supabase
                 .from('organizers')

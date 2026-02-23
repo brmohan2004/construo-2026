@@ -91,13 +91,13 @@ class ConstruoAnimations {
         const speed = s.loaderSpeed || 30;
         let progress = 0;
 
-        // 3. Safety Timeout: Lowered to 4 seconds for better UX
+        // 3. Safety Timeout: Increased to 30 seconds to accommodate large asset downloads
         setTimeout(() => {
             if (!this.dataReady) {
-                console.warn('Preloader safety timeout reached (5s). Forcing entrance.');
+                console.warn('Preloader safety timeout reached (30s). Forcing entrance.');
                 this.markDataLoaded();
             }
-        }, 5000);
+        }, 30000);
 
         // Clear any existing interval
         if (this.loaderInterval) clearInterval(this.loaderInterval);

@@ -1134,6 +1134,12 @@
                     const registration = JSON.parse(regData);
                     viewDetails(registration);
                 }
+            } else if (action === 'edit-row') {
+                const regId = button.getAttribute('data-reg-id');
+                toggleEditRow(button, regId);
+            } else if (action === 'save-row') {
+                const regId = button.getAttribute('data-reg-id');
+                saveEditRow(button, regId);
             } else if (action === 'confirm') {
                 const regId = button.getAttribute('data-reg-id');
                 const registration = allRegistrations.find(r => (r.id === regId || r._id === regId));
@@ -1147,6 +1153,72 @@
                 if (regId) {
                     deleteRegistration(regId);
                 }
+            }
+        }
+
+        function toggleEditRow(button, regId) {
+            const tr = button.closest('tr');
+            const cells = tr.querySelectorAll('.editable-cell');
+
+            cells.forEach(cell => {
+                const field = cell.getAttribute('data-field');
+                let currentValue = cell.textContent;
+                if (currentValue === 'N/A' || currentValue === 'Open Link') {
+                    const reg = allRegistrations.find(r => r.id === regId);
+                    if (reg) {
+                        if (field.startsWith('participant.')) {
+                            const f = field.split('.')[1];
+                            currentValue = reg.participant[f] || '';
+                        } else if (field.startsWith('data.')) {
+                            const f = field.substring(5);
+                            currentValue = reg.data && reg.data[f] ? reg.data[f] : '';
+                        }
+                    } else {
+                        currentValue = '';
+                    }
+                }
+                cell.innerHTML = `<input type="text" class="form-input" style="width: 100%; min-width: 100px; padding: 0.25rem 0.5rem;" data-field="${field}" value="${String(currentValue).replace(/"/g, '&quot;')}">`;
+            });
+
+            button.setAttribute('data-action', 'save-row');
+            button.setAttribute('title', 'Save');
+            button.innerHTML = `
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="stroke: var(--success);">
+                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                    <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                    <polyline points="7 3 7 8 15 8"></polyline>
+                </svg>`;
+        }
+
+        async function saveEditRow(button, regId) {
+            const tr = button.closest('tr');
+            const inputs = tr.querySelectorAll('input[data-field]');
+
+            const reg = allRegistrations.find(r => r.id === regId);
+            if (!reg) return;
+
+            const updatedParticipant = { ...reg.participant };
+            const updatedData = { ...(reg.data || {}) };
+
+            inputs.forEach(input => {
+                const field = input.getAttribute('data-field');
+                const value = input.value;
+                if (field.startsWith('participant.')) {
+                    const f = field.split('.')[1];
+                    updatedParticipant[f] = value;
+                } else if (field.startsWith('data.')) {
+                    const f = field.substring(5);
+                    updatedData[f] = value;
+                }
+            });
+
+            try {
+                await Admin.updateRegistration(regId, { participant: updatedParticipant, data: updatedData });
+                showNotification('Row updated successfully', 'success');
+                loadRegistrations(); // refetch to rerender
+            } catch (error) {
+                console.error('Save failed:', error);
+                showNotification('Failed to save row', 'error');
             }
         }
 
@@ -1314,16 +1386,16 @@
                     rowContent += `<td><strong>${reg.registrationNumber}</strong></td>`;
                     currentFormFields.forEach(field => {
                         const rawValue = reg.data?.[field.id];
-                        rowContent += `<td>${formatValue(rawValue)}</td>`;
+                        rowContent += `<td class="editable-cell" data-field="data.${field.id}">${formatValue(rawValue)}</td>`;
                     });
                 } else {
                     // Default rendering
                     rowContent += `
                         <td><strong>${reg.registrationNumber}</strong></td>
-                        <td>${reg.participant.name || 'N/A'}</td>
-                        <td>${reg.participant.email || 'N/A'}</td>
-                        <td>${reg.participant.phone || 'N/A'}</td>
-                        <td>${reg.participant.college || 'N/A'}</td>
+                        <td class="editable-cell" data-field="participant.name">${reg.participant.name || 'N/A'}</td>
+                        <td class="editable-cell" data-field="participant.email">${reg.participant.email || 'N/A'}</td>
+                        <td class="editable-cell" data-field="participant.phone">${reg.participant.phone || 'N/A'}</td>
+                        <td class="editable-cell" data-field="participant.college">${reg.participant.college || 'N/A'}</td>
                     `;
                 }
 
@@ -1339,6 +1411,12 @@
                         <td>${formatDate(reg.createdAt)}</td>
                         <td>
                             <div class="action-buttons">
+                                <button class="btn-icon" data-action="edit-row" data-reg-id="${reg.id}" title="Edit Registration">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                    </svg>
+                                </button>
                                 <button class="btn-icon" data-action="view" data-reg-data='${JSON.stringify(reg).replace(/'/g, "&#39;")}' title="View Details">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <circle cx="12" cy="12" r="10" />

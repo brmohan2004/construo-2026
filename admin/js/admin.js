@@ -912,14 +912,19 @@ const Admin = {
         try {
             const user = await Auth.getCurrentUser();
 
+            const updatePayload = {
+                updated_by: user ? user.username : null
+            };
+            
+            if (regData.status !== undefined) updatePayload.status = regData.status;
+            if (regData.payment !== undefined) updatePayload.payment = regData.payment;
+            if (regData.events !== undefined) updatePayload.events = regData.events;
+            if (regData.participant !== undefined) updatePayload.participant = regData.participant;
+            if (regData.data !== undefined) updatePayload.data = regData.data;
+
             const { data, error } = await supabase
                 .from('registrations')
-                .update({
-                    status: regData.status,
-                    payment: regData.payment,
-                    events: regData.events, // Added events field
-                    updated_by: user ? user.username : null
-                })
+                .update(updatePayload)
                 .eq('id', id)
                 .select()
                 .single();

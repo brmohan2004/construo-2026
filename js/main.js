@@ -165,7 +165,7 @@ class ConstruoApp {
             const fetchDataWithTimeout = async () => {
                 return Promise.race([
                     dataLoader.loadAll(),
-                    new Promise((_, reject) => setTimeout(() => reject(new Error('Data fetch timeout')), 5000))
+                    new Promise((_, reject) => setTimeout(() => reject(new Error('Data fetch timeout')), 30000))
                 ]);
             };
 

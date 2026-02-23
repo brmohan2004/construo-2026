@@ -406,8 +406,7 @@
     <!-- Certificate Builder Overlay -->
 
 
-    <script type="module" src="../js/certificates.js"></script>
-    <!-- 
+    <!-- Inline fallback for certificates logic since certificates.js does not exist in repo -->
     <script type="module">
         import Admin from '../js/admin.js';
 
@@ -436,8 +435,15 @@
             async loadConfig() {
                 try {
                     const config = await Admin.getSiteConfig();
+                    // Load old config if exist
                     if (config?.certificates) {
                         this.templateConfig = { ...this.templateConfig, ...config.certificates };
+                    }
+                    // Load fabric json if exist
+                    let data = config?.settings?.certificate_template || config?.certificate_template;
+                    if (data) {
+                        if (typeof data === 'string') data = JSON.parse(data);
+                        this.canvasJson = data;
                     }
                     this.applyTemplateConfig();
                 } catch (error) {
@@ -448,43 +454,49 @@
             applyTemplateConfig() {
                 const conf = this.templateConfig;
 
-                // Apply UI text
-                document.getElementById('cert-event-display').textContent = conf.eventName;
-                document.getElementById('cert-college-display').textContent = conf.college;
-                document.getElementById('cert-sig1-name').textContent = conf.sig1Name;
-                document.getElementById('cert-sig1-title').textContent = conf.sig1Title;
-                document.getElementById('cert-sig2-name').textContent = conf.sig2Name;
-                document.getElementById('cert-sig2-title').textContent = conf.sig2Title;
+                // Apply UI text (with null checks)
+                const els1 = [
+                    { id: 'cert-event-display', val: conf.eventName },
+                    { id: 'cert-college-display', val: conf.college },
+                    { id: 'cert-sig1-name', val: conf.sig1Name },
+                    { id: 'cert-sig1-title', val: conf.sig1Title },
+                    { id: 'cert-sig2-name', val: conf.sig2Name },
+                    { id: 'cert-sig2-title', val: conf.sig2Title },
+                    { id: 'prevEvent', val: conf.eventName }
+                ];
+                els1.forEach(i => { const e = document.getElementById(i.id); if (e) e.textContent = i.val; });
 
-                // Apply styles
                 document.documentElement.style.setProperty('--cert-accent', conf.themeColor);
 
                 const certContainer = document.querySelector('.cert-container');
                 const certBg = document.getElementById('cert-dynamic-bg');
 
-                if (conf.bgUrl) {
-                    certContainer.style.backgroundImage = `url('${conf.bgUrl}')`;
-                    certBg.style.display = 'none'; // Hide pattern if custom BG
-                    document.getElementById('cert-dynamic-watermark').style.display = 'none';
-                    document.getElementById('cert-dynamic-logo').style.display = 'none';
-                } else {
-                    certContainer.style.backgroundImage = 'none';
-                    certBg.style.display = 'block';
-                    document.getElementById('cert-dynamic-watermark').style.display = 'block';
-                    document.getElementById('cert-dynamic-logo').style.display = 'block';
+                if (certContainer) {
+                    if (conf.bgUrl) {
+                        certContainer.style.backgroundImage = `url('${conf.bgUrl}')`;
+                        if (certBg) certBg.style.display = 'none';
+                        const wm = document.getElementById('cert-dynamic-watermark'); if (wm) wm.style.display = 'none';
+                        const dl = document.getElementById('cert-dynamic-logo'); if (dl) dl.style.display = 'none';
+                    } else {
+                        certContainer.style.backgroundImage = 'none';
+                        if (certBg) certBg.style.display = 'block';
+                        const wm = document.getElementById('cert-dynamic-watermark'); if (wm) wm.style.display = 'block';
+                        const dl = document.getElementById('cert-dynamic-logo'); if (dl) dl.style.display = 'block';
+                    }
                 }
 
-                // Update modal inputs
-                document.getElementById('inputEventName').value = conf.eventName;
-                document.getElementById('inputCollege').value = conf.college;
-                document.getElementById('inputSig1Name').value = conf.sig1Name;
-                document.getElementById('inputSig1Title').value = conf.sig1Title;
-                document.getElementById('inputSig2Name').value = conf.sig2Name;
-                document.getElementById('inputSig2Title').value = conf.sig2Title;
-                document.getElementById('inputThemeColor').value = conf.themeColor;
-                document.getElementById('hexThemeColor').value = conf.themeColor;
-                document.getElementById('inputBgUrl').value = conf.bgUrl;
-                document.getElementById('prevEvent').textContent = conf.eventName;
+                const els2 = [
+                    { id: 'inputEventName', val: conf.eventName },
+                    { id: 'inputCollege', val: conf.college },
+                    { id: 'inputSig1Name', val: conf.sig1Name },
+                    { id: 'inputSig1Title', val: conf.sig1Title },
+                    { id: 'inputSig2Name', val: conf.sig2Name },
+                    { id: 'inputSig2Title', val: conf.sig2Title },
+                    { id: 'inputThemeColor', val: conf.themeColor },
+                    { id: 'hexThemeColor', val: conf.themeColor },
+                    { id: 'inputBgUrl', val: conf.bgUrl }
+                ];
+                els2.forEach(i => { const e = document.getElementById(i.id); if (e) e.value = i.val; });
             },
 
             async loadParticipants() {
@@ -627,7 +639,41 @@
             },
 
             async downloadPDF(row) {
-                // Update template
+                if (this.canvasJson) {
+                    Admin.showToast('info', 'Generating', 'Rendering design...');
+                    const canvasEl = document.createElement('canvas');
+                    canvasEl.id = 'temp-canvas';
+                    canvasEl.style.display = 'none';
+                    document.body.appendChild(canvasEl);
+
+                    const staticCanvas = new fabric.StaticCanvas('temp-canvas', {
+                        width: 1123,
+                        height: 794
+                    });
+
+                    staticCanvas.loadFromJSON(this.canvasJson, () => {
+                        // Find and replace text
+                        staticCanvas.getObjects().forEach(obj => {
+                            if (obj.data_type && (obj.type === 'textbox' || obj.type === 'i-text')) {
+                                if (obj.data_type === 'name') obj.set('text', (row.participant?.name || 'PARTICIPANT').toUpperCase());
+                                if (obj.data_type === 'event') obj.set('text', row.targetEvent || '{Event Name}');
+                                if (obj.data_type === 'college') obj.set('text', row.participant?.college || '{College Name}');
+                            }
+                        });
+                        staticCanvas.renderAll();
+
+                        const dataUrl = staticCanvas.toDataURL({ format: 'jpeg', quality: 1 });
+                        const link = document.createElement('a');
+                        link.href = dataUrl;
+                        link.download = `Certificate_${row.registrationNumber || row.participant?.name}_${row.targetEvent}.jpg`;
+                        link.click();
+
+                        document.body.removeChild(canvasEl);
+                    });
+                    return;
+                }
+
+                // Fallback to old template
                 document.getElementById('cert-user-name').textContent = (row.participant?.name || 'PARTICIPANT').toUpperCase();
                 document.getElementById('cert-participation-event').textContent = `for ${row.targetEvent}`;
 
@@ -652,8 +698,7 @@
         window.CertApp = CertApp;
         window.refreshData = () => CertApp.loadParticipants();
         document.addEventListener('DOMContentLoaded', () => CertApp.init());
-    </script> 
-    -->
+    </script>
 </body>
 
 </html>
