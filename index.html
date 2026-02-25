@@ -48,7 +48,8 @@
             </div>
             <!-- Optional: You can remove this simple text if you want STRICTLY logo + bar only -->
             <div class="loader-text">Loading...</div>
-            <div id="debug-status" style="margin-top: 20px; font-size: 12px; color: #ff6b35; max-width: 300px; text-align: center;"></div>
+            <div id="debug-status"
+                style="margin-top: 20px; font-size: 12px; color: #ff6b35; max-width: 300px; text-align: center;"></div>
         </div>
     </div>
 
@@ -82,7 +83,7 @@
             </div>
 
             <div class="nav-actions">
-                <a href="#ms-register" class="nav-cta" onclick="event.preventDefault(); document.getElementById('modal-ms-forms').classList.add('open'); document.getElementById('modal-ms-forms').setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden';">Register</a>
+                <a href="#register" class="nav-cta">Register</a>
                 <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
                     <span></span>
                     <span></span>
@@ -134,9 +135,9 @@
                     <div class="hero-cta">
                         <!-- CTA Buttons loaded dynamically from MongoDB -->
                         <!-- Fallback hardcoded button for mobile -->
-                        <a href="#ms-register" class="btn btn-primary" onclick="event.preventDefault(); document.getElementById('modal-ms-forms').classList.add('open'); document.getElementById('modal-ms-forms').setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden';">Register Now</a>
+                        <a href="#register" class="btn btn-primary">Register Now</a>
                     </div>
-                    <a href="#ms-register" class="mobile-register-btn" onclick="event.preventDefault(); document.getElementById('modal-ms-forms').classList.add('open'); document.getElementById('modal-ms-forms').setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden';">REGISTER NOW</a>
+                    <a href="#register" class="mobile-register-btn">REGISTER NOW</a>
 
                     <!-- Countdown Timer -->
                     <div id="countdown-container" class="countdown-container">
@@ -398,7 +399,8 @@
             <a href="#speakers" class="mobile-link">Speakers</a>
             <a href="#events" class="mobile-link">Events</a>
             <a href="#venue" class="mobile-link">Venue</a>
-            <a href="#ms-register" class="mobile-link cta" onclick="event.preventDefault(); document.getElementById('modal-ms-forms').classList.add('open'); document.getElementById('modal-ms-forms').setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden'; document.querySelector('.mobile-menu').classList.remove('active');">Register Now</a>
+            <a href="#register" class="mobile-link cta"
+                onclick="document.querySelector('.mobile-menu').classList.remove('active');">Register Now</a>
         </div>
     </div>
 
@@ -413,9 +415,10 @@
                 <form id="modal-registration-form" class="modal-registration-form">
                     <!-- Form fields loaded dynamically from MongoDB -->
                 </form>
-                
+
                 <!-- Fallback Registration Button -->
-                <div style="text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+                <div
+                    style="text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
                     <p style="margin-bottom: 10px; opacity: 0.8; font-size: 0.9rem;">Having trouble registering?</p>
                     <button type="button" class="btn btn-secondary" id="fallback-register-btn" style="width: 100%;">
                         Register via Microsoft Forms
@@ -427,24 +430,21 @@
 
     <!-- Microsoft Forms Registration Modal -->
     <div id="modal-ms-forms" class="modal" aria-hidden="true">
-        <div class="modal-backdrop" onclick="this.parentElement.classList.remove('open'); this.parentElement.setAttribute('aria-hidden', 'true'); document.body.style.overflow = '';"></div>
-        <div class="modal-dialog modal-poster-dialog" role="dialog" aria-modal="true" aria-labelledby="modal-ms-forms-title" style="max-width: 700px;">
-            <button class="modal-close" aria-label="Close modal" onclick="document.getElementById('modal-ms-forms').classList.remove('open'); document.getElementById('modal-ms-forms').setAttribute('aria-hidden', 'true'); document.body.style.overflow = '';">&times;</button>
+        <div class="modal-backdrop"
+            onclick="this.parentElement.classList.remove('open'); this.parentElement.setAttribute('aria-hidden', 'true'); document.body.style.overflow = '';">
+        </div>
+        <div class="modal-dialog modal-poster-dialog" role="dialog" aria-modal="true"
+            aria-labelledby="modal-ms-forms-title" style="max-width: 700px;">
+            <button class="modal-close" aria-label="Close modal"
+                onclick="document.getElementById('modal-ms-forms').classList.remove('open'); document.getElementById('modal-ms-forms').setAttribute('aria-hidden', 'true'); document.body.style.overflow = '';">&times;</button>
             <div class="modal-body">
                 <h2 id="modal-ms-forms-title">Registration Form</h2>
                 <div class="ms-forms-container" style="width: 100%; height: 600px; max-height: 80vh; overflow: hidden;">
-                    <iframe 
-                        width="100%" 
-                        height="100%" 
-                        src="https://forms.office.com/Pages/ResponsePage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAAMAAGjQ5SBURFBLQlFaRjY3UFQ0UzNDWjNLRUZWNUU5RS4u&embed=true" 
-                        frameborder="0" 
-                        marginwidth="0" 
-                        marginheight="0" 
-                        style="border: none; width: 100%; height: 100%;" 
-                        allowfullscreen 
-                        webkitallowfullscreen 
-                        mozallowfullscreen 
-                        msallowfullscreen>
+                    <iframe width="100%" height="100%"
+                        src="https://forms.office.com/Pages/ResponsePage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAAMAAGjQ5SBURFBLQlFaRjY3UFQ0UzNDWjNLRUZWNUU5RS4u&embed=true"
+                        frameborder="0" marginwidth="0" marginheight="0"
+                        style="border: none; width: 100%; height: 100%;" allowfullscreen webkitallowfullscreen
+                        mozallowfullscreen msallowfullscreen>
                     </iframe>
                 </div>
             </div>
@@ -549,7 +549,7 @@
     <!-- 6. Service Worker for PWA/Offline caching -->
     <script>
         // Dynamic cache buster - forces fresh JS files on every load
-        (function() {
+        (function () {
             const timestamp = Date.now();
             const scripts = document.querySelectorAll('script[src*=".js"]');
             scripts.forEach(script => {
