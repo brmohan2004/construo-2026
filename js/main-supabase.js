@@ -271,10 +271,14 @@
 
     function ConstruoSupabaseData() {
         this.cache = {};
-        this.currentVersion = '2.0';
+        this.currentVersion = '3.0';
         this._supabase = getClient();
         this._readyPromise = null;
         this.loadedModules = 0;
+        
+        // Clear old cache versions on initialization
+        clearOldCacheVersions();
+        
         this.checkUrlParams();
     }
 
