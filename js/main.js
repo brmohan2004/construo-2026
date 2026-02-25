@@ -122,12 +122,25 @@ class ConstruoApp {
             ];
             this.updateOrganizersUI({ organizers, categories });
         }
+
+        // Refresh all scroll triggers after DOM insertions are complete
+        if (typeof window !== 'undefined' && window.ScrollTrigger) {
+            setTimeout(() => {
+                window.ScrollTrigger.refresh();
+                console.log('ScrollTrigger refreshed after UI update');
+            }, 300);
+        }
     }
 
     // Load initial data on page load (called once)
     async loadInitialData() {
         console.log('Loading initial data from Supabase...');
         try {
+            // Signal preloader to finish immediately so the user doesn't wait for database requests
+            if (window.construoAnimations && typeof window.construoAnimations.markDataLoaded === 'function') {
+                window.construoAnimations.markDataLoaded();
+            }
+
             // Import Supabase data loader
             const waitForDataLoader = () => {
                 return new Promise((resolve) => {
@@ -201,16 +214,8 @@ class ConstruoApp {
 
             console.log('Initial data loaded successfully from Supabase');
 
-            // Signal preloader to finish
-            if (window.construoAnimations && typeof window.construoAnimations.markDataLoaded === 'function') {
-                window.construoAnimations.markDataLoaded();
-            }
         } catch (err) {
             console.error('Failed to load initial data from Supabase:', err);
-            // Also unblock on error so user isn't stuck
-            if (window.construoAnimations && typeof window.construoAnimations.markDataLoaded === 'function') {
-                window.construoAnimations.markDataLoaded();
-            }
         }
     }
 
@@ -380,7 +385,9 @@ class ConstruoApp {
         }
 
         // Re-init animations if needed
-        if (window.gsap && window.ScrollTrigger) {
+        if (window.construoAnimations && typeof window.construoAnimations.initOrganizersAnimations === 'function') {
+            window.construoAnimations.initOrganizersAnimations();
+        } else if (window.gsap && window.ScrollTrigger) {
             setTimeout(() => {
                 try { window.ScrollTrigger.refresh(); } catch (e) { }
             }, 200);
@@ -867,28 +874,39 @@ class ConstruoApp {
 
         // Update poster (both in about section and modal)
         const poster = document.getElementById('about-poster');
-        if (poster && data.poster) {
-            poster.src = data.poster;
-            poster.alt = data.posterAlt || 'Event Poster';
+        if (poster) {
+            const trigger = poster.closest('.poster-trigger');
+            if (data.poster) {
+                poster.src = data.poster;
+                poster.alt = data.posterAlt || 'Event Poster';
+                if (trigger) trigger.style.display = '';
 
-            // Also update the poster modal image
-            const posterModalImage = document.querySelector('#modal-poster .poster-modal-image');
-            if (posterModalImage) {
-                posterModalImage.src = data.poster;
-                posterModalImage.alt = data.posterAlt || 'Event Poster - Full Size';
-            }
+                // Also update the poster modal image
+                const posterModalImage = document.querySelector('#modal-poster .poster-modal-image');
+                if (posterModalImage) {
+                    posterModalImage.src = data.poster;
+                    posterModalImage.alt = data.posterAlt || 'Event Poster - Full Size';
+                }
 
-            // Update poster modal title
-            const posterModalTitle = document.getElementById('modal-poster-title');
-            if (posterModalTitle) {
-                posterModalTitle.textContent = data.posterTitle || 'Event Poster';
+                // Update poster modal title
+                const posterModalTitle = document.getElementById('modal-poster-title');
+                if (posterModalTitle) {
+                    posterModalTitle.textContent = data.posterTitle || 'Event Poster';
+                }
+            } else {
+                if (trigger) trigger.style.display = 'none';
             }
         }
 
         // Update brochure
         const brochure = document.getElementById('about-brochure');
-        if (brochure && data.brochure) {
-            brochure.setAttribute('href', data.brochure);
+        if (brochure) {
+            if (data.brochure) {
+                brochure.setAttribute('href', data.brochure);
+                brochure.style.display = '';
+            } else {
+                brochure.style.display = 'none';
+            }
         }
     }
 
@@ -1085,6 +1103,11 @@ class ConstruoApp {
 
         // Re-initialize hover effects for new cards
         this.initCustomCursor();
+
+        // Re-init GSAP animations for new event cards
+        if (window.construoAnimations && typeof window.construoAnimations.initEventAnimations === 'function') {
+            window.construoAnimations.initEventAnimations();
+        }
 
         // Set up mobile carousel UX (drag + dots)
         this.initMobileEventCarousels();

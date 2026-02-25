@@ -463,6 +463,16 @@ class ConstruoAnimations {
     }
 
     initEventAnimations() {
+        // Kill existing event ScrollTriggers to avoid duplicates
+        ScrollTrigger.getAll().forEach(trigger => {
+            if (trigger.vars && trigger.vars.trigger) {
+                const tr = trigger.vars.trigger;
+                if ((tr.classList && tr.classList.contains('event-card')) || tr === '.prize-banner' || tr === '.prize-amount') {
+                    trigger.kill();
+                }
+            }
+        });
+
         // Event cards staggered animation
         gsap.utils.toArray('.event-card').forEach((card, index) => {
             gsap.from(card, {
@@ -543,6 +553,16 @@ class ConstruoAnimations {
     }
 
     initOrganizersAnimations() {
+        // Kill existing organizer ScrollTriggers to avoid duplicates
+        ScrollTrigger.getAll().forEach(trigger => {
+            if (trigger.vars && trigger.vars.trigger) {
+                const tr = trigger.vars.trigger;
+                if (tr.classList && tr.classList.contains('organizer-card')) {
+                    trigger.kill();
+                }
+            }
+        });
+
         gsap.utils.toArray('.organizer-card').forEach((card, index) => {
             gsap.from(card, {
                 scrollTrigger: {
