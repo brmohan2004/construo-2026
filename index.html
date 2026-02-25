@@ -489,16 +489,20 @@
         </div>
     </div>
 
-    <!-- Scripts -->
-    <!-- Supabase UMD must load first (blocking) so window.supabase is available for modules -->
+    <!-- Scripts: All defer scripts execute in document order (guaranteed) -->
+    <!-- 1. Supabase UMD from CDN (blocking - must be first) -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script type="module" src="js/supabase-config.js?v=3.0"></script>
-    <script type="module" src="js/main-supabase.js?v=3.0"></script>
+    <!-- 2. Initialize Supabase client (sets window._construoSupabase) -->
+    <script src="js/supabase-config.js?v=4.0" defer></script>
+    <!-- 3. Data loader (sets window.ConstruoSupabaseData) -->
+    <script src="js/main-supabase.js?v=4.0" defer></script>
+    <!-- 4. Other dependencies -->
     <script src="js/three-scene.js" defer></script>
     <script src="js/animations.js?v=1.2" defer></script>
     <script src="js/scroll-animations.js?v=1.0" defer></script>
-    <script src="js/main.js?v=3.0" defer></script>
-    <script src="js/faq.js"></script>
+    <!-- 5. Main app (uses window.ConstruoSupabaseData) -->
+    <script src="js/main.js?v=4.0" defer></script>
+    <script src="js/faq.js" defer></script>
 </body>
 
 </html>

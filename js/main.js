@@ -134,74 +134,62 @@ class ConstruoApp {
 
     // Load initial data on page load (called once)
     async loadInitialData() {
-        console.log('Loading initial data from Supabase...');
+        console.log('[main.js] Loading initial data from Supabase...');
         try {
             // Signal preloader to finish immediately so the user doesn't wait for database requests
             if (window.construoAnimations && typeof window.construoAnimations.markDataLoaded === 'function') {
                 window.construoAnimations.markDataLoaded();
             }
 
-            // Wait for ConstruoSupabaseData to be available on window
-            // On mobile, module scripts may finish after defer scripts
-            const waitForDataLoader = () => {
-                return new Promise((resolve) => {
-                    if (window.ConstruoSupabaseData) {
-                        resolve(window.ConstruoSupabaseData);
-                        return;
-                    }
-                    const checkInterval = setInterval(() => {
+            // With all scripts as defer, ConstruoSupabaseData should already be on window.
+            // Short polling as safety net only.
+            let dataLoader = window.ConstruoSupabaseData;
+            if (!dataLoader) {
+                console.log('[main.js] Waiting for ConstruoSupabaseData...');
+                dataLoader = await new Promise((resolve) => {
+                    let elapsed = 0;
+                    const interval = setInterval(() => {
+                        elapsed += 100;
                         if (window.ConstruoSupabaseData) {
-                            clearInterval(checkInterval);
+                            clearInterval(interval);
                             resolve(window.ConstruoSupabaseData);
-                        }
-                    }, 100);
-                    // Timeout after 20s to avoid infinite waiting on slow mobile networks
-                    setTimeout(() => {
-                        clearInterval(checkInterval);
-                        if (!window.ConstruoSupabaseData) {
-                            console.error('Supabase data loader timed out after 20s');
+                        } else if (elapsed >= 5000) {
+                            clearInterval(interval);
+                            console.error('[main.js] ConstruoSupabaseData not found after 5s');
                             resolve(null);
                         }
-                    }, 20000);
+                    }, 100);
                 });
-            };
+            }
 
-            const dataLoader = await waitForDataLoader();
             if (!dataLoader) {
-                console.error('Data loader failed to initialize');
-                if (window.construoAnimations && typeof window.construoAnimations.markDataLoaded === 'function') {
-                    window.construoAnimations.markDataLoaded();
-                }
+                console.error('[main.js] Data loader failed to initialize');
                 return;
             }
 
-            // Wait for the Supabase client inside the data loader to be ready
-            // This is the critical fix for mobile: the client may still be initializing
-            if (dataLoader._ready) {
-                console.log('Waiting for Supabase client to be ready...');
-                await Promise.race([
-                    dataLoader._ready,
-                    new Promise((_, reject) => setTimeout(() => reject(new Error('Supabase client init timeout')), 15000))
-                ]);
-                console.log('Supabase client is ready');
-            }
+            console.log('[main.js] Data loader found, calling loadAll()...');
 
-            // Add a timeout to the data fetch to prevent hanging forever
-            const fetchDataWithTimeout = async () => {
-                return Promise.race([
-                    dataLoader.loadAll(),
-                    new Promise((_, reject) => setTimeout(() => reject(new Error('Data fetch timeout after 45s')), 45000))
-                ]);
-            };
-
-            const result = await fetchDataWithTimeout();
+            // Fetch data with a generous timeout for slow mobile connections
+            const result = await Promise.race([
+                dataLoader.loadAll(),
+                new Promise((_, reject) => setTimeout(() => reject(new Error('Data fetch timeout after 45s')), 45000))
+            ]);
 
             if (!result) {
-                console.error('Data fetch returned null/undefined');
+                console.error('[main.js] loadAll() returned null/undefined');
                 return;
             }
 
             const { siteConfig, events, timeline, speakers, sponsors, organizers } = result;
+
+            console.log('[main.js] Data received:', {
+                hasSiteConfig: !!siteConfig,
+                eventsCount: events ? events.length : 0,
+                timelineCount: timeline ? timeline.length : 0,
+                speakersCount: speakers ? speakers.length : 0,
+                sponsorsCount: sponsors ? sponsors.length : 0,
+                organizersCount: organizers ? organizers.length : 0
+            });
 
             // Update Preloader appearance with loaded settings
             if (siteConfig && siteConfig.settings && window.construoAnimations) {
@@ -231,11 +219,11 @@ class ConstruoApp {
                 }
             }
 
-            console.log('Initial data loaded successfully from Supabase');
+            console.log('[main.js] Initial data loaded and UI updated successfully');
 
         } catch (err) {
-            console.error('Failed to load initial data from Supabase:', err);
-            console.error('Error details:', err.message, err.stack);
+            console.error('[main.js] Failed to load initial data:', err);
+            console.error('[main.js] Error details:', err.message, err.stack);
         }
     }
 
