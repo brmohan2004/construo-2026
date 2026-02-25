@@ -459,21 +459,35 @@
         var self = this;
 
         return this.ensureClient().then(function (supabase) {
-            if (!supabase) return null;
+            if (!supabase) {
+                console.error('[main-supabase] No Supabase client available for getSiteConfig');
+                return null;
+            }
+            console.log('[main-supabase] Fetching site_config from Supabase...');
             return supabase
                 .from('site_config')
                 .select('*')
                 .eq('config_key', 'main')
                 .single()
                 .then(function (result) {
-                    if (result.error) throw result.error;
+                    if (result.error) {
+                        console.error('[main-supabase] Supabase error in getSiteConfig:', result.error);
+                        throw result.error;
+                    }
+                    console.log('[main-supabase] ✅ site_config fetched successfully');
                     self.cache.siteConfig = result.data;
                     self.dispatchPartialProgress();
                     return result.data;
                 });
         }).catch(function (error) {
             console.error('[main-supabase] Error fetching site config:', error);
-            return readFromStorage(CACHE_KEYS.siteConfig);
+            var cached = readFromStorage(CACHE_KEYS.siteConfig);
+            if (cached) {
+                console.log('[main-supabase] Using cached site_config as fallback');
+            } else {
+                console.error('[main-supabase] No cached site_config available');
+            }
+            return cached;
         });
     };
 
