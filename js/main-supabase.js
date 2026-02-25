@@ -162,11 +162,13 @@
      * Returns null if any critical piece is missing OR if localStorage is disabled by admin.
      */
     function getAllCachedData() {
+        updateDebugStatus('Checking localStorage...');
         var siteConfig = readFromStorage(CACHE_KEYS.siteConfig);
         
         // Check if admin has disabled localStorage
         if (siteConfig && !isLocalStorageEnabled(siteConfig)) {
             console.log('[cache] localStorage disabled by admin - clearing cache and forcing fresh fetch');
+            updateDebugStatus('localStorage disabled by admin');
             clearAllStorage();
             return null;
         }
@@ -181,6 +183,7 @@
         // Need at least siteConfig to consider cache valid
         if (!siteConfig) {
             console.log('[cache] No cached siteConfig found - cache miss');
+            updateDebugStatus('No cache found, fetching from Supabase...');
             return null;
         }
 
@@ -193,6 +196,8 @@
             organizersCount: organizers ? organizers.length : 0,
             lastFetch: lastFetch ? new Date(lastFetch).toLocaleString() : 'unknown'
         });
+        
+        updateDebugStatus('Using cached data');
 
         return {
             siteConfig: siteConfig,
@@ -202,6 +207,20 @@
             sponsors: sponsors || [],
             organizers: organizers || []
         };
+    }
+
+    /**
+     * Update debug status on screen (for mobile debugging)
+     */
+    function updateDebugStatus(message) {
+        try {
+            var debugEl = document.getElementById('debug-status');
+            if (debugEl) {
+                debugEl.textContent = message;
+            }
+        } catch (e) {
+            // Ignore if element doesn't exist yet
+        }
     }
 
     /**
@@ -320,6 +339,7 @@
     ConstruoSupabaseData.prototype.loadAll = function () {
         var self = this;
         console.log('[main-supabase] loadAll() called');
+        updateDebugStatus('Starting data load...');
 
         // Step 1: Check localStorage
         var cachedData = getAllCachedData();
@@ -327,6 +347,7 @@
         if (cachedData) {
             // Step 2a: We have cached data! Return it instantly.
             console.log('[main-supabase] ✅ Returning cached data for INSTANT render');
+            updateDebugStatus('Loaded from cache');
 
             // Step 2b: Check if we need a background refresh (Cooldown Timer)
             var lastFetch = readFromStorage(CACHE_KEYS.lastFetch);
@@ -335,6 +356,7 @@
 
             if (!lastFetch || (now - lastFetch) > cooldownMs) {
                 console.log('[main-supabase] Cache is older than 3 minutes, starting background refresh...');
+                updateDebugStatus('Checking for updates...');
                 self.backgroundRefresh(cachedData);
             } else {
                 console.log('[main-supabase] ⏳ Cache is fresh (less than 3 min old), skipping background check to save bandwidth.');
@@ -345,15 +367,26 @@
 
         // Step 3: No cache - must fetch from Supabase (first visit)
         console.log('[main-supabase] 📡 First visit - fetching from Supabase...');
+        updateDebugStatus('Fetching from Supabase...');
         return self.ensureClient().then(function (client) {
             if (!client) {
+                updateDebugStatus('❌ Supabase client not available');
                 throw new Error('Supabase client not available');
             }
+            updateDebugStatus('Connected to Supabase');
             return self.fetchAllFresh();
         }).then(function (freshData) {
+            if (!freshData) {
+                updateDebugStatus('❌ No data received');
+                throw new Error('No data received from Supabase');
+            }
+            updateDebugStatus('✅ Data loaded successfully');
             // Save to localStorage for next visit
             saveAllToStorage(freshData);
             return freshData;
+        }).catch(function (error) {
+            updateDebugStatus('❌ Error: ' + error.message);
+            throw error;
         });
     };
 
