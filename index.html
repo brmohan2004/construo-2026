@@ -82,7 +82,7 @@
             </div>
 
             <div class="nav-actions">
-                <a href="#register" class="nav-cta">Register</a>
+                <a href="#ms-register" class="nav-cta" onclick="event.preventDefault(); document.getElementById('modal-ms-forms').classList.add('open'); document.getElementById('modal-ms-forms').setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden';">Register</a>
                 <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
                     <span></span>
                     <span></span>
@@ -133,8 +133,10 @@
                     </div>
                     <div class="hero-cta">
                         <!-- CTA Buttons loaded dynamically from MongoDB -->
+                        <!-- Fallback hardcoded button for mobile -->
+                        <a href="#ms-register" class="btn btn-primary" onclick="event.preventDefault(); document.getElementById('modal-ms-forms').classList.add('open'); document.getElementById('modal-ms-forms').setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden';">Register Now</a>
                     </div>
-                    <a href="#register" class="mobile-register-btn">REGISTER NOW</a>
+                    <a href="#ms-register" class="mobile-register-btn" onclick="event.preventDefault(); document.getElementById('modal-ms-forms').classList.add('open'); document.getElementById('modal-ms-forms').setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden';">REGISTER NOW</a>
 
                     <!-- Countdown Timer -->
                     <div id="countdown-container" class="countdown-container">
@@ -396,7 +398,7 @@
             <a href="#speakers" class="mobile-link">Speakers</a>
             <a href="#events" class="mobile-link">Events</a>
             <a href="#venue" class="mobile-link">Venue</a>
-            <a href="#register" class="mobile-link cta">Register Now</a>
+            <a href="#ms-register" class="mobile-link cta" onclick="event.preventDefault(); document.getElementById('modal-ms-forms').classList.add('open'); document.getElementById('modal-ms-forms').setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden'; document.querySelector('.mobile-menu').classList.remove('active');">Register Now</a>
         </div>
     </div>
 
@@ -425,9 +427,9 @@
 
     <!-- Microsoft Forms Registration Modal -->
     <div id="modal-ms-forms" class="modal" aria-hidden="true">
-        <div class="modal-backdrop" data-modal-close></div>
+        <div class="modal-backdrop" onclick="this.parentElement.classList.remove('open'); this.parentElement.setAttribute('aria-hidden', 'true'); document.body.style.overflow = '';"></div>
         <div class="modal-dialog modal-poster-dialog" role="dialog" aria-modal="true" aria-labelledby="modal-ms-forms-title" style="max-width: 700px;">
-            <button class="modal-close" aria-label="Close modal" data-modal-close>&times;</button>
+            <button class="modal-close" aria-label="Close modal" onclick="document.getElementById('modal-ms-forms').classList.remove('open'); document.getElementById('modal-ms-forms').setAttribute('aria-hidden', 'true'); document.body.style.overflow = '';">&times;</button>
             <div class="modal-body">
                 <h2 id="modal-ms-forms-title">Registration Form</h2>
                 <div class="ms-forms-container" style="width: 100%; height: 600px; max-height: 80vh; overflow: hidden;">
