@@ -25,7 +25,7 @@
 (function () {
     'use strict';
 
-    var CACHE_PREFIX = 'construo_v4_';
+    var CACHE_PREFIX = 'construo_v6_';
     var CACHE_KEYS = {
         siteConfig: CACHE_PREFIX + 'siteConfig',
         events: CACHE_PREFIX + 'events',
