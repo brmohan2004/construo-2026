@@ -159,19 +159,7 @@ class ConstruoSupabaseData {
     }
 
     getAllFromCache() {
-        const data = {
-            siteConfig: this.getFromCache('siteConfig'),
-            events: this.getFromCache('events'),
-            timeline: this.getFromCache('timeline'),
-            speakers: this.getFromCache('speakers'),
-            sponsors: this.getFromCache('sponsors'),
-            organizers: this.getFromCache('organizers')
-        };
-
-        // Return if at least some core data exists
-        if (data.events || data.siteConfig) {
-            return data;
-        }
+        // BYPASS ALL CACHING FOR TESTING
         return null;
     }
 
