@@ -11,7 +11,8 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="../css/admin.css">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script></head>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
 
 <body>
     <div class="admin-layout">
@@ -472,11 +473,25 @@
                 saveBtn.textContent = 'Saving...';
                 saveBtn.disabled = true;
 
+                console.log('[Footer Save] FAQs being saved:', JSON.stringify(footerData.faqs));
+                console.log('[Footer Save] Full footer data:', JSON.stringify(footerData));
+
                 try {
-                    await Admin.updateSiteConfig('footer', footerData);
+                    const result = await Admin.updateSiteConfig('footer', footerData);
+                    console.log('[Footer Save] updateSiteConfig result:', result);
                     this.data = footerData;
 
-                    Admin.showToast('success', 'Saved', 'Footer settings updated');
+                    // Verify save by re-reading from database
+                    const verifyConfig = await Admin.getSiteConfig();
+                    console.log('[Footer Save] VERIFY - DB faqs:', JSON.stringify(verifyConfig.footer?.faqs));
+
+                    if (!verifyConfig.footer?.faqs || verifyConfig.footer.faqs.length === 0) {
+                        console.error('[Footer Save] ❌ SAVE FAILED - FAQs not in database!');
+                        Admin.showToast('error', 'Warning', 'FAQs may not have saved correctly. Check console.');
+                    } else {
+                        console.log('[Footer Save] ✅ FAQs verified in database:', verifyConfig.footer.faqs.length, 'items');
+                        Admin.showToast('success', 'Saved', 'Footer settings updated');
+                    }
                 } catch (error) {
                     console.error('Save footer error:', error);
                     Admin.showToast('error', 'Error', error.message || 'Failed to save footer');
