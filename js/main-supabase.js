@@ -8,7 +8,7 @@ import supabase from './supabase-config.js';
 class ConstruoSupabaseData {
     constructor() {
         this.cache = {};
-        this.currentVersion = '1.2';
+        this.currentVersion = '1.3';
         this.checkUrlParams();
     }
 
