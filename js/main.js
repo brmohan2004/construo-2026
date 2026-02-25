@@ -154,14 +154,14 @@ class ConstruoApp {
                             resolve(window.ConstruoSupabaseData);
                         }
                     }, 50);
-                    // Timeout after 5s to avoid infinite waiting
+                    // Timeout after 15s to avoid infinite waiting on slow mobile networks
                     setTimeout(() => {
                         clearInterval(checkInterval);
                         if (!window.ConstruoSupabaseData) {
                             console.error('Supabase data loader timed out');
                             resolve(null);
                         }
-                    }, 5000);
+                    }, 15000);
                 });
             };
 
