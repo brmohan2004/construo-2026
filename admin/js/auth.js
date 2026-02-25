@@ -229,7 +229,12 @@ const Auth = {
             }
         } catch (error) {
             console.error('Login error:', error);
-            this.showLoginError(error.message || 'Invalid username or password');
+            // Check for network connection errors specifically (failed to fetch, no internet)
+            if (error.message === 'Failed to fetch' || error.message.includes('NetworkError') || !navigator.onLine) {
+                this.showLoginError('Network connection blocked by ISP. Please use a VPN or Cloudflare DNS (1.1.1.1).');
+            } else {
+                this.showLoginError(error.message || 'Invalid username or password');
+            }
         } finally {
             submitBtn.classList.remove('loading');
         }
