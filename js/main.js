@@ -76,14 +76,15 @@ class ConstruoApp {
     }
 
     async initDataSync() {
-        console.log('Loading website data from Supabase...');
+        console.log('[main.js] Initializing data sync...');
         this.loadInitialData();
 
-        // Listen for background updates
+        // Listen for background refresh updates (when admin has made changes)
         window.addEventListener('construo-data-refreshed', (e) => {
-            console.log('Data refreshed from background, updating UI...');
+            console.log('[main.js] 🆕 Background refresh detected changes - updating UI with fresh data...');
             const { siteConfig, events, timeline, speakers, sponsors, organizers } = e.detail;
             this.updateUI({ siteConfig, events, timeline, speakers, sponsors, organizers });
+            console.log('[main.js] ✅ UI updated with fresh data from Supabase');
         });
     }
 

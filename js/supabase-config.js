@@ -43,7 +43,6 @@
         attempts++;
         if (initClient()) {
             clearInterval(poll);
-            // Notify anyone waiting
             window.dispatchEvent(new CustomEvent('supabase-client-ready'));
         } else if (attempts >= maxAttempts) {
             clearInterval(poll);

@@ -1,22 +1,187 @@
 /**
- * CONSTRUO 2026 - Main JavaScript (Supabase)
- * Supabase data loading functions for public website
+ * CONSTRUO 2026 - Main Supabase Data Loader
+ * 
+ * Smart caching system ("stale-while-revalidate"):
+ * 
+ *  1. FIRST VISIT:
+ *     - Fetch all data from Supabase
+ *     - Store in user's localStorage (phone memory)
+ *     - Display the data
+ * 
+ *  2. RETURN VISITS:
+ *     - Instantly load data from localStorage (super fast, no network wait)
+ *     - Display cached data immediately
+ *     - Fetch fresh data from Supabase in the background
+ *     - If data changed (admin made edits), update localStorage + update UI
+ * 
+ *  3. ADMIN CHANGES:
+ *     - When admin updates anything in the admin panel, Supabase has new data
+ *     - On user's next visit/refresh, background fetch detects the change
+ *     - localStorage is updated and UI refreshes automatically
  * 
  * NO ES MODULES - uses window globals for maximum mobile compatibility.
- * This must load after supabase-config.js which sets window._construoSupabase
  */
 
 (function () {
     'use strict';
 
+    var CACHE_PREFIX = 'construo_v2_';
+    var CACHE_KEYS = {
+        siteConfig: CACHE_PREFIX + 'siteConfig',
+        events: CACHE_PREFIX + 'events',
+        timeline: CACHE_PREFIX + 'timeline',
+        speakers: CACHE_PREFIX + 'speakers',
+        sponsors: CACHE_PREFIX + 'sponsors',
+        organizers: CACHE_PREFIX + 'organizers',
+        lastFetch: CACHE_PREFIX + 'lastFetch',
+        dataHash: CACHE_PREFIX + 'dataHash'
+    };
+
+    // ========================================================
+    // CACHE HELPERS - localStorage for mobile persistence
+    // ========================================================
+
+    /**
+     * Save data to localStorage.
+     * Handles quota exceeded errors gracefully.
+     */
+    function saveToStorage(key, data) {
+        try {
+            var json = JSON.stringify(data);
+            localStorage.setItem(key, json);
+            return true;
+        } catch (e) {
+            if (e.name === 'QuotaExceededError' || e.code === 22) {
+                console.warn('[cache] localStorage quota exceeded, clearing old cache');
+                clearAllStorage();
+                try {
+                    localStorage.setItem(key, JSON.stringify(data));
+                    return true;
+                } catch (e2) {
+                    console.error('[cache] Still cannot save after clearing:', e2);
+                }
+            } else {
+                console.error('[cache] Error saving to localStorage:', e);
+            }
+            return false;
+        }
+    }
+
+    /**
+     * Read data from localStorage.
+     */
+    function readFromStorage(key) {
+        try {
+            var json = localStorage.getItem(key);
+            if (!json) return null;
+            return JSON.parse(json);
+        } catch (e) {
+            console.error('[cache] Error reading from localStorage:', e);
+            return null;
+        }
+    }
+
+    /**
+     * Clear all construo cache entries from localStorage.
+     */
+    function clearAllStorage() {
+        try {
+            Object.keys(CACHE_KEYS).forEach(function (k) {
+                localStorage.removeItem(CACHE_KEYS[k]);
+            });
+            console.log('[cache] All cache cleared');
+            return true;
+        } catch (e) {
+            console.error('[cache] Error clearing cache:', e);
+            return false;
+        }
+    }
+
+    /**
+     * Generate a simple hash of data to detect changes.
+     * Uses a fast string hash - not cryptographic, just for comparison.
+     */
+    function simpleHash(str) {
+        var hash = 0;
+        if (!str || str.length === 0) return hash.toString();
+        for (var i = 0; i < str.length; i++) {
+            var char = str.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash; // Convert to 32bit integer
+        }
+        return hash.toString();
+    }
+
+    /**
+     * Get all cached data from localStorage.
+     * Returns null if any critical piece is missing.
+     */
+    function getAllCachedData() {
+        var siteConfig = readFromStorage(CACHE_KEYS.siteConfig);
+        var events = readFromStorage(CACHE_KEYS.events);
+        var timeline = readFromStorage(CACHE_KEYS.timeline);
+        var speakers = readFromStorage(CACHE_KEYS.speakers);
+        var sponsors = readFromStorage(CACHE_KEYS.sponsors);
+        var organizers = readFromStorage(CACHE_KEYS.organizers);
+        var lastFetch = readFromStorage(CACHE_KEYS.lastFetch);
+
+        // Need at least siteConfig to consider cache valid
+        if (!siteConfig) {
+            console.log('[cache] No cached siteConfig found - cache miss');
+            return null;
+        }
+
+        console.log('[cache] Cache HIT - loaded from localStorage', {
+            hasSiteConfig: !!siteConfig,
+            eventsCount: events ? events.length : 0,
+            timelineCount: timeline ? timeline.length : 0,
+            speakersCount: speakers ? speakers.length : 0,
+            sponsorsCount: sponsors ? sponsors.length : 0,
+            organizersCount: organizers ? organizers.length : 0,
+            lastFetch: lastFetch ? new Date(lastFetch).toLocaleString() : 'unknown'
+        });
+
+        return {
+            siteConfig: siteConfig,
+            events: events || [],
+            timeline: timeline || [],
+            speakers: speakers || [],
+            sponsors: sponsors || [],
+            organizers: organizers || []
+        };
+    }
+
+    /**
+     * Save all data to localStorage.
+     */
+    function saveAllToStorage(data) {
+        if (!data) return;
+
+        if (data.siteConfig) saveToStorage(CACHE_KEYS.siteConfig, data.siteConfig);
+        if (data.events) saveToStorage(CACHE_KEYS.events, data.events);
+        if (data.timeline) saveToStorage(CACHE_KEYS.timeline, data.timeline);
+        if (data.speakers) saveToStorage(CACHE_KEYS.speakers, data.speakers);
+        if (data.sponsors) saveToStorage(CACHE_KEYS.sponsors, data.sponsors);
+        if (data.organizers) saveToStorage(CACHE_KEYS.organizers, data.organizers);
+        saveToStorage(CACHE_KEYS.lastFetch, Date.now());
+
+        // Save a hash of the data to detect changes on next visit
+        var hashStr = JSON.stringify(data.siteConfig) +
+            JSON.stringify(data.events) +
+            JSON.stringify(data.speakers);
+        saveToStorage(CACHE_KEYS.dataHash, simpleHash(hashStr));
+
+        console.log('[cache] All data saved to localStorage');
+    }
+
+    // ========================================================
+    // SUPABASE CLIENT HELPER
+    // ========================================================
+
     function getClient() {
         return window._construoSupabase || null;
     }
 
-    /**
-     * Wait for the Supabase client to be ready.
-     * Handles cases where the CDN or config script is still loading.
-     */
     function waitForClient(timeoutMs) {
         timeoutMs = timeoutMs || 15000;
         return new Promise(function (resolve) {
@@ -40,9 +205,13 @@
         });
     }
 
+    // ========================================================
+    // MAIN DATA LOADER CLASS
+    // ========================================================
+
     function ConstruoSupabaseData() {
         this.cache = {};
-        this.currentVersion = '1.5';
+        this.currentVersion = '2.0';
         this._supabase = getClient();
         this._readyPromise = null;
         this.loadedModules = 0;
@@ -54,6 +223,7 @@
             var urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('clearCache') === 'true' || urlParams.get('refresh') === 'true') {
                 console.log('[main-supabase] Force clearing cache due to URL parameter');
+                clearAllStorage();
                 var newUrl = window.location.origin + window.location.pathname;
                 window.history.replaceState({}, document.title, newUrl);
             }
@@ -62,9 +232,6 @@
         }
     };
 
-    /**
-     * Ensure we have a valid Supabase client before making requests.
-     */
     ConstruoSupabaseData.prototype.ensureClient = function () {
         if (this._supabase) return Promise.resolve(this._supabase);
         if (this._readyPromise) return this._readyPromise;
@@ -77,22 +244,120 @@
         return this._readyPromise;
     };
 
+    /**
+     * MAIN LOAD METHOD - Implements stale-while-revalidate:
+     * 
+     * 1. Check localStorage for cached data
+     * 2. If cached data exists → return it immediately (instant render)
+     *    AND start a background fetch from Supabase
+     * 3. If no cached data → fetch from Supabase directly
+     * 4. After fresh fetch, compare with cache. If different → update cache + notify UI
+     */
     ConstruoSupabaseData.prototype.loadAll = function () {
         var self = this;
         console.log('[main-supabase] loadAll() called');
 
-        return this.ensureClient().then(function (client) {
+        // Step 1: Check localStorage
+        var cachedData = getAllCachedData();
+
+        if (cachedData) {
+            // Step 2a: We have cached data! Return it instantly.
+            console.log('[main-supabase] ✅ Returning cached data for INSTANT render');
+
+            // Step 2b: Start background refresh (don't await it)
+            self.backgroundRefresh(cachedData);
+
+            return Promise.resolve(cachedData);
+        }
+
+        // Step 3: No cache - must fetch from Supabase (first visit)
+        console.log('[main-supabase] 📡 First visit - fetching from Supabase...');
+        return self.ensureClient().then(function (client) {
             if (!client) {
                 throw new Error('Supabase client not available');
             }
-            console.log('[main-supabase] Client ready, fetching all data...');
             return self.fetchAllFresh();
+        }).then(function (freshData) {
+            // Save to localStorage for next visit
+            saveAllToStorage(freshData);
+            return freshData;
         });
     };
 
+    /**
+     * Background refresh: Fetch fresh data from Supabase and compare with cached data.
+     * If data has changed (admin made edits), update localStorage and notify the UI.
+     */
+    ConstruoSupabaseData.prototype.backgroundRefresh = function (cachedData) {
+        var self = this;
+
+        // Small delay to let the UI render first with cached data
+        setTimeout(function () {
+            console.log('[main-supabase] 🔄 Background refresh starting...');
+
+            self.ensureClient().then(function (client) {
+                if (!client) {
+                    console.warn('[main-supabase] No client for background refresh');
+                    return;
+                }
+                return self.fetchAllFresh();
+            }).then(function (freshData) {
+                if (!freshData) return;
+
+                // Compare fresh data with cached data using hash
+                var freshHashStr = JSON.stringify(freshData.siteConfig) +
+                    JSON.stringify(freshData.events) +
+                    JSON.stringify(freshData.speakers);
+                var freshHash = simpleHash(freshHashStr);
+                var cachedHash = readFromStorage(CACHE_KEYS.dataHash);
+
+                if (freshHash !== cachedHash) {
+                    // Data has changed! Admin made edits.
+                    console.log('[main-supabase] 🆕 DATA CHANGED - admin made edits! Updating cache + UI...');
+
+                    // Update localStorage with new data
+                    saveAllToStorage(freshData);
+
+                    // Notify the UI to re-render with fresh data
+                    var event = new CustomEvent('construo-data-refreshed', { detail: freshData });
+                    window.dispatchEvent(event);
+
+                    console.log('[main-supabase] ✅ Cache updated and UI refreshed with new data');
+                } else {
+                    console.log('[main-supabase] ✅ Data unchanged - cache is up to date');
+                }
+            }).catch(function (err) {
+                console.warn('[main-supabase] Background refresh failed (will use cached data):', err.message);
+            });
+        }, 500); // 500ms delay to let cached data render first
+    };
+
+    /**
+     * Force refresh all data - bypasses cache completely.
+     * Called when user adds ?refresh=true to URL.
+     */
+    ConstruoSupabaseData.prototype.refreshAllData = function () {
+        var self = this;
+        console.log('[main-supabase] Force refreshing all data...');
+        clearAllStorage();
+        return this.ensureClient().then(function (client) {
+            if (!client) throw new Error('No client');
+            return self.fetchAllFresh();
+        }).then(function (freshData) {
+            saveAllToStorage(freshData);
+            var event = new CustomEvent('construo-data-refreshed', { detail: freshData });
+            window.dispatchEvent(event);
+            return freshData;
+        });
+    };
+
+    // ========================================================
+    // INDIVIDUAL DATA FETCHERS
+    // ========================================================
+
     ConstruoSupabaseData.prototype.fetchAllFresh = function () {
         var self = this;
-        console.log('[main-supabase] Fetching all data fresh from Supabase...');
+        self.loadedModules = 0; // Reset progress counter
 
         return Promise.all([
             self.getEvents(),
@@ -101,38 +366,20 @@
             self.getSponsors(),
             self.getOrganizers()
         ]).then(function (results) {
-            var events = results[0];
-            var timeline = results[1];
-            var speakers = results[2];
-            var sponsors = results[3];
-            var organizers = results[4];
-
             return self.getSiteConfig().then(function (siteConfig) {
-                console.log('[main-supabase] All data fetched successfully');
-                return {
+                var data = {
                     siteConfig: siteConfig,
-                    events: events,
-                    timeline: timeline,
-                    speakers: speakers,
-                    sponsors: sponsors,
-                    organizers: organizers
+                    events: results[0],
+                    timeline: results[1],
+                    speakers: results[2],
+                    sponsors: results[3],
+                    organizers: results[4]
                 };
+                console.log('[main-supabase] All data fetched from Supabase');
+                return data;
             });
         });
     };
-
-    ConstruoSupabaseData.prototype.refreshAllData = function () {
-        var self = this;
-        console.log('[main-supabase] Refreshing data in background...');
-        return this.fetchAllFresh().then(function (freshData) {
-            var event = new CustomEvent('construo-data-refreshed', { detail: freshData });
-            window.dispatchEvent(event);
-        }).catch(function (e) {
-            console.warn('[main-supabase] Background refresh failed', e);
-        });
-    };
-
-    // --- Data Fetchers ---
 
     ConstruoSupabaseData.prototype.getSiteConfig = function () {
         if (this.cache.siteConfig) return Promise.resolve(this.cache.siteConfig);
@@ -149,12 +396,11 @@
                     if (result.error) throw result.error;
                     self.cache.siteConfig = result.data;
                     self.dispatchPartialProgress();
-                    console.log('[main-supabase] site_config loaded');
                     return result.data;
                 });
         }).catch(function (error) {
             console.error('[main-supabase] Error fetching site config:', error);
-            return null;
+            return readFromStorage(CACHE_KEYS.siteConfig);
         });
     };
 
@@ -186,12 +432,11 @@
                     });
                     self.cache.events = mappedData;
                     self.dispatchPartialProgress();
-                    console.log('[main-supabase] events loaded:', mappedData.length);
                     return mappedData;
                 });
         }).catch(function (error) {
             console.error('[main-supabase] Error fetching events:', error);
-            return [];
+            return readFromStorage(CACHE_KEYS.events) || [];
         });
     };
 
@@ -209,12 +454,11 @@
                     if (result.error) throw result.error;
                     self.cache.timeline = result.data;
                     self.dispatchPartialProgress();
-                    console.log('[main-supabase] timeline loaded:', result.data.length);
                     return result.data;
                 });
         }).catch(function (error) {
             console.error('[main-supabase] Error fetching timeline:', error);
-            return [];
+            return readFromStorage(CACHE_KEYS.timeline) || [];
         });
     };
 
@@ -233,12 +477,11 @@
                     if (result.error) throw result.error;
                     self.cache.speakers = result.data;
                     self.dispatchPartialProgress();
-                    console.log('[main-supabase] speakers loaded:', result.data.length);
                     return result.data;
                 });
         }).catch(function (error) {
             console.error('[main-supabase] Error fetching speakers:', error);
-            return [];
+            return readFromStorage(CACHE_KEYS.speakers) || [];
         });
     };
 
@@ -257,12 +500,11 @@
                     if (result.error) throw result.error;
                     self.cache.sponsors = result.data;
                     self.dispatchPartialProgress();
-                    console.log('[main-supabase] sponsors loaded:', result.data.length);
                     return result.data;
                 });
         }).catch(function (error) {
             console.error('[main-supabase] Error fetching sponsors:', error);
-            return [];
+            return readFromStorage(CACHE_KEYS.sponsors) || [];
         });
     };
 
@@ -281,12 +523,11 @@
                     if (result.error) throw result.error;
                     self.cache.organizers = result.data;
                     self.dispatchPartialProgress();
-                    console.log('[main-supabase] organizers loaded:', result.data.length);
                     return result.data;
                 });
         }).catch(function (error) {
             console.error('[main-supabase] Error fetching organizers:', error);
-            return [];
+            return readFromStorage(CACHE_KEYS.organizers) || [];
         });
     };
 
@@ -297,8 +538,11 @@
         window.dispatchEvent(new CustomEvent('construo-partial-load', { detail: { percent: percent } }));
     };
 
+    // ========================================================
+    // REGISTRATION (not cached - always live)
+    // ========================================================
+
     ConstruoSupabaseData.prototype.getActiveForm = function () {
-        var self = this;
         return this.ensureClient().then(function (supabase) {
             if (!supabase) return null;
             return supabase
@@ -325,7 +569,6 @@
     };
 
     ConstruoSupabaseData.prototype.createRegistration = function (regData) {
-        var self = this;
         return this.ensureClient().then(function (supabase) {
             if (!supabase) throw new Error('Supabase client not available');
             var registrationId = 'reg_' + Date.now() + '_' + Math.random().toString(36).substring(7);
@@ -352,7 +595,10 @@
         });
     };
 
-    // Create global instance
+    // ========================================================
+    // EXPOSE GLOBALLY
+    // ========================================================
+
     window.ConstruoSupabaseData = new ConstruoSupabaseData();
-    console.log('[main-supabase] ConstruoSupabaseData created and attached to window');
+    console.log('[main-supabase] ConstruoSupabaseData created (v2.0 with smart caching)');
 })();
