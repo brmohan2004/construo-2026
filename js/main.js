@@ -85,7 +85,58 @@ class ConstruoApp {
             const { siteConfig, events, timeline, speakers, sponsors, organizers } = e.detail;
             this.updateUI({ siteConfig, events, timeline, speakers, sponsors, organizers });
             console.log('[main.js] ✅ UI updated with fresh data from Supabase');
+
+            // Show subtle update notification
+            this.showUpdateToast();
         });
+    }
+
+    showUpdateToast() {
+        let toast = document.getElementById('construo-update-toast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'construo-update-toast';
+            toast.innerHTML = '<span style="font-size: 1.1em;">✨</span> Information updated to latest version';
+
+            // Inline styling so it works regardless of CSS load state
+            Object.assign(toast.style, {
+                position: 'fixed',
+                bottom: '-60px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                background: 'rgba(31, 40, 51, 0.95)',
+                color: '#66FCF1',
+                backdropFilter: 'blur(10px)',
+                WebkitBackdropFilter: 'blur(10px)',
+                padding: '10px 24px',
+                borderRadius: '30px',
+                fontSize: '13px',
+                fontFamily: 'var(--font-primary, inherit)',
+                fontWeight: '500',
+                boxShadow: '0 4px 15px rgba(0,0,0,0.3), 0 0 10px rgba(102, 252, 241, 0.1)',
+                border: '1px solid rgba(102, 252, 241, 0.2)',
+                zIndex: '9999',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                opacity: '0',
+                transition: 'all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
+            });
+
+            document.body.appendChild(toast);
+        }
+
+        // Show the toast smoothly
+        setTimeout(() => {
+            toast.style.bottom = '30px';
+            toast.style.opacity = '1';
+        }, 100);
+
+        // Hide after 4 seconds
+        setTimeout(() => {
+            toast.style.bottom = '-60px';
+            toast.style.opacity = '0';
+        }, 4000);
     }
 
     updateUI({ siteConfig, events, timeline, speakers, sponsors, organizers }) {

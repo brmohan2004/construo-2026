@@ -264,8 +264,17 @@
             // Step 2a: We have cached data! Return it instantly.
             console.log('[main-supabase] ✅ Returning cached data for INSTANT render');
 
-            // Step 2b: Start background refresh (don't await it)
-            self.backgroundRefresh(cachedData);
+            // Step 2b: Check if we need a background refresh (Cooldown Timer)
+            var lastFetch = readFromStorage(CACHE_KEYS.lastFetch);
+            var now = Date.now();
+            var cooldownMs = 3 * 60 * 1000; // 3 minutes cooldown
+
+            if (!lastFetch || (now - lastFetch) > cooldownMs) {
+                console.log('[main-supabase] Cache is older than 3 minutes, starting background refresh...');
+                self.backgroundRefresh(cachedData);
+            } else {
+                console.log('[main-supabase] ⏳ Cache is fresh (less than 3 min old), skipping background check to save bandwidth.');
+            }
 
             return Promise.resolve(cachedData);
         }

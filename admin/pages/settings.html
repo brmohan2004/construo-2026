@@ -11,7 +11,8 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="../css/admin.css">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script></head>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
 
 <body>
     <div class="admin-layout">
@@ -200,6 +201,7 @@
                     <button class="tab-btn" data-tab="email">Email</button>
                     <button class="tab-btn" data-tab="seo">SEO</button>
                     <button class="tab-btn" data-tab="animations">Animations</button>
+                    <button class="tab-btn" data-tab="cache">User Cache</button>
                     <button class="tab-btn" data-tab="maintenance">Maintenance</button>
                 </div>
 
@@ -495,6 +497,65 @@
                                         <option value="elastic.out(1, 0.3)">Elastic</option>
                                         <option value="none">Linear (No Ease)</option>
                                     </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cache Settings -->
+                <div class="tab-content" id="tab-cache">
+                    <div class="settings-grid">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Mobile Data Storage (User Devices)</h3>
+                            </div>
+                            <div class="card-body">
+                                <p style="color: var(--admin-text-muted); font-size: 0.9em; margin-bottom: 15px;">
+                                    To make the website load instantly, we smartly store the following data locally on
+                                    users' mobile phones:
+                                </p>
+                                <ul
+                                    style="list-style: disc; margin-left: 20px; margin-bottom: 25px; color: var(--admin-text); font-size: 0.9em; line-height: 1.6;">
+                                    <li>Site Configuration & UI Settings</li>
+                                    <li>Events Information</li>
+                                    <li>Timeline & Schedules</li>
+                                    <li>Speaker Profiles</li>
+                                    <li>Sponsor Information</li>
+                                    <li>Organizer Details</li>
+                                </ul>
+
+                                <div class="form-group"
+                                    style="padding-top: 20px; border-top: 1px solid var(--admin-border);">
+                                    <label class="form-label"
+                                        style="color: var(--admin-danger); font-size: 1.1em; display:flex; align-items:center; gap:8px;">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            width="18" height="18">
+                                            <path
+                                                d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z">
+                                            </path>
+                                            <line x1="12" y1="9" x2="12" y2="13"></line>
+                                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                        </svg>
+                                        Force Cache Clearance
+                                    </label>
+                                    <p style="font-size: 0.85em; color: var(--admin-text-muted); margin-bottom: 15px;">
+                                        Clicking this guarantees that all returning website visitors will immediately
+                                        download fresh data on their next visit, overwriting their local storage.
+                                    </p>
+                                    <button class="btn btn-secondary btn-danger"
+                                        onclick="Settings.forceClearUserCaches()" id="forceClearCacheBtn">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            width="16" height="16">
+                                            <polyline points="3 6 5 6 21 6"></polyline>
+                                            <path
+                                                d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                                            </path>
+                                            <line x1="10" y1="11" x2="10" y2="17"></line>
+                                            <line x1="14" y1="11" x2="14" y2="17"></line>
+                                        </svg>
+                                        Clear All User Mobile Caches
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -1000,6 +1061,36 @@
                 // localStorage.removeItem('construo_activity_log'); // Old local way
 
                 Admin.showToast('warning', 'Not Supported', 'Clearing server activity logs is not currently supported via this interface.');
+            },
+
+            async forceClearUserCaches() {
+                if (!confirm('Are you sure you want to force clear all user mobile caches? The next time they visit, they will redownload all data.')) return;
+
+                const btn = document.getElementById('forceClearCacheBtn');
+                if (btn) {
+                    btn.disabled = true;
+                    btn.innerHTML = '<span class="spinner-sm"></span> Clearing...';
+                }
+
+                try {
+                    // Update cacheBuster in Settings, which is part of site_config.
+                    // This will change the simpleHash on the public site, triggering an automatic cache update for all users.
+                    const currentSettings = this.data.settings || {};
+                    currentSettings.cacheBuster = Date.now();
+
+                    await Admin.updateSiteConfig('settings', currentSettings);
+                    this.data.settings = currentSettings;
+
+                    Admin.showToast('success', 'Caches Cleared', 'A signal has been sent to wipe all user mobile caches.');
+                } catch (e) {
+                    console.error('Failed to clear caches', e);
+                    Admin.showToast('error', 'Error', 'Failed to send cache clear signal.');
+                } finally {
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg> Clear All User Mobile Caches';
+                    }
+                }
             }
         };
 
