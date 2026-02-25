@@ -25,7 +25,7 @@
 (function () {
     'use strict';
 
-    var CACHE_PREFIX = 'construo_v2_';
+    var CACHE_PREFIX = 'construo_v3_';
     var CACHE_KEYS = {
         siteConfig: CACHE_PREFIX + 'siteConfig',
         events: CACHE_PREFIX + 'events',
@@ -40,6 +40,17 @@
     // ========================================================
     // CACHE HELPERS - localStorage for mobile persistence
     // ========================================================
+
+    /**
+     * Check if localStorage is enabled by admin
+     */
+    function isLocalStorageEnabled(siteConfig) {
+        // Check if admin has disabled localStorage
+        if (siteConfig && siteConfig.settings && siteConfig.settings.enableLocalStorage === false) {
+            return false;
+        }
+        return true; // Default to enabled
+    }
 
     /**
      * Save data to localStorage.
@@ -98,6 +109,40 @@
     }
 
     /**
+     * Clear old cache versions (v1, v2, etc.) to free up space
+     */
+    function clearOldCacheVersions() {
+        try {
+            var oldPrefixes = ['construo_v1_', 'construo_v2_'];
+            var keysToRemove = [];
+            
+            // Find all old cache keys
+            for (var i = 0; i < localStorage.length; i++) {
+                var key = localStorage.key(i);
+                if (key) {
+                    for (var j = 0; j < oldPrefixes.length; j++) {
+                        if (key.startsWith(oldPrefixes[j])) {
+                            keysToRemove.push(key);
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            // Remove old cache keys
+            keysToRemove.forEach(function(key) {
+                localStorage.removeItem(key);
+            });
+            
+            if (keysToRemove.length > 0) {
+                console.log('[cache] Cleared ' + keysToRemove.length + ' old cache entries');
+            }
+        } catch (e) {
+            console.error('[cache] Error clearing old cache versions:', e);
+        }
+    }
+
+    /**
      * Generate a simple hash of data to detect changes.
      * Uses a fast string hash - not cryptographic, just for comparison.
      */
@@ -114,10 +159,18 @@
 
     /**
      * Get all cached data from localStorage.
-     * Returns null if any critical piece is missing.
+     * Returns null if any critical piece is missing OR if localStorage is disabled by admin.
      */
     function getAllCachedData() {
         var siteConfig = readFromStorage(CACHE_KEYS.siteConfig);
+        
+        // Check if admin has disabled localStorage
+        if (siteConfig && !isLocalStorageEnabled(siteConfig)) {
+            console.log('[cache] localStorage disabled by admin - clearing cache and forcing fresh fetch');
+            clearAllStorage();
+            return null;
+        }
+
         var events = readFromStorage(CACHE_KEYS.events);
         var timeline = readFromStorage(CACHE_KEYS.timeline);
         var speakers = readFromStorage(CACHE_KEYS.speakers);
@@ -153,9 +206,16 @@
 
     /**
      * Save all data to localStorage.
+     * Only saves if localStorage is enabled by admin.
      */
     function saveAllToStorage(data) {
         if (!data) return;
+
+        // Check if localStorage is enabled
+        if (data.siteConfig && !isLocalStorageEnabled(data.siteConfig)) {
+            console.log('[cache] localStorage disabled by admin - skipping cache save');
+            return;
+        }
 
         if (data.siteConfig) saveToStorage(CACHE_KEYS.siteConfig, data.siteConfig);
         if (data.events) saveToStorage(CACHE_KEYS.events, data.events);

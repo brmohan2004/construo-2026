@@ -316,27 +316,37 @@ const Admin = {
             const user = await Auth.getCurrentUser();
             const timestamp = new Date().toISOString();
 
+            // Add metadata to the section data
+            const dataWithMetadata = {
+                ...sectionData,
+                updatedAt: timestamp,
+                updatedBy: user ? user.username : 'unknown'
+            };
+
+            // Build update object - only update the specific JSONB column
             const updateData = {
-                [section]: {
-                    ...sectionData,
-                    updatedAt: timestamp,
-                    updatedBy: user ? user.username : 'unknown'
-                },
+                [section]: dataWithMetadata,
                 updated_at: timestamp
             };
 
-            const { data, error } = await supabase
+            // Perform update without select to avoid timeout
+            const { error: updateError } = await supabase
                 .from('site_config')
                 .update(updateData)
-                .eq('config_key', 'main')
-                .select()
-                .single();
+                .eq('config_key', 'main');
 
-            if (error) throw error;
+            if (updateError) throw updateError;
 
-            await this.logActivity('update', section, `Updated ${section} section`);
-            this.cache.siteConfig = data;
-            return data;
+            // Log activity (don't await to avoid blocking)
+            this.logActivity('update', section, `Updated ${section} section`).catch(e => 
+                console.warn('Failed to log activity:', e)
+            );
+
+            // Invalidate cache
+            this.cache.siteConfig = null;
+
+            // Return the updated data
+            return { [section]: dataWithMetadata };
         } catch (error) {
             console.error('Error updating site config:', error);
             throw error;
