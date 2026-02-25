@@ -159,7 +159,25 @@ class ConstruoSupabaseData {
     }
 
     getAllFromCache() {
-        // BYPASS ALL CACHING FOR TESTING
+        // Try reading memory cache first
+        if (Object.keys(this.cache).length >= 6) {
+            return this.cache;
+        }
+
+        // Try reading local storage
+        const siteConfig = this.getFromCache('siteConfig');
+        const events = this.getFromCache('events');
+        const timeline = this.getFromCache('timeline');
+        const speakers = this.getFromCache('speakers');
+        const sponsors = this.getFromCache('sponsors');
+        const organizers = this.getFromCache('organizers');
+
+        // If we have all required data
+        if (siteConfig && events && timeline && speakers && sponsors && organizers) {
+            this.cache = { siteConfig, events, timeline, speakers, sponsors, organizers };
+            return this.cache;
+        }
+
         return null;
     }
 
