@@ -1,15 +1,52 @@
 /**
  * CONSTRUO 2026 - Main JavaScript (Supabase)
  * Supabase data loading functions for public website
+ * 
+ * MOBILE FIX: Uses async getSupabaseClient() to wait for the Supabase
+ * library to finish loading before making any queries. This prevents
+ * the race condition where module scripts execute before the CDN script
+ * on slow mobile connections.
  */
 
-import supabase from './supabase-config.js?v=2.5';
+import { getSupabaseClient } from './supabase-config.js?v=3.0';
 
 class ConstruoSupabaseData {
     constructor() {
         this.cache = {};
-        this.currentVersion = '1.3';
+        this.currentVersion = '1.4';
+        this._supabase = null; // Will be set asynchronously
+        this._ready = this._initClient(); // Start client initialization immediately
         this.checkUrlParams();
+    }
+
+    /**
+     * Initialize the Supabase client asynchronously.
+     * This is the key fix for mobile: we wait for the CDN to load.
+     */
+    async _initClient() {
+        try {
+            this._supabase = await getSupabaseClient();
+            if (!this._supabase) {
+                console.error('Supabase client is null after initialization');
+            } else {
+                console.log('ConstruoSupabaseData: Supabase client ready');
+            }
+        } catch (err) {
+            console.error('ConstruoSupabaseData: Failed to get Supabase client:', err);
+        }
+    }
+
+    /**
+     * Ensure the client is ready before making queries.
+     * Returns the supabase client or throws if unavailable.
+     */
+    async _getClient() {
+        if (this._supabase) return this._supabase;
+        await this._ready;
+        if (!this._supabase) {
+            throw new Error('Supabase client not available');
+        }
+        return this._supabase;
     }
 
     checkUrlParams() {
@@ -26,6 +63,9 @@ class ConstruoSupabaseData {
     async loadAll() {
         try {
             console.log('Loading website data from Supabase...');
+
+            // Ensure client is ready (waits for CDN on mobile)
+            await this._getClient();
 
             // Try to load any available parts from cache for partial instant render
             const cachedData = this.getAllFromCache();
@@ -45,6 +85,10 @@ class ConstruoSupabaseData {
     }
 
     async fetchAllFresh() {
+        // Ensure client is ready
+        const client = await this._getClient();
+        console.log('Fetching all data fresh from Supabase...');
+
         // Fetch smaller, critical assets first in parallel
         const [events, timeline, speakers, sponsors, organizers] = await Promise.all([
             this.getEvents(),
@@ -103,6 +147,7 @@ class ConstruoSupabaseData {
     async getSiteConfig() {
         if (this.cache.siteConfig) return this.cache.siteConfig;
         try {
+            const supabase = await this._getClient();
             const { data, error } = await supabase
                 .from('site_config')
                 .select('*')
@@ -128,6 +173,7 @@ class ConstruoSupabaseData {
     async getEvents() {
         if (this.cache.events) return this.cache.events;
         try {
+            const supabase = await this._getClient();
             const { data, error } = await supabase
                 .from('events')
                 .select('*')
@@ -167,6 +213,7 @@ class ConstruoSupabaseData {
     async getTimeline() {
         if (this.cache.timeline) return this.cache.timeline;
         try {
+            const supabase = await this._getClient();
             const { data, error } = await supabase
                 .from('timeline_days')
                 .select('*')
@@ -186,6 +233,7 @@ class ConstruoSupabaseData {
     async getSpeakers() {
         if (this.cache.speakers) return this.cache.speakers;
         try {
+            const supabase = await this._getClient();
             const { data, error } = await supabase
                 .from('speakers')
                 .select('*')
@@ -206,6 +254,7 @@ class ConstruoSupabaseData {
     async getSponsors() {
         if (this.cache.sponsors) return this.cache.sponsors;
         try {
+            const supabase = await this._getClient();
             const { data, error } = await supabase
                 .from('sponsors')
                 .select('*')
@@ -226,6 +275,7 @@ class ConstruoSupabaseData {
     async getOrganizers() {
         if (this.cache.organizers) return this.cache.organizers;
         try {
+            const supabase = await this._getClient();
             const { data, error } = await supabase
                 .from('organizers')
                 .select('*')
@@ -253,6 +303,7 @@ class ConstruoSupabaseData {
 
     async getActiveForm() {
         try {
+            const supabase = await this._getClient();
             const { data, error } = await supabase
                 .from('registration_forms')
                 .select('*')
@@ -278,6 +329,7 @@ class ConstruoSupabaseData {
 
     async createRegistration(regData) {
         try {
+            const supabase = await this._getClient();
             const registrationId = `reg_${Date.now()}_${Math.random().toString(36).substring(7)}`;
 
             const { data, error } = await supabase

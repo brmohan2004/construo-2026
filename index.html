@@ -29,9 +29,6 @@
     <!-- GSAP + ScrollTrigger (Deferred) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
-
-    <!-- Supabase UMD -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <body>
@@ -493,12 +490,14 @@
     </div>
 
     <!-- Scripts -->
-    <script type="module" src="js/supabase-config.js?v=2.5"></script>
-    <script type="module" src="js/main-supabase.js?v=2.5" defer></script>
+    <!-- Supabase UMD must load first (blocking) so window.supabase is available for modules -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="module" src="js/supabase-config.js?v=3.0"></script>
+    <script type="module" src="js/main-supabase.js?v=3.0"></script>
     <script src="js/three-scene.js" defer></script>
     <script src="js/animations.js?v=1.2" defer></script>
     <script src="js/scroll-animations.js?v=1.0" defer></script>
-    <script src="js/main.js?v=2.5" defer></script>
+    <script src="js/main.js?v=3.0" defer></script>
     <script src="js/faq.js"></script>
 </body>
 
