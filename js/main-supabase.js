@@ -3,7 +3,7 @@
  * Supabase data loading functions for public website
  */
 
-import supabase from './supabase-config.js';
+import supabase from './supabase-config.js?v=2.5';
 
 class ConstruoSupabaseData {
     constructor() {
