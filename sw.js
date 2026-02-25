@@ -1,4 +1,4 @@
-const CACHE_NAME = 'construo-cache-v6';
+const CACHE_NAME = 'construo-cache-v7';
 const ASSETS_TO_CACHE = [
     '/',
     '/index.html',
@@ -36,8 +36,12 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-    // Skip cross-origin requests and API requests (like Supabase API proxy) and let them pass through normally
-    if (!event.request.url.startsWith(self.location.origin) || event.request.url.includes('/api/')) {
+    // Skip cross-origin requests, API requests, admin panel, and Supabase requests
+    const url = event.request.url;
+    if (!url.startsWith(self.location.origin) ||
+        url.includes('/api/') ||
+        url.includes('/admin/') ||
+        url.includes('supabase')) {
         return;
     }
 
