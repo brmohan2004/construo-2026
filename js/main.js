@@ -16,6 +16,7 @@ class ConstruoApp {
         this.initMobileMenu();
         this.initFormHandling();
         this.initPosterModal();
+        this.initFallbackRegistration();
         this.initEventCardModals();
         this.initIntersectionObserver();
         this.initDataSync();
@@ -2417,6 +2418,22 @@ class ConstruoApp {
 
         posterTrigger.addEventListener('click', () => {
             this.openModal('modal-poster');
+        });
+    }
+
+    // Fallback Registration Button (Microsoft Forms)
+    initFallbackRegistration() {
+        const fallbackBtn = document.getElementById('fallback-register-btn');
+        if (!fallbackBtn) return;
+
+        fallbackBtn.addEventListener('click', () => {
+            // Close the main registration modal
+            this.closeModal('modal-register');
+            
+            // Open the Microsoft Forms modal
+            setTimeout(() => {
+                this.openModal('modal-ms-forms');
+            }, 300);
         });
     }
 

@@ -411,6 +411,40 @@
                 <form id="modal-registration-form" class="modal-registration-form">
                     <!-- Form fields loaded dynamically from MongoDB -->
                 </form>
+                
+                <!-- Fallback Registration Button -->
+                <div style="text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+                    <p style="margin-bottom: 10px; opacity: 0.8; font-size: 0.9rem;">Having trouble registering?</p>
+                    <button type="button" class="btn btn-secondary" id="fallback-register-btn" style="width: 100%;">
+                        Register via Microsoft Forms
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Microsoft Forms Registration Modal -->
+    <div id="modal-ms-forms" class="modal" aria-hidden="true">
+        <div class="modal-backdrop" data-modal-close></div>
+        <div class="modal-dialog modal-poster-dialog" role="dialog" aria-modal="true" aria-labelledby="modal-ms-forms-title" style="max-width: 700px;">
+            <button class="modal-close" aria-label="Close modal" data-modal-close>&times;</button>
+            <div class="modal-body">
+                <h2 id="modal-ms-forms-title">Registration Form</h2>
+                <div class="ms-forms-container" style="width: 100%; height: 600px; max-height: 80vh; overflow: hidden;">
+                    <iframe 
+                        width="100%" 
+                        height="100%" 
+                        src="https://forms.office.com/Pages/ResponsePage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAAMAAGjQ5SBURFBLQlFaRjY3UFQ0UzNDWjNLRUZWNUU5RS4u&embed=true" 
+                        frameborder="0" 
+                        marginwidth="0" 
+                        marginheight="0" 
+                        style="border: none; width: 100%; height: 100%;" 
+                        allowfullscreen 
+                        webkitallowfullscreen 
+                        mozallowfullscreen 
+                        msallowfullscreen>
+                    </iframe>
+                </div>
             </div>
         </div>
     </div>
@@ -507,7 +541,7 @@
     <script src="js/animations.js?v=6.0" defer></script>
     <script src="js/scroll-animations.js?v=6.0" defer></script>
     <!-- 5. Main app (uses window.ConstruoSupabaseData) -->
-    <script src="js/main.js?v=7.0" defer></script>
+    <script src="js/main.js?v=8.0" defer></script>
     <script src="js/faq.js?v=6.0" defer></script>
 
     <!-- 6. Service Worker for PWA/Offline caching -->
