@@ -81,103 +81,20 @@ class ConstruoSupabaseData {
 
     // --- Cache Helpers ---
     getFromCache(key) {
-        try {
-            const cached = localStorage.getItem(`construo_${key}`);
-            if (!cached) return null;
-
-            const { data, timestamp, version } = JSON.parse(cached);
-
-            // Version check - invalidate if version mismatches
-            if (version !== this.currentVersion) {
-                console.log(`Cache version mismatch for ${key}: expected ${this.currentVersion}, got ${version}. Invalidating.`);
-                localStorage.removeItem(`construo_${key}`);
-                return null;
-            }
-
-            // 1 hour cache validity
-            if (Date.now() - timestamp > 60 * 60 * 1000) {
-                console.log(`Cache expired for ${key}`);
-                return null;
-            }
-
-            return data;
-        } catch (e) {
-            console.warn(`Error reading from cache for ${key}:`, e);
-            return null;
-        }
+        // Caching disabled
+        return null;
     }
 
     saveToCache(key, data) {
-        try {
-            const cacheObj = {
-                data,
-                timestamp: Date.now(),
-                version: this.currentVersion
-            };
-            const serialized = JSON.stringify(cacheObj);
-
-            // Log large data saves for debugging
-            const sizeKB = Math.round(serialized.length / 1024);
-            if (sizeKB > 500) {
-                console.warn(`Large data block for cache: ${key} (${sizeKB} KB)`);
-            }
-
-            // STRICT LIMIT: Don't even TRY to save if it's over 2MB (most browser limits are 5-10MB total)
-            // Caching 11MB in localStorage is not recommended and causes QuotaExceededError
-            if (serialized.length > 2 * 1024 * 1024) { // 2MB limit per entry
-                console.warn(`Data block for ${key} is too large for LocalStorage (${sizeKB} KB). Skipping persistent cache, using memory only.`);
-                return;
-            }
-
-            localStorage.setItem(`construo_${key}`, serialized);
-        } catch (e) {
-            console.warn(`Cache save failed for ${key}:`, e);
-            if (e.name === 'QuotaExceededError' || e.code === 22) {
-                console.warn('LocalStorage quota exceeded. Attempting to clear old Construo cache to make room...');
-                this.clearAllCache();
-                // We don't retry for blocks over 1MB if we already hit quota once
-            }
-        }
+        // Caching disabled
     }
 
     clearAllCache() {
-        try {
-            const keysToRemove = [];
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                if (key && key.startsWith('construo_')) {
-                    keysToRemove.push(key);
-                }
-            }
-            keysToRemove.forEach(key => localStorage.removeItem(key));
-            console.log(`Cleared ${keysToRemove.length} Construo cache keys`);
-            return true;
-        } catch (e) {
-            console.error('Failed to clear Construo cache:', e);
-            return false;
-        }
+        return true;
     }
 
     getAllFromCache() {
-        // Try reading memory cache first
-        if (Object.keys(this.cache).length >= 6) {
-            return this.cache;
-        }
-
-        // Try reading local storage
-        const siteConfig = this.getFromCache('siteConfig');
-        const events = this.getFromCache('events');
-        const timeline = this.getFromCache('timeline');
-        const speakers = this.getFromCache('speakers');
-        const sponsors = this.getFromCache('sponsors');
-        const organizers = this.getFromCache('organizers');
-
-        // If we have all required data
-        if (siteConfig && events && timeline && speakers && sponsors && organizers) {
-            this.cache = { siteConfig, events, timeline, speakers, sponsors, organizers };
-            return this.cache;
-        }
-
+        // Caching disabled
         return null;
     }
 
