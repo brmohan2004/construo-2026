@@ -539,18 +539,34 @@
     <!-- 3. Data loader (sets window.ConstruoSupabaseData) -->
     <script src="js/main-supabase.js?v=8.0" defer></script>
     <!-- 4. Other dependencies -->
-    <script src="js/three-scene.js?v=6.0" defer></script>
-    <script src="js/animations.js?v=6.0" defer></script>
-    <script src="js/scroll-animations.js?v=6.0" defer></script>
+    <script src="js/three-scene.js?v=8.0" defer></script>
+    <script src="js/animations.js?v=8.0" defer></script>
+    <script src="js/scroll-animations.js?v=8.0" defer></script>
     <!-- 5. Main app (uses window.ConstruoSupabaseData) -->
     <script src="js/main.js?v=8.0" defer></script>
-    <script src="js/faq.js?v=6.0" defer></script>
+    <script src="js/faq.js?v=8.0" defer></script>
 
     <!-- 6. Service Worker for PWA/Offline caching -->
     <script>
-        // Dynamic cache buster - forces fresh JS files on every load
+        // Emergency Fix: If user is stuck with old Service Worker / Cache
         (function () {
-            const timestamp = Date.now();
+            const EMERGENCY_V = '8.0';
+            if (localStorage.getItem('construo_emergency_clear') !== EMERGENCY_V) {
+                if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.getRegistrations().then(function (registrations) {
+                        for (let registration of registrations) { registration.unregister(); }
+                        localStorage.clear();
+                        localStorage.setItem('construo_emergency_clear', EMERGENCY_V);
+                        console.log('[Emergency] Cache and Workers cleared for v8.0 upgrade. Reloading...');
+                        window.location.reload();
+                    });
+                }
+            }
+        })();
+
+        // Dynamic cache buster for JS imports
+        (function () {
+            const timestamp = '8.0.' + Date.now();
             const scripts = document.querySelectorAll('script[src*=".js"]');
             scripts.forEach(script => {
                 const src = script.getAttribute('src');
@@ -562,8 +578,9 @@
 
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function () {
-                navigator.serviceWorker.register('sw.js').then(function (registration) {
-                    console.log('[PWA] ServiceWorker registered with scope: ', registration.scope);
+                // Add versioning to SW to force update
+                navigator.serviceWorker.register('sw.js?v=8.0').then(function (registration) {
+                    console.log('[PWA] ServiceWorker registered (v8.0)');
                 }).catch(function (err) {
                     console.error('[PWA] ServiceWorker registration failed: ', err);
                 });
