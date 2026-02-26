@@ -1,56 +1,61 @@
 export async function onRequest(context) {
     const { request, params } = context;
 
-    // Handle CORS preflight for PATCH/POST/DELETE
+    // Handle CORS preflight
     if (request.method === 'OPTIONS') {
         return new Response(null, {
             status: 204,
             headers: {
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
-                'Access-Control-Allow-Headers': request.headers.get('Access-Control-Request-Headers') || '*',
+                'Access-Control-Allow-Headers': '*',
                 'Access-Control-Max-Age': '86400',
             },
         });
     }
 
-    // Construct the target URL
     const path = params.path ? params.path.join('/') : '';
-    const targetUrl = new URL(`https://cknbkgeurnwdqexgqezz.supabase.co/${path}`);
+    const originUrl = new URL(request.url);
+    const targetUrl = new URL(`https://cknbkgeurnwdqexgqezz.supabase.co/${path}${originUrl.search}`);
 
-    // Keep original query parameters
-    const originalUrl = new URL(request.url);
-    targetUrl.search = originalUrl.search;
+    // Forward ONLY essential headers to avoid CF-internal header conflicts
+    const headers = new Headers();
+    const headersToForward = ['apikey', 'authorization', 'content-type', 'prefer', 'range'];
 
-    // Copy headers, replacing Host with the target host
-    const headers = new Headers(request.headers);
+    for (const [key, value] of request.headers.entries()) {
+        if (headersToForward.includes(key.toLowerCase())) {
+            headers.set(key, value);
+        }
+    }
+
+    // Set host explicitly for Supabase
     headers.set('Host', 'cknbkgeurnwdqexgqezz.supabase.co');
 
-    // Explicitly read the request body for methods that have one
     let body = null;
     if (request.method !== 'GET' && request.method !== 'HEAD') {
         body = await request.arrayBuffer();
-        if (body.byteLength === 0) body = null;
     }
 
-    // Create explicit request with all parts preserved
-    const proxyRequest = new Request(targetUrl.toString(), {
-        method: request.method,
-        headers: headers,
-        body: body,
-        redirect: 'follow',
-    });
+    try {
+        const response = await fetch(targetUrl.toString(), {
+            method: request.method,
+            headers: headers,
+            body: body,
+            redirect: 'follow'
+        });
 
-    // Forward the request to Supabase
-    const response = await fetch(proxyRequest);
+        const responseHeaders = new Headers(response.headers);
+        responseHeaders.set('Access-Control-Allow-Origin', '*');
 
-    // Create a mutable response to add CORS headers
-    const responseHeaders = new Headers(response.headers);
-    responseHeaders.set('Access-Control-Allow-Origin', '*');
-
-    return new Response(response.body, {
-        status: response.status,
-        statusText: response.statusText,
-        headers: responseHeaders,
-    });
+        return new Response(response.body, {
+            status: response.status,
+            statusText: response.statusText,
+            headers: responseHeaders,
+        });
+    } catch (err) {
+        return new Response(JSON.stringify({ error: err.message }), {
+            status: 500,
+            headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+        });
+    }
 }

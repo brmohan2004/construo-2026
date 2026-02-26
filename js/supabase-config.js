@@ -9,10 +9,7 @@
 (function () {
     'use strict';
 
-    var IS_LOCAL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    var SUPABASE_URL = IS_LOCAL
-        ? 'https://cknbkgeurnwdqexgqezz.supabase.co'
-        : window.location.origin + '/api/supabase';
+    var SUPABASE_URL = 'https://cknbkgeurnwdqexgqezz.supabase.co';
     var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNrbmJrZ2V1cm53ZHFleGdxZXp6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzNTUxMjUsImV4cCI6MjA4NTkzMTEyNX0.J_xNdmoZFBsNNp9drYN5BHzg42kK0UE8Rhx9OSM9G7w';
 
     function initClient() {
