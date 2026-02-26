@@ -195,6 +195,30 @@
             <div class="admin-content">
                 <form id="footerForm">
                     <div class="form-grid">
+                        <!-- Footer Branding -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Footer Branding</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label class="form-label">Branding Text (Logo Name)</label>
+                                    <input type="text" class="form-input" id="logoText" placeholder="CONSTRUO">
+                                </div>
+                                <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                    <div class="form-group">
+                                        <label class="form-label">Year</label>
+                                        <input type="text" class="form-input" id="logoYear" placeholder="2026">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Tagline</label>
+                                        <input type="text" class="form-input" id="tagline"
+                                            placeholder="National Technical Symposium">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Copyright -->
                         <div class="card">
                             <div class="card-header">
@@ -312,10 +336,11 @@
     </div>
 
     <div class="toast-container" id="toastContainer"></div>
-    <script>
+    <script type="module">
+        import Admin from '../js/admin.js';
+
         const FooterEditor = {
             data: null,
-            linkCount: 0,
 
             async init() {
                 await this.loadData();
@@ -330,7 +355,7 @@
                 } catch (error) {
                     console.error('Failed to load footer data:', error);
                     this.data = {};
-                    Admin.showToast('warning', 'Load Failed', 'Could not load footer data. Starting with empty form.');
+                    Admin.showToast('warning', 'Load Failed', 'Could not load footer data.');
                 }
             },
 
@@ -340,72 +365,39 @@
 
             render() {
                 if (!this.data) return;
-                // this.data is now the footer object directly
                 const f = this.data;
 
-                document.getElementById('copyright').value = f.copyright || '';
-                document.getElementById('credits').value = f.credits || '';
-                document.getElementById('whatsappCommunity').value = f.social?.whatsappCommunity || '';
-                document.getElementById('socialInstagram').value = f.social?.instagram || '';
-                document.getElementById('socialFacebook').value = f.social?.facebook || '';
-                document.getElementById('socialTwitter').value = f.social?.twitter || '';
-                document.getElementById('socialLinkedIn').value = f.social?.linkedin || '';
-                document.getElementById('socialYoutube').value = f.social?.youtube || '';
-                document.getElementById('contactEmail').value = f.contact?.email || '';
-                document.getElementById('contactPhone').value = f.contact?.phone || '';
-                document.getElementById('contactAddress').value = f.contact?.address || '';
+                const setVal = (id, val) => {
+                    const el = document.getElementById(id);
+                    if (el) el.value = val || '';
+                };
 
-                // Render quick links
-                const container = document.getElementById('quickLinksList');
-                container.innerHTML = ''; // Clear existing
-                const links = f.quickLinks || [];
-                links.forEach(link => this.addLink(link));
-                if (links.length === 0) this.addLink();
+                // Footer Branding
+                setVal('logoText', f.logoText || 'CONSTRUO');
+                setVal('logoYear', f.logoYear || '2026');
+                setVal('tagline', f.tagline || 'National Technical Symposium');
 
-                // Render FAQs
+                setVal('copyright', f.copyright);
+                setVal('credits', f.credits);
+                setVal('whatsappCommunity', f.social?.whatsappCommunity);
+                setVal('socialInstagram', f.social?.instagram);
+                setVal('socialFacebook', f.social?.facebook);
+                setVal('socialTwitter', f.social?.twitter);
+                setVal('socialLinkedIn', f.social?.linkedin);
+                setVal('socialYoutube', f.social?.youtube);
+                setVal('contactEmail', f.contact?.email);
+                setVal('contactPhone', f.contact?.phone);
+                setVal('contactAddress', f.contact?.address);
+
+                const quickLinksContainer = document.getElementById('quickLinksList');
+                quickLinksContainer.innerHTML = '';
+                (f.quickLinks || []).forEach(link => this.addLink(link));
+                if (!f.quickLinks?.length) this.addLink();
+
                 const faqContainer = document.getElementById('faqList');
-                faqContainer.innerHTML = ''; // Clear existing
-                const faqs = f.faqs || [];
-                faqs.forEach(faq => this.addFaq(faq));
-                if (faqs.length === 0) this.addFaq();
-            },
-
-            addFaq(data = null) {
-                const container = document.getElementById('faqList');
-                const div = document.createElement('div');
-                div.className = 'link-item faq-item';
-                div.innerHTML = `
-                    <div class="form-row" style="align-items: flex-start;">
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 0.5rem;">
-                            <div class="form-group">
-                                <input type="text" class="form-input faq-question" value="${data?.question || ''}" placeholder="Question">
-                            </div>
-                            <div class="form-group">
-                                <textarea class="form-textarea faq-answer" rows="2" placeholder="Answer">${data?.answer || ''}</textarea>
-                            </div>
-                        </div>
-                        <button type="button" class="btn btn-icon btn-ghost btn-danger" onclick="this.closest('.faq-item').remove()" style="margin-top: 5px;">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                        </button>
-                    </div>
-                `;
-                container.appendChild(div);
-            },
-
-            getFaqsFromForm() {
-                const faqs = [];
-                const container = document.getElementById('faqList');
-                container.querySelectorAll('.faq-item').forEach(item => {
-                    const questionInput = item.querySelector('.faq-question');
-                    const answerInput = item.querySelector('.faq-answer');
-
-                    if (questionInput && answerInput) {
-                        const question = questionInput.value.trim();
-                        const answer = answerInput.value.trim();
-                        if (question && answer) faqs.push({ question, answer });
-                    }
-                });
-                return faqs;
+                faqContainer.innerHTML = '';
+                (f.faqs || []).forEach(faq => this.addFaq(faq));
+                if (!f.faqs?.length) this.addFaq();
             },
 
             addLink(data = null) {
@@ -420,35 +412,67 @@
                         <div class="form-group">
                             <input type="text" class="form-input link-url" value="${data?.url || ''}" placeholder="URL or #section">
                         </div>
-                        <button type="button" class="btn btn-icon btn-ghost btn-danger" onclick="this.closest('.link-item').remove()">
+                        <button type="button" class="btn btn-icon btn-ghost btn-danger remove-btn">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                         </button>
                     </div>
                 `;
+                div.querySelector('.remove-btn').onclick = () => div.remove();
+                container.appendChild(div);
+            },
+
+            addFaq(data = null) {
+                const container = document.getElementById('faqList');
+                const div = document.createElement('div');
+                div.className = 'link-item faq-item';
+                div.innerHTML = `
+                    <div class="form-row" style="align-items: flex-start;">
+                        <div style="flex: 1; display: flex; flex-direction: column; gap: 0.5rem;">
+                            <div class="form-group" style="margin-bottom: 0.5rem;">
+                                <input type="text" class="form-input faq-question" value="${data?.question || ''}" placeholder="Question">
+                            </div>
+                            <div class="form-group">
+                                <textarea class="form-textarea faq-answer" rows="2" placeholder="Answer">${data?.answer || ''}</textarea>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-icon btn-ghost btn-danger remove-btn" style="margin-top: 5px;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                        </button>
+                    </div>
+                `;
+                div.querySelector('.remove-btn').onclick = () => div.remove();
                 container.appendChild(div);
             },
 
             getLinksFromForm() {
                 const links = [];
-                const container = document.getElementById('quickLinksList');
-                container.querySelectorAll('.link-item').forEach(item => {
-                    // Skip if it's an FAQ item (just in case, though scoping should fix it)
-                    if (item.classList.contains('faq-item')) return;
-
-                    const textInput = item.querySelector('.link-text');
-                    const urlInput = item.querySelector('.link-url');
-
-                    if (textInput && urlInput) {
-                        const text = textInput.value.trim();
-                        const url = urlInput.value.trim();
-                        if (text && url) links.push({ text, url });
-                    }
+                document.querySelectorAll('#quickLinksList .link-item').forEach(item => {
+                    const text = item.querySelector('.link-text').value.trim();
+                    const url = item.querySelector('.link-url').value.trim();
+                    if (text && url) links.push({ text, url });
                 });
                 return links;
             },
 
+            getFaqsFromForm() {
+                const faqs = [];
+                document.querySelectorAll('#faqList .faq-item').forEach(item => {
+                    const question = item.querySelector('.faq-question').value.trim();
+                    const answer = item.querySelector('.faq-answer').value.trim();
+                    if (question && answer) faqs.push({ question, answer });
+                });
+                return faqs;
+            },
+
             async save() {
+                const saveBtn = document.getElementById('saveBtn');
+                Admin.setLoading(saveBtn, true);
+
                 const footerData = {
+                    ...this.data, // Preserve other fields (like potential 'resources')
+                    logoText: document.getElementById('logoText').value,
+                    logoYear: document.getElementById('logoYear').value,
+                    tagline: document.getElementById('tagline').value,
                     copyright: document.getElementById('copyright').value,
                     credits: document.getElementById('credits').value,
                     social: {
@@ -468,58 +492,56 @@
                     }
                 };
 
-                const saveBtn = document.getElementById('saveBtn');
-                const originalText = saveBtn.innerHTML;
-                saveBtn.textContent = 'Saving...';
-                saveBtn.disabled = true;
-
-                console.log('[Footer Save] FAQs being saved:', JSON.stringify(footerData.faqs));
-                console.log('[Footer Save] Full footer data:', JSON.stringify(footerData));
+                console.log('[Footer Save] Preparing to save:', footerData);
 
                 try {
                     const result = await Admin.updateSiteConfig('footer', footerData);
                     console.log('[Footer Save] updateSiteConfig result:', result);
-                    this.data = footerData;
 
-                    // Verify save by re-reading from database
-                    const verifyConfig = await Admin.getSiteConfig();
-                    console.log('[Footer Save] VERIFY - DB faqs:', JSON.stringify(verifyConfig.footer?.faqs));
+                    if (result && result.footer) {
+                        this.data = result.footer;
 
-                    if (!verifyConfig.footer?.faqs || verifyConfig.footer.faqs.length === 0) {
-                        console.error('[Footer Save] ❌ SAVE FAILED - FAQs not in database!');
-                        Admin.showToast('error', 'Warning', 'FAQs may not have saved correctly. Check console.');
+                        // Check if FAQs were successfully saved
+                        if (!result.footer.faqs || result.footer.faqs.length === 0) {
+                            console.error('[Footer Save] ❌ FAQs not returned from server. Check database column type!');
+                            Admin.showToast('warning', 'Save Partially Successful', 'Footer saved, but FAQs might be empty. Check console.');
+                        } else {
+                            console.log('[Footer Save] ✅ FAQs verified in returned data:', result.footer.faqs.length, 'items');
+                            Admin.showToast('success', 'Saved', 'Footer settings updated successfully');
+                        }
                     } else {
-                        console.log('[Footer Save] ✅ FAQs verified in database:', verifyConfig.footer.faqs.length, 'items');
-                        Admin.showToast('success', 'Saved', 'Footer settings updated');
+                        throw new Error('Server returned empty data. Save might not have worked.');
                     }
                 } catch (error) {
                     console.error('Save footer error:', error);
                     Admin.showToast('error', 'Error', error.message || 'Failed to save footer');
                 } finally {
-                    saveBtn.innerHTML = originalText;
-                    saveBtn.disabled = false;
+                    Admin.setLoading(saveBtn, false);
                 }
             }
         };
 
+        window.FooterEditor = FooterEditor;
         document.addEventListener('DOMContentLoaded', () => FooterEditor.init());
     </script>
     <style>
         .form-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 1.5rem;
+            margin-bottom: 2rem;
         }
 
         .links-list {
             display: flex;
             flex-direction: column;
-            gap: 0.75rem;
+            gap: 1rem;
         }
 
         .link-item {
-            padding: 0.75rem;
-            background: var(--admin-bg);
+            padding: 1rem;
+            background: var(--admin-bg-alt);
+            border: 1px solid var(--admin-border);
             border-radius: 8px;
         }
 
@@ -544,9 +566,6 @@
             }
         }
     </style>
-    <script type="module" src="../js/supabase-config.js"></script>
-    <script type="module" src="../js/auth.js"></script>
-    <script type="module" src="../js/admin.js"></script>
 </body>
 
 </html>

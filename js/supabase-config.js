@@ -1,12 +1,5 @@
-/**
- * CONSTRUO 2026 - Supabase Configuration
- * Initializes Supabase client with robust loading for mobile
- * 
- * NO ES MODULES - uses window globals for maximum mobile compatibility.
- * This script MUST load after the Supabase UMD CDN script.
- */
-
 (function () {
+
     'use strict';
 
     var IS_LOCAL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';

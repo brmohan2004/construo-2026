@@ -329,16 +329,32 @@ const Admin = {
                 updated_at: timestamp
             };
 
-            // Perform update without select to avoid timeout
-            const { error: updateError } = await supabase
+            console.log(`[updateSiteConfig] Updating '${section}' with:`, JSON.stringify(updateData[section]).substring(0, 200));
+
+            // Perform update WITH select to verify the update was applied
+            const { data: updatedRows, error: updateError } = await supabase
                 .from('site_config')
                 .update(updateData)
-                .eq('config_key', 'main');
+                .eq('config_key', 'main')
+                .select(section);
 
-            if (updateError) throw updateError;
+            if (updateError) {
+                console.error(`[updateSiteConfig] Update error:`, updateError);
+                throw updateError;
+            }
+
+            // Check if the update actually affected a row
+            if (!updatedRows || updatedRows.length === 0) {
+                console.error(`[updateSiteConfig] ❌ No rows were updated! The config_key 'main' may not exist.`);
+                throw new Error('Update failed: no rows were affected. Please check the database.');
+            }
+
+            // Verify the returned data contains our section
+            const returnedSection = updatedRows[0][section];
+            console.log(`[updateSiteConfig] ✅ Update successful. Returned ${section}:`, JSON.stringify(returnedSection).substring(0, 200));
 
             // Log activity (don't await to avoid blocking)
-            this.logActivity('update', section, `Updated ${section} section`).catch(e => 
+            this.logActivity('update', section, `Updated ${section} section`).catch(e =>
                 console.warn('Failed to log activity:', e)
             );
 
@@ -925,7 +941,7 @@ const Admin = {
             const updatePayload = {
                 updated_by: user ? user.username : null
             };
-            
+
             if (regData.status !== undefined) updatePayload.status = regData.status;
             if (regData.payment !== undefined) updatePayload.payment = regData.payment;
             if (regData.events !== undefined) updatePayload.events = regData.events;

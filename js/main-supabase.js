@@ -59,17 +59,30 @@
     function saveToStorage(key, data) {
         try {
             var json = JSON.stringify(data);
+            var sizeKB = Math.round(json.length / 1024);
+
+            // Safety: If data is over 2MB, don't even try to cache it (save space for other keys)
+            if (sizeKB > 2048) {
+                console.warn('[cache] Skipping save for ' + key + ' - data too large (' + sizeKB + ' KB)');
+                return false;
+            }
+
             localStorage.setItem(key, json);
             return true;
         } catch (e) {
             if (e.name === 'QuotaExceededError' || e.code === 22) {
-                console.warn('[cache] localStorage quota exceeded, clearing old cache');
-                clearAllStorage();
+                console.warn('[cache] localStorage quota exceeded while saving ' + key + ' (' + Math.round(JSON.stringify(data).length / 1024) + ' KB)');
+                console.warn('[cache] Emergency clearing ALL localStorage data (global sweep)...');
+
+                // Nuclear option: True clear of everything on this domain
+                localStorage.clear();
+
                 try {
                     localStorage.setItem(key, JSON.stringify(data));
+                    console.log('[cache] Successfully saved ' + key + ' after emergency global sweep.');
                     return true;
                 } catch (e2) {
-                    console.error('[cache] Still cannot save after clearing:', e2);
+                    console.error('[cache] Still cannot save ' + key + ' even after global sweep. Data itself might be over 5MB limit.');
                 }
             } else {
                 console.error('[cache] Error saving to localStorage:', e);
@@ -108,34 +121,26 @@
         }
     }
 
-    /**
-     * Clear old cache versions (v1, v2, etc.) to free up space
-     */
     function clearOldCacheVersions() {
         try {
-            var oldPrefixes = ['construo_v1_', 'construo_v2_'];
+            var currentPrefix = CACHE_PREFIX;
             var keysToRemove = [];
-            
-            // Find all old cache keys
+
+            // Find ALL construo keys that don't match our current version
             for (var i = 0; i < localStorage.length; i++) {
                 var key = localStorage.key(i);
-                if (key) {
-                    for (var j = 0; j < oldPrefixes.length; j++) {
-                        if (key.startsWith(oldPrefixes[j])) {
-                            keysToRemove.push(key);
-                            break;
-                        }
-                    }
+                if (key && (key.startsWith('construo_') || key.startsWith('construo_v')) && !key.startsWith(currentPrefix)) {
+                    keysToRemove.push(key);
                 }
             }
-            
-            // Remove old cache keys
-            keysToRemove.forEach(function(key) {
+
+            // Remove them
+            keysToRemove.forEach(function (key) {
                 localStorage.removeItem(key);
             });
-            
+
             if (keysToRemove.length > 0) {
-                console.log('[cache] Cleared ' + keysToRemove.length + ' old cache entries');
+                console.log('[cache] Pruned ' + keysToRemove.length + ' outdated cache entries to free up space.');
             }
         } catch (e) {
             console.error('[cache] Error clearing old cache versions:', e);
@@ -164,7 +169,7 @@
     function getAllCachedData() {
         updateDebugStatus('Checking localStorage...');
         var siteConfig = readFromStorage(CACHE_KEYS.siteConfig);
-        
+
         // Check if admin has disabled localStorage
         if (siteConfig && !isLocalStorageEnabled(siteConfig)) {
             console.log('[cache] localStorage disabled by admin - clearing cache and forcing fresh fetch');
@@ -196,7 +201,7 @@
             organizersCount: organizers ? organizers.length : 0,
             lastFetch: lastFetch ? new Date(lastFetch).toLocaleString() : 'unknown'
         });
-        
+
         updateDebugStatus('Using cached data');
 
         return {
@@ -236,13 +241,24 @@
             return;
         }
 
-        if (data.siteConfig) saveToStorage(CACHE_KEYS.siteConfig, data.siteConfig);
-        if (data.events) saveToStorage(CACHE_KEYS.events, data.events);
-        if (data.timeline) saveToStorage(CACHE_KEYS.timeline, data.timeline);
-        if (data.speakers) saveToStorage(CACHE_KEYS.speakers, data.speakers);
-        if (data.sponsors) saveToStorage(CACHE_KEYS.sponsors, data.sponsors);
-        if (data.organizers) saveToStorage(CACHE_KEYS.organizers, data.organizers);
+        console.group('[cache] Saving data to localStorage...');
+
+        var keys = ['siteConfig', 'events', 'timeline', 'speakers', 'sponsors', 'organizers'];
+        keys.forEach(function (k) {
+            if (data[k]) {
+                var keyName = CACHE_KEYS[k] || k;
+                var res = saveToStorage(keyName, data[k]);
+                var size = Math.round(JSON.stringify(data[k]).length / 1024);
+                if (res) {
+                    console.log('✅ ' + k + ' saved (' + size + ' KB)');
+                } else {
+                    console.warn('❌ ' + k + ' failed to save (' + size + ' KB)');
+                }
+            }
+        });
+
         saveToStorage(CACHE_KEYS.lastFetch, Date.now());
+        console.groupEnd();
 
         // Save a hash of the data to detect changes on next visit
         var hashStr = JSON.stringify(data.siteConfig) +
@@ -250,7 +266,7 @@
             JSON.stringify(data.speakers);
         saveToStorage(CACHE_KEYS.dataHash, simpleHash(hashStr));
 
-        console.log('[cache] All data saved to localStorage');
+        console.log('[cache] All data sync complete');
     }
 
     // ========================================================
@@ -294,10 +310,10 @@
         this._supabase = getClient();
         this._readyPromise = null;
         this.loadedModules = 0;
-        
+
         // Clear old cache versions on initialization
         clearOldCacheVersions();
-        
+
         this.checkUrlParams();
     }
 

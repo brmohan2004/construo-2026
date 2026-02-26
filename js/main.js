@@ -141,31 +141,57 @@ class ConstruoApp {
     }
 
     updateUI({ siteConfig, events, timeline, speakers, sponsors, organizers }) {
-        if (siteConfig && siteConfig.settings) {
-            this.updateSettingsUI(siteConfig.settings);
-            if (siteConfig.settings.sections) {
-                this.updateSectionsUI(siteConfig.settings.sections);
+        try {
+            // Priority 1: Site Settings & Sections Visibility
+            if (siteConfig && siteConfig.settings) {
+                this.updateSettingsUI(siteConfig.settings);
+                if (siteConfig.settings.sections) {
+                    this.updateSectionsUI(siteConfig.settings.sections);
+                }
             }
-        }
-        if (siteConfig && siteConfig.hero) this.updateHeroUI(siteConfig.hero);
-        if (siteConfig && siteConfig.about) this.updateAboutUI(siteConfig.about);
-        if (events) this.updateEventsUI(events);
-        if (timeline) this.updateTimelineUI(timeline);
-        if (speakers) this.updateSpeakersUI(speakers);
-        if (sponsors) {
-            this.sponsorsRaw = sponsors;
-            const sponsorsObj = this.convertSponsorsData({ tiers: [{ id: 'platinum' }, { id: 'gold' }, { id: 'silver' }, { id: 'bronze' }] }) || {};
-            // Re-filtering manually since convertSponsorsData expects different structure sometimes
-            const sObj = {
-                platinum: sponsors.filter(s => s.tier_id === 'platinum'),
-                gold: sponsors.filter(s => s.tier_id === 'gold'),
-                silver: sponsors.filter(s => s.tier_id === 'silver'),
-                bronze: sponsors.filter(s => s.tier_id === 'bronze')
-            };
-            this.updateSponsorsUI(sObj);
-        }
-        if (siteConfig && siteConfig.venue) this.updateVenueUI(siteConfig.venue);
-        if (siteConfig && siteConfig.footer) this.updateFooterUI(siteConfig.footer);
+        } catch (e) { console.error('[UI] Settings update failed:', e); }
+
+        try {
+            // Priority 2: Footer (moved up as it's critical for baseline site appearance)
+            if (siteConfig && siteConfig.footer) this.updateFooterUI(siteConfig.footer);
+        } catch (e) { console.error('[UI] Footer update failed:', e); }
+
+        try {
+            if (siteConfig && siteConfig.hero) this.updateHeroUI(siteConfig.hero);
+        } catch (e) { console.error('[UI] Hero update failed:', e); }
+
+        try {
+            if (siteConfig && siteConfig.about) this.updateAboutUI(siteConfig.about);
+        } catch (e) { console.error('[UI] About update failed:', e); }
+
+        try {
+            if (events) this.updateEventsUI(events);
+        } catch (e) { console.error('[UI] Events update failed:', e); }
+
+        try {
+            if (timeline) this.updateTimelineUI(timeline);
+        } catch (e) { console.error('[UI] Timeline update failed:', e); }
+
+        try {
+            if (speakers) this.updateSpeakersUI(speakers);
+        } catch (e) { console.error('[UI] Speakers update failed:', e); }
+
+        try {
+            if (sponsors) {
+                this.sponsorsRaw = sponsors;
+                const sObj = {
+                    platinum: sponsors.filter(s => s.tier_id === 'platinum'),
+                    gold: sponsors.filter(s => s.tier_id === 'gold'),
+                    silver: sponsors.filter(s => s.tier_id === 'silver'),
+                    bronze: sponsors.filter(s => s.tier_id === 'bronze')
+                };
+                this.updateSponsorsUI(sObj);
+            }
+        } catch (e) { console.error('[UI] Sponsors update failed:', e); }
+
+        try {
+            if (siteConfig && siteConfig.venue) this.updateVenueUI(siteConfig.venue);
+        } catch (e) { console.error('[UI] Venue update failed:', e); }
         if (organizers) {
             this.organizersRaw = organizers;
             const categories = [
@@ -557,12 +583,12 @@ class ConstruoApp {
         // Update logo text and year
         const logoText = footerSection.querySelector('.logo-text');
         const logoYear = footerSection.querySelector('.logo-year');
-        if (logoText && footer.logoText) logoText.textContent = footer.logoText;
-        if (logoYear && footer.logoYear) logoYear.textContent = footer.logoYear;
+        if (logoText && footer.logoText !== undefined) logoText.textContent = footer.logoText;
+        if (logoYear && footer.logoYear !== undefined) logoYear.textContent = footer.logoYear;
 
         // Update tagline
         const tagline = footerSection.querySelector('.footer-tagline');
-        if (tagline && footer.tagline) {
+        if (tagline && footer.tagline !== undefined) {
             tagline.textContent = footer.tagline;
         }
 
@@ -574,14 +600,16 @@ class ConstruoApp {
                     instagram: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" /><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" /><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" /></svg>`,
                     linkedin: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" /><rect x="2" y="9" width="4" height="12" /><circle cx="4" cy="4" r="2" /></svg>`,
                     twitter: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z" /></svg>`,
+                    x: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z" /></svg>`,
                     youtube: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z" /><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" /></svg>`,
                     facebook: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" /></svg>`
                 };
 
                 let socialHTML = '';
                 Object.entries(footer.social).forEach(([platform, url]) => {
-                    if (url && socialIcons[platform]) {
-                        socialHTML += `<a href="${url}" class="social-link" aria-label="${platform}" target="_blank" rel="noopener">${socialIcons[platform]}</a>`;
+                    const iconKey = platform.toLowerCase() === 'twitter' ? 'twitter' : platform.toLowerCase();
+                    if (url && socialIcons[iconKey]) {
+                        socialHTML += `<a href="${url}" class="social-link" aria-label="${platform}" target="_blank" rel="noopener">${socialIcons[iconKey]}</a>`;
                     }
                 });
                 socialContainer.innerHTML = socialHTML;
@@ -619,7 +647,7 @@ class ConstruoApp {
                     <div class="footer-column">
                         <h4>Contact</h4>
                         ${footer.contact.email ? `<a href="mailto:${footer.contact.email}">${footer.contact.email}</a>` : ''}
-                        ${footer.contact.phone ? `<a href="tel:${footer.contact.phone.replace(/\s/g, '')}">${footer.contact.phone}</a>` : ''}
+                        ${footer.contact.phone ? `<a href="tel:${footer.contact.phone.toString().replace(/\s/g, '')}">${footer.contact.phone}</a>` : ''}
                         ${footer.contact.address ? `<p>${footer.contact.address}</p>` : ''}
                     </div>
                 `;
@@ -632,12 +660,12 @@ class ConstruoApp {
 
         // Update copyright and credits
         const copyright = footerSection.querySelector('.footer-copyright');
-        if (copyright && footer.copyright) {
+        if (copyright && footer.copyright !== undefined) {
             copyright.textContent = footer.copyright;
         }
 
         const credits = footerSection.querySelector('.footer-credits');
-        if (credits && footer.credits) {
+        if (credits && footer.credits !== undefined) {
             credits.textContent = footer.credits;
         }
     }
@@ -2429,7 +2457,7 @@ class ConstruoApp {
         fallbackBtn.addEventListener('click', () => {
             // Close the main registration modal
             this.closeModal('modal-register');
-            
+
             // Open the Microsoft Forms modal
             setTimeout(() => {
                 this.openModal('modal-ms-forms');
