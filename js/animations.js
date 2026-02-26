@@ -149,6 +149,9 @@ class ConstruoAnimations {
 
 
     playHeroEntrance() {
+        const heroBadge = document.querySelector('.hero-badge');
+        if (!heroBadge) return; // Hero not rendered yet
+
         const tl = gsap.timeline();
         const s = (window.construoApp && window.construoApp.siteConfig && window.construoApp.siteConfig.settings) || {};
 
@@ -156,7 +159,7 @@ class ConstruoAnimations {
         const stagger = s.animStagger || 0.2;
         const ease = s.animEase || 'power3.out';
 
-        tl.from('.hero-badge', {
+        tl.from(heroBadge, {
             y: 30,
             opacity: 0,
             duration: duration,
@@ -210,13 +213,14 @@ class ConstruoAnimations {
     }
 
     playHeroCtaEntrance() {
+        if (!document.querySelector('.hero-cta .btn')) return;
         gsap.from('.hero-cta .btn', {
             y: 20,
             opacity: 0,
             duration: 0.6,
             stagger: 0.15,
             ease: 'power3.out',
-            clearProps: 'all' // Ensure visibility persists after animation
+            clearProps: 'all'
         });
     }
 

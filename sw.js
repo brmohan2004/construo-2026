@@ -1,15 +1,28 @@
-const CACHE_NAME = 'construo-cache-v7';
+const CACHE_NAME = 'construo-cache-v8';
 const ASSETS_TO_CACHE = [
     '/',
     '/index.html',
+    '/css/base.css',
     '/css/style.css',
     '/css/responsive.css',
-    '/css/animations.css',
+    '/css/hero.css',
+    '/css/about.css',
+    '/css/events.css',
+    '/css/speakers.css',
+    '/css/timeline.css',
+    '/css/venue.css',
+    '/css/organizers.css',
+    '/css/faq.css',
+    '/css/faq_whatsapp.css',
+    '/css/navigation.css',
+    '/css/modal.css',
+    '/css/preloader.css',
     '/js/main.js',
     '/js/main-supabase.js',
     '/js/supabase-config.js',
     '/js/three-scene.js',
     '/js/animations.js',
+    '/js/scroll-animations.js',
     '/js/faq.js',
     '/images/favicon.svg'
 ];
