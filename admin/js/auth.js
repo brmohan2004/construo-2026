@@ -126,11 +126,18 @@ const Auth = {
 
     async getProfile(userId) {
         try {
-            const { data, error } = await supabase
+            // Add timeout to prevent hanging
+            const promise = supabase
                 .from('profiles')
                 .select('*')
                 .eq('user_id', userId)
                 .single();
+            
+            const timeout = new Promise((_, reject) => 
+                setTimeout(() => reject(new Error('Profile fetch timeout')), 5000)
+            );
+            
+            const { data, error } = await Promise.race([promise, timeout]);
 
             if (error) throw error;
             return data;
@@ -183,65 +190,110 @@ const Auth = {
         submitBtn.classList.add('loading');
         errorDiv.style.display = 'none';
 
+        // Add global timeout for entire login operation
+        const loginTimeout = setTimeout(() => {
+            console.error('[Auth] Login operation timed out after 30 seconds');
+            submitBtn.classList.remove('loading');
+            this.showLoginError('Login timeout. Please check your connection and try again.');
+        }, 30000); // 30 second total timeout
+
         try {
             // Check if input is email or username
             let profile = null;
             if (username.includes('@')) {
                 // Input is likely an email, try to fetch profile by email
-                const { data, error } = await supabase
+                const profilePromise = supabase
                     .from('profiles')
                     .select('*')
                     .eq('email', username)
                     .single();
-
-                if (!error && data) {
-                    profile = data;
+                
+                const timeout = new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error('Profile lookup timeout')), 8000)
+                );
+                
+                try {
+                    const { data, error } = await Promise.race([profilePromise, timeout]);
+                    if (!error && data) {
+                        profile = data;
+                    }
+                } catch (err) {
+                    console.warn('[Auth] Profile fetch by email failed:', err.message);
                 }
             }
 
             // If not found by email or input wasn't email, try username
             if (!profile) {
-                profile = await this.getProfileByUsername(username);
+                try {
+                    const profilePromise = this.getProfileByUsername(username);
+                    const timeout = new Promise((_, reject) => 
+                        setTimeout(() => reject(new Error('Username lookup timeout')), 8000)
+                    );
+                    profile = await Promise.race([profilePromise, timeout]);
+                } catch (err) {
+                    console.warn('[Auth] Profile fetch by username failed:', err.message);
+                }
             }
 
-            // If still no profile, we can't proceed (but we could try direct auth if we wanted, though app logic relies on profile)
-            if (!profile) {
-                // Fallback: Try direct Supabase auth with email just in case (for users without profile setup correctly but valid auth)
-                if (username.includes('@')) {
-                    const { data, error } = await supabase.auth.signInWithPassword({
+            // If still no profile, try direct auth
+            if (!profile && username.includes('@')) {
+                console.log('[Auth] Attempting direct auth...');
+                try {
+                    const authPromise = supabase.auth.signInWithPassword({
                         email: username,
                         password: password
                     });
+                    const timeout = new Promise((_, reject) => 
+                        setTimeout(() => reject(new Error('Auth timeout')), 10000)
+                    );
+                    
+                    const { data, error } = await Promise.race([authPromise, timeout]);
+                    
+                    if (error) throw error;
+                    
                     if (data.session) {
-                        // Session created, fetch profile using user ID
-                        const userProfile = await this.getProfile(data.user.id);
-                        if (userProfile) {
-                            profile = userProfile;
-                        } else {
-                            // No profile exists for this authorized user, create one or error out?
-                            // Better to let it fail or handle it. For now, let's treat it as valid auth.
-                            console.warn('User logged in but has no profile');
-                            // We need 'profile' for role-based redirect.
+                        // Try to fetch profile
+                        profile = await this.getProfile(data.user.id);
+                        if (!profile) {
+                            throw new Error('User authenticated but no profile found');
                         }
                     }
+                } catch (err) {
+                    console.error('[Auth] Direct auth failed:', err);
                 }
-
-                if (!profile) throw new Error('Invalid username or password');
             }
 
-            const { data, error } = await supabase.auth.signInWithPassword({
-                email: profile.email, // Use the email from the found profile
+            if (!profile) {
+                throw new Error('Invalid username or password');
+            }
+
+            console.log('[Auth] Profile found, attempting sign in...');
+            
+            const signInPromise = supabase.auth.signInWithPassword({
+                email: profile.email,
                 password: password
             });
+            const timeout = new Promise((_, reject) => 
+                setTimeout(() => reject(new Error('Sign in timeout')), 10000)
+            );
+            
+            const { data, error } = await Promise.race([signInPromise, timeout]);
 
             if (error) throw error;
 
             if (data.session) {
-                await this.logActivity('login', 'auth', `User ${profile.username || username} logged in`);
+                console.log('[Auth] Login successful, redirecting...');
+                
+                // Log activity but don't wait for it
+                this.logActivity('login', 'auth', `User ${profile.username || username} logged in`)
+                    .catch(err => console.warn('[Auth] Failed to log activity:', err));
 
                 this.showToast('success', 'Login Successful', 'Redirecting...');
 
                 await this.delay(500);
+
+                // Clear timeout before redirect
+                clearTimeout(loginTimeout);
 
                 // Role-based redirect
                 if (profile.role === 'viewer') {
@@ -249,15 +301,28 @@ const Auth = {
                 } else {
                     window.location.href = this.config.redirectAfterLogin;
                 }
+                return; // Exit after redirect
             }
         } catch (error) {
+            // Clear timeout on error
+            clearTimeout(loginTimeout);
+            
             console.error('Login error:', error);
-            // Check for network connection errors specifically (failed to fetch, no internet)
-            if (error.message === 'Failed to fetch' || error.message.includes('NetworkError') || !navigator.onLine) {
-                this.showLoginError('Network connection blocked by ISP. Please use a VPN or Cloudflare DNS (1.1.1.1).');
-            } else {
-                this.showLoginError(error.message || 'Invalid username or password');
+            
+            let errorMessage = 'Login failed. Please try again.';
+            
+            // Check for specific error types
+            if (error.message.includes('timeout') || error.message.includes('Timeout')) {
+                errorMessage = 'Connection timeout. Please check your internet and try again.';
+            } else if (error.message === 'Failed to fetch' || error.message.includes('NetworkError') || !navigator.onLine) {
+                errorMessage = 'Network error. Check your connection or try using a VPN.';
+            } else if (error.message.includes('Invalid') || error.message.includes('password')) {
+                errorMessage = 'Invalid username or password';
+            } else if (error.message) {
+                errorMessage = error.message;
             }
+            
+            this.showLoginError(errorMessage);
         } finally {
             submitBtn.classList.remove('loading');
         }
@@ -350,11 +415,17 @@ const Auth = {
 
     async getProfileByUsername(username) {
         try {
-            const { data, error } = await supabase
+            const promise = supabase
                 .from('profiles')
                 .select('*')
                 .eq('username', username)
                 .single();
+            
+            const timeout = new Promise((_, reject) => 
+                setTimeout(() => reject(new Error('Username lookup timeout')), 5000)
+            );
+            
+            const { data, error } = await Promise.race([promise, timeout]);
 
             if (error) throw error;
             return data;
