@@ -523,7 +523,7 @@
                         console.error('[main-supabase] Supabase error in getSiteConfig:', result.error);
                         throw result.error;
                     }
-                    console.log('[main-supabase] ✅ site_config fetched successfully');
+                    console.log('[main-supabase] ✅ site_config fetched (' + Math.round(JSON.stringify(result.data).length / 1024) + ' KB)');
                     self.cache.siteConfig = result.data;
                     self.dispatchPartialProgress();
                     return result.data;

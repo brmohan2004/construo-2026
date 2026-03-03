@@ -6,6 +6,15 @@ window.CertBuilder = {
     isDragging: false,
     lastPosX: 0,
     lastPosY: 0,
+    paperSize: 'A4-landscape', // Default paper size
+    paperSizes: {
+        'A4-landscape': { width: 1122, height: 794, label: 'A4 Landscape (297x210mm)' },
+        'A4-portrait': { width: 794, height: 1122, label: 'A4 Portrait (210x297mm)' },
+        'Letter-landscape': { width: 1056, height: 816, label: 'Letter Landscape (11x8.5in)' },
+        'Letter-portrait': { width: 816, height: 1056, label: 'Letter Portrait (8.5x11in)' },
+        'A3-landscape': { width: 1587, height: 1122, label: 'A3 Landscape (420x297mm)' },
+        'custom': { width: 1122, height: 794, label: 'Custom Size' }
+    },
 
     async init() {
         console.log('Initializing Certificate Builder...');
@@ -78,8 +87,26 @@ window.CertBuilder = {
         // 5. Keyboard Shortcuts
         document.addEventListener('keydown', (e) => this.handleKeyboard(e));
 
-        // 6. Save Button
-        document.getElementById('saveBuilderBtn').onclick = () => this.saveTemplate();
+        // 6. Save Button - Ensure proper binding
+        const saveBtn = document.getElementById('saveBuilderBtn');
+        if (saveBtn) {
+            saveBtn.onclick = async (e) => {
+                e.preventDefault();
+                console.log('Save button clicked');
+                try {
+                    await this.saveTemplate();
+                } catch (error) {
+                    console.error('Error in save button handler:', error);
+                    Admin.showToast('error', 'Save Failed', `Error: ${error.message}`);
+                }
+            };
+            console.log('Save button bound successfully');
+        } else {
+            console.error('Save button not found!');
+        }
+
+        // 6b. Paper Size Selector
+        this.bindPaperSizeSelector();
 
         // 7. Property Inputs Binding
         this.bindPropertyInputs();
@@ -90,11 +117,11 @@ window.CertBuilder = {
             requestAnimationFrame(() => this.resizeToFit());
         });
 
-        // 9. Create the visual "Page" on the infinite canvas
-        this.createPageBackground();
-
-        // 10. Load existing template data
+        // 9. Load existing template data (before creating page background)
         await this.loadConfig();
+
+        // 10. Create the visual "Page" on the infinite canvas (after loading config to get paper size)
+        this.createPageBackground();
 
         console.log('Certificate Builder ready.');
     },
@@ -115,7 +142,10 @@ window.CertBuilder = {
             .filter(o => o.id === 'page-bg' || o.id === 'page-shadow')
             .forEach(o => this.canvas.remove(o));
 
-        const W = 1123, H = 794;
+        // Get dimensions from current paper size
+        const size = this.paperSizes[this.paperSize];
+        const W = size.width;
+        const H = size.height;
 
         // Shadow behind the page
         const shadow = new fabric.Rect({
@@ -149,7 +179,11 @@ window.CertBuilder = {
     },
 
     centerPage() {
-        const W = 1123, H = 794;
+        // Get dimensions from current paper size
+        const size = this.paperSizes[this.paperSize];
+        const W = size.width;
+        const H = size.height;
+        
         const container = document.querySelector('.builder-canvas-container');
         if (!container) return;
 
@@ -172,6 +206,33 @@ window.CertBuilder = {
         const zoom = this.canvas.getZoom();
         const el = document.getElementById('zoomLevel');
         if (el) el.textContent = Math.round(zoom * 100) + '%';
+    },
+
+    // --- Paper Size Management ---
+
+    bindPaperSizeSelector() {
+        const selector = document.getElementById('paperSizeSelect');
+        if (selector) {
+            selector.onchange = (e) => {
+                this.changePaperSize(e.target.value);
+            };
+            // Update selector to current value
+            selector.value = this.paperSize;
+            console.log('Paper size selector bound successfully');
+        } else {
+            console.warn('Paper size selector not found in HTML');
+        }
+    },
+
+    changePaperSize(newSize) {
+        if (!this.paperSizes[newSize]) {
+            console.error('Invalid paper size:', newSize);
+            return;
+        }
+        this.paperSize = newSize;
+        this.createPageBackground(); // Recreate the page with new dimensions
+        Admin.showToast('info', 'Paper Size Changed', `Changed to ${this.paperSizes[newSize].label}`);
+        console.log('Paper size changed to:', newSize);
     },
 
     // --- Keyboard ---
@@ -200,12 +261,24 @@ window.CertBuilder = {
 
     async loadConfig() {
         try {
+            console.log('Loading certificate template config...');
             const config = await Admin.getSiteConfig();
+            console.log('Site config loaded:', config);
+            
             // Check settings.certificate_template first (our new storage), then fall back to top-level if it existed
             let data = config?.settings?.certificate_template || config?.certificate_template;
 
             if (data) {
                 if (typeof data === 'string') data = JSON.parse(data);
+
+                // Load paper size if saved
+                if (data.paperSize && this.paperSizes[data.paperSize]) {
+                    this.paperSize = data.paperSize;
+                    console.log('Loaded paper size:', this.paperSize);
+                    // Update selector
+                    const selector = document.getElementById('paperSizeSelect');
+                    if (selector) selector.value = this.paperSize;
+                }
 
                 if (data && data.objects) {
                     fabric.util.enlivenObjects(data.objects, (objs) => {
@@ -215,35 +288,59 @@ window.CertBuilder = {
                         });
                         this.canvas.renderAll();
                     });
-                    console.log('Template loaded.');
+                    console.log('Template loaded successfully with', data.objects.length, 'objects');
+                } else {
+                    console.log('No template objects found');
                 }
+            } else {
+                console.log('No certificate template data found in config');
             }
         } catch (error) {
             console.error('Failed to load certificate config:', error);
+            Admin.showToast('warning', 'Load Warning', 'No existing template found. Starting fresh.');
         }
     },
 
     async saveTemplate() {
-        // Serialize, excluding system helper objects
-        const json = this.canvas.toJSON(['data_type', 'id']);
-        json.objects = json.objects.filter(o => o.id !== 'page-bg' && o.id !== 'page-shadow');
-
+        console.log('=== Starting saveTemplate ==>');
         try {
+            // Serialize, excluding system helper objects
+            const json = this.canvas.toJSON(['data_type', 'id']);
+            json.objects = json.objects.filter(o => o.id !== 'page-bg' && o.id !== 'page-shadow');
+            
+            // Save paper size with template
+            json.paperSize = this.paperSize;
+            
+            console.log('Template JSON created with', json.objects.length, 'objects');
+            console.log('Paper size:', this.paperSize);
+
             // Fetch current config to ensure we don't overwrite other settings
+            console.log('Fetching current config...');
             const currentConfig = await Admin.getSiteConfig();
+            console.log('Current config retrieved:', currentConfig);
+            
             const currentSettings = currentConfig.settings || {};
+            console.log('Current settings:', currentSettings);
 
             // Merge our template into settings
             const newSettings = {
                 ...currentSettings,
                 certificate_template: json
             };
+            console.log('New settings prepared, updating...');
 
-            await Admin.updateSiteConfig('settings', newSettings);
-            Admin.showToast('success', 'Saved', 'Certificate template saved!');
+            const result = await Admin.updateSiteConfig('settings', newSettings);
+            console.log('Update result:', result);
+            
+            Admin.showToast('success', 'Saved Successfully', `Certificate template saved with ${json.objects.length} objects!`);
+            console.log('=== saveTemplate completed successfully ==>');
+            return result;
         } catch (error) {
-            console.error('Failed to save template:', error);
-            Admin.showToast('error', 'Error', 'Failed to save template.');
+            console.error('=== Failed to save template ===>');
+            console.error('Error details:', error);
+            console.error('Error stack:', error.stack);
+            Admin.showToast('error', 'Save Error', `Failed to save: ${error.message}`);
+            throw error; // Re-throw to let button handler catch it too
         }
     },
 

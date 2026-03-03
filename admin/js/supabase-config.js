@@ -3,8 +3,8 @@
  * Initializes and exports Supabase client for admin panel
  */
 
-// Admin panel always uses direct Supabase URL (not the proxy)
-// The proxy is only for the public site to bypass ISP blocking for visitors
+// Admin panel uses direct Supabase URL
+// For local development: Add http://localhost:8000 to Supabase CORS settings
 const SUPABASE_URL = 'https://cknbkgeurnwdqexgqezz.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNrbmJrZ2V1cm53ZHFleGdxZXp6Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MDM1NTEyNSwiZXhwIjoyMDg1OTMxMTI1fQ.Be6HGgj4ApSNjJLc1vkChAzDhjoszbCYCCt2Ojf0k_s';
 

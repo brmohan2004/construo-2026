@@ -259,6 +259,20 @@
             text-align: center;
         }
 
+        /* --- Paper Size Selector --- */
+        #paperSizeSelect {
+            font-size: 0.85rem;
+            appearance: auto;
+            padding: 0.4rem 0.6rem;
+            cursor: pointer;
+            min-width: 160px;
+        }
+
+        #paperSizeSelect:focus {
+            outline: 2px solid #ea580c;
+            outline-offset: 2px;
+        }
+
         a {
             text-decoration: none;
         }
@@ -301,6 +315,16 @@
             </div>
             <div style="display: flex; gap: 0.5rem; align-items: center;">
                 <span class="zoom-indicator" id="zoomLevel">100%</span>
+                
+                <!-- Paper Size Selector -->
+                <select id="paperSizeSelect" class="btn btn-ghost" title="Select Paper Size">
+                    <option value="A4-landscape">📄 A4 Landscape</option>
+                    <option value="A4-portrait">📄 A4 Portrait</option>
+                    <option value="Letter-landscape">📄 Letter Landscape</option>
+                    <option value="Letter-portrait">📄 Letter Portrait</option>
+                    <option value="A3-landscape">📄 A3 Landscape</option>
+                </select>
+                
                 <button class="btn btn-ghost" onclick="CertBuilder.centerPage()" title="Fit to Page">
                     <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path>
