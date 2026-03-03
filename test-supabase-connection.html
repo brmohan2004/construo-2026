@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Supabase Connection</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .status {
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            font-weight: 500;
+        }
+        .status.loading {
+            background: #fef3c7;
+            color: #92400e;
+            border-left: 4px solid #f59e0b;
+        }
+        .status.success {
+            background: #d1fae5;
+            color: #065f46;
+            border-left: 4px solid #10b981;
+        }
+        .status.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border-left: 4px solid #ef4444;
+        }
+        .status.warning {
+            background: #fef3c7;
+            color: #92400e;
+            border-left: 4px solid #f59e0b;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px 5px;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #5568d3;
+        }
+        button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+        .details {
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        .help {
+            background: #eff6ff;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #3b82f6;
+            margin: 20px 0;
+        }
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔌 Supabase Connection Test</h1>
+        
+        <div id="status" class="status loading">
+            <div class="spinner"></div>
+            Initializing...
+        </div>
+        
+        <div>
+            <button id="testBtn" onclick="runTest()">🔄 Test Connection</button>
+            <button id="testAuthBtn" onclick="testAuth()">👤 Test Auth</button>
+            <button id="testConfigBtn" onclick="testConfig()">⚙️ Test Site Config</button>
+        </div>
+        
+        <div id="details" class="details" style="display: none;"></div>
+        
+        <div class="help">
+            <h3>📋 If Database is Paused:</h3>
+            <ol>
+                <li>Go to <a href="https://supabase.com/dashboard" target="_blank">Supabase Dashboard</a></li>
+                <li>Select your project</li>
+                <li>Click <strong>"Restore"</strong> or <strong>"Unpause"</strong></li>
+                <li>Wait 1-2 minutes for database to start</li>
+                <li>Click "Test Connection" above</li>
+            </ol>
+        </div>
+    </div>
+
+    <script type="module">
+        const SUPABASE_URL = 'https://cknbkgeurnwdqexgqezz.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNrbmJrZ2V1cm53ZHFleGdxZXp6Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MDM1NTEyNSwiZXhwIjoyMDg1OTMxMTI1fQ.Be6HGgj4ApSNjJLc1vkChAzDhjoszbCYCCt2Ojf0k_s';
+
+        window.supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        const statusEl = document.getElementById('status');
+        const detailsEl = document.getElementById('details');
+        const testBtn = document.getElementById('testBtn');
+        const testAuthBtn = document.getElementById('testAuthBtn');
+        const testConfigBtn = document.getElementById('testConfigBtn');
+
+        function showStatus(type, message) {
+            statusEl.className = 'status ' + type;
+            statusEl.innerHTML = type === 'loading' 
+                ? '<div class="spinner"></div>' + message 
+                : message;
+        }
+
+        function showDetails(data) {
+            detailsEl.style.display = 'block';
+            detailsEl.textContent = JSON.stringify(data, null, 2);
+        }
+
+        async function runTest() {
+            testBtn.disabled = true;
+            showStatus('loading', 'Testing basic connection...');
+            detailsEl.style.display = 'none';
+
+            try {
+                const start = Date.now();
+                const { data, error } = await window.supabase
+                    .from('site_config')
+                    .select('config_key')
+                    .limit(1);
+
+                const duration = Date.now() - start;
+
+                if (error) {
+                    showStatus('error', `❌ Connection Failed: ${error.message}`);
+                    showDetails({
+                        error: error.message,
+                        code: error.code,
+                        hint: error.hint,
+                        details: error.details,
+                        duration: duration + 'ms'
+                    });
+
+                    if (error.code === 'PGRST002' || error.message.includes('schema cache')) {
+                        showStatus('warning', '⚠️ Database is paused or starting up. Please wait 1-2 minutes and try again.');
+                    }
+                } else {
+                    showStatus('success', `✅ Connection Successful! (${duration}ms)`);
+                    showDetails({
+                        status: 'Connected',
+                        duration: duration + 'ms',
+                        data: data
+                    });
+                }
+            } catch (err) {
+                showStatus('error', `❌ Network Error: ${err.message}`);
+                showDetails({
+                    error: err.message,
+                    stack: err.stack
+                });
+            } finally {
+                testBtn.disabled = false;
+            }
+        }
+
+        async function testAuth() {
+            testAuthBtn.disabled = true;
+            showStatus('loading', 'Testing authentication...');
+            
+            try {
+                const { data: { session }, error } = await window.supabase.auth.getSession();
+                
+                if (error) {
+                    showStatus('error', `❌ Auth Error: ${error.message}`);
+                    showDetails(error);
+                } else if (session) {
+                    showStatus('success', `✅ Authenticated as: ${session.user.email}`);
+                    showDetails({
+                        user_id: session.user.id,
+                        email: session.user.email,
+                        role: session.user.role
+                    });
+                } else {
+                    showStatus('warning', '⚠️ Not logged in');
+                    showDetails({ message: 'No active session' });
+                }
+            } catch (err) {
+                showStatus('error', `❌ Error: ${err.message}`);
+                showDetails(err);
+            } finally {
+                testAuthBtn.disabled = false;
+            }
+        }
+
+        async function testConfig() {
+            testConfigBtn.disabled = true;
+            showStatus('loading', 'Testing site_config query...');
+            
+            try {
+                const start = Date.now();
+                const { data, error } = await window.supabase
+                    .from('site_config')
+                    .select('config_key, hero, settings')
+                    .eq('config_key', 'main')
+                    .single();
+
+                const duration = Date.now() - start;
+
+                if (error) {
+                    showStatus('error', `❌ Query Failed: ${error.message}`);
+                    showDetails({
+                        error: error.message,
+                        code: error.code,
+                        duration: duration + 'ms'
+                    });
+                } else {
+                    showStatus('success', `✅ Config loaded successfully! (${duration}ms)`);
+                    showDetails({
+                        config_key: data.config_key,
+                        has_hero: !!data.hero,
+                        has_settings: !!data.settings,
+                        duration: duration + 'ms'
+                    });
+                }
+            } catch (err) {
+                showStatus('error', `❌ Error: ${err.message}`);
+                showDetails(err);
+            } finally {
+                testConfigBtn.disabled = false;
+            }
+        }
+
+        // Auto-test on load
+        window.addEventListener('load', () => {
+            setTimeout(runTest, 500);
+        });
+
+        // Expose functions globally
+        window.runTest = runTest;
+        window.testAuth = testAuth;
+        window.testConfig = testConfig;
+    </script>
+</body>
+</html>

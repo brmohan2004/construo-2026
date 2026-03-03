@@ -1,4 +1,5 @@
 import Admin from './admin.js';
+import supabase from './supabase-config.js';
 
 window.CertBuilder = {
     canvas: null,
@@ -323,13 +324,36 @@ window.CertBuilder = {
             console.log('Template JSON created with', json.objects.length, 'objects');
             console.log('Paper size:', this.paperSize);
 
-            // Fetch current config to ensure we don't overwrite other settings
+            // Try to fetch current config with retry logic
             console.log('Fetching current config...');
-            const currentConfig = await Admin.getSiteConfig();
-            console.log('Current config retrieved:', currentConfig);
+            let currentSettings = {};
             
-            const currentSettings = currentConfig.settings || {};
-            console.log('Current settings:', currentSettings);
+            try {
+                const currentConfig = await Admin.getSiteConfig();
+                console.log('Current config retrieved:', currentConfig);
+                currentSettings = currentConfig.settings || {};
+                console.log('Current settings:', currentSettings);
+            } catch (configError) {
+                console.warn('Failed to fetch current config, will use fallback:', configError.message);
+                // Fallback: Try to fetch only settings column directly
+                try {
+                    console.log('Attempting direct settings fetch...');
+                    const { data, error } = await supabase
+                        .from('site_config')
+                        .select('settings')
+                        .eq('config_key', 'main')
+                        .single();
+                    
+                    if (!error && data) {
+                        currentSettings = data.settings || {};
+                        console.log('Direct fetch successful, got settings');
+                    } else {
+                        console.warn('Direct fetch failed, using empty settings');
+                    }
+                } catch (directError) {
+                    console.warn('Direct fetch also failed, continuing with empty settings');
+                }
+            }
 
             // Merge our template into settings
             const newSettings = {
@@ -351,13 +375,20 @@ window.CertBuilder = {
             
             // Check if it's a timeout/CORS error
             let errorMessage = error.message;
+            let detailedHelp = '';
+            
             if (error.message.includes('timed out') || error.message.includes('CORS')) {
-                errorMessage = 'Connection timeout. Please add http://localhost:8000 to Supabase CORS settings in your dashboard.';
+                errorMessage = 'Database connection timeout';
+                detailedHelp = 'Please run fix_certificate_builder_timeout.sql in your Supabase SQL editor, then refresh this page.';
             } else if (error.message.includes('Failed to fetch')) {
-                errorMessage = 'Network error. Check your internet connection and Supabase CORS settings.';
+                errorMessage = 'Network error';
+                detailedHelp = 'Check your internet connection and ensure Supabase is accessible.';
+            } else if (error.message.includes('permission denied') || error.message.includes('policy')) {
+                errorMessage = 'Permission denied';
+                detailedHelp = 'Run fix_certificate_builder_timeout.sql to update database policies.';
             }
             
-            Admin.showToast('error', 'Save Failed', errorMessage);
+            Admin.showToast('error', 'Save Failed', `${errorMessage}. ${detailedHelp}`);
             throw error;
         } finally {
             // Restore button state
