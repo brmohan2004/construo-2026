@@ -294,16 +294,31 @@ const Admin = {
 
     // -------------------- SUPABASE DATA METHODS --------------------
 
+    // Helper function to add timeout to promises
+    withTimeout(promise, timeoutMs = 10000) {
+        return Promise.race([
+            promise,
+            new Promise((_, reject) => 
+                setTimeout(() => reject(new Error(`Operation timed out after ${timeoutMs}ms. This may be due to CORS issues. Please check Supabase CORS settings.`)), timeoutMs)
+            )
+        ]);
+    },
+
     async getSiteConfig() {
         try {
-            const { data, error } = await supabase
-                .from('site_config')
-                .select('*')
-                .eq('config_key', 'main')
-                .single();
+            console.log('[getSiteConfig] Fetching config...');
+            const { data, error } = await this.withTimeout(
+                supabase
+                    .from('site_config')
+                    .select('*')
+                    .eq('config_key', 'main')
+                    .single(),
+                10000 // 10 second timeout
+            );
 
             if (error) throw error;
             this.cache.siteConfig = data;
+            console.log('[getSiteConfig] Config fetched successfully');
             return data;
         } catch (error) {
             console.error('Error fetching site config:', error);
@@ -332,11 +347,14 @@ const Admin = {
             console.log(`[updateSiteConfig] Updating '${section}' with:`, JSON.stringify(updateData[section]).substring(0, 200));
 
             // Perform update WITH select to verify the update was applied
-            const { data: updatedRows, error: updateError } = await supabase
-                .from('site_config')
-                .update(updateData)
-                .eq('config_key', 'main')
-                .select(section);
+            const { data: updatedRows, error: updateError } = await this.withTimeout(
+                supabase
+                    .from('site_config')
+                    .update(updateData)
+                    .eq('config_key', 'main')
+                    .select(section),
+                15000 // 15 second timeout for update
+            );
 
             if (updateError) {
                 console.error(`[updateSiteConfig] Update error:`, updateError);

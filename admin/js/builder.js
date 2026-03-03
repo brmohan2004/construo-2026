@@ -97,7 +97,7 @@ window.CertBuilder = {
                     await this.saveTemplate();
                 } catch (error) {
                     console.error('Error in save button handler:', error);
-                    Admin.showToast('error', 'Save Failed', `Error: ${error.message}`);
+                    // Error toast already shown in saveTemplate, no need to show again
                 }
             };
             console.log('Save button bound successfully');
@@ -303,6 +303,15 @@ window.CertBuilder = {
 
     async saveTemplate() {
         console.log('=== Starting saveTemplate ==>');
+        
+        // Show loading indicator
+        const saveBtn = document.getElementById('saveBuilderBtn');
+        const originalText = saveBtn ? saveBtn.innerHTML : '';
+        if (saveBtn) {
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> Saving...';
+        }
+        
         try {
             // Serialize, excluding system helper objects
             const json = this.canvas.toJSON(['data_type', 'id']);
@@ -339,8 +348,23 @@ window.CertBuilder = {
             console.error('=== Failed to save template ===>');
             console.error('Error details:', error);
             console.error('Error stack:', error.stack);
-            Admin.showToast('error', 'Save Error', `Failed to save: ${error.message}`);
-            throw error; // Re-throw to let button handler catch it too
+            
+            // Check if it's a timeout/CORS error
+            let errorMessage = error.message;
+            if (error.message.includes('timed out') || error.message.includes('CORS')) {
+                errorMessage = 'Connection timeout. Please add http://localhost:8000 to Supabase CORS settings in your dashboard.';
+            } else if (error.message.includes('Failed to fetch')) {
+                errorMessage = 'Network error. Check your internet connection and Supabase CORS settings.';
+            }
+            
+            Admin.showToast('error', 'Save Failed', errorMessage);
+            throw error;
+        } finally {
+            // Restore button state
+            if (saveBtn) {
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = originalText;
+            }
         }
     },
 
