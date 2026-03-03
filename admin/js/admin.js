@@ -35,6 +35,13 @@ const Admin = {
 
     async checkAuth() {
         try {
+            // Check if bypass mode is enabled
+            const bypassMode = sessionStorage.getItem('adminBypass') === 'true';
+            if (bypassMode) {
+                console.log('[Admin] Bypass mode active - skipping auth check');
+                return true;
+            }
+
             // Add timeout to prevent hanging
             const sessionPromise = supabase.auth.getSession();
             const timeoutPromise = new Promise((_, reject) => 

@@ -67,25 +67,30 @@ const Auth = {
 
     async checkSession() {
         try {
-            // Check if bypass mode is enabled
-            const bypassMode = sessionStorage.getItem('adminBypass') === 'true';
-            
             const currentPath = window.location.pathname;
             const isLoginPage = currentPath.includes('admin/index.html') ||
                 currentPath.endsWith('/admin/') ||
                 currentPath.endsWith('/admin');
             const isResetPage = currentPath.includes('reset-password.html');
 
-            if (bypassMode) {
-                console.log('[Auth] Bypass mode active - skipping authentication');
+            // Check if bypass mode is enabled
+            const bypassMode = sessionStorage.getItem('adminBypass');
+            console.log('[Auth] checkSession - Path:', currentPath, 'isLoginPage:', isLoginPage, 'bypassMode:', bypassMode);
+            
+            if (bypassMode === 'true') {
+                console.log('[Auth] ✓ Bypass mode active - skipping authentication');
                 // If on login page with bypass active, redirect to dashboard
                 if (isLoginPage) {
+                    console.log('[Auth] On login page with bypass, redirecting to dashboard');
                     window.location.href = this.config.redirectAfterLogin;
                     return;
                 }
                 // Allow access to all admin pages in bypass mode
+                console.log('[Auth] Allowing access in bypass mode');
                 return;
             }
+            
+            console.log('[Auth] No bypass mode, checking Supabase session...');
 
             // Add timeout protection
             const sessionPromise = supabase.auth.getSession();
@@ -558,14 +563,25 @@ const Auth = {
     enterAsAdminBypass() {
         console.log('[Auth] Entering as admin without authentication');
         // Set a flag in sessionStorage to indicate bypass mode
-        sessionStorage.setItem('adminBypass', 'true');
-        sessionStorage.setItem('bypassUser', JSON.stringify({
-            email: 'admin@bypass.local',
-            role: 'admin',
-            full_name: 'Admin (Bypass Mode)',
-            created_at: new Date().toISOString()
-        }));
-        window.location.href = this.config.redirectAfterLogin;
+        try {
+            sessionStorage.setItem('adminBypass', 'true');
+            sessionStorage.setItem('bypassUser', JSON.stringify({
+                email: 'admin@bypass.local',
+                role: 'admin',
+                full_name: 'Admin (Bypass Mode)',
+                created_at: new Date().toISOString()
+            }));
+            console.log('[Auth] Bypass mode set:', sessionStorage.getItem('adminBypass'));
+            console.log('[Auth] Redirecting to:', this.config.redirectAfterLogin);
+            
+            // Use setTimeout to ensure sessionStorage is written before redirect
+            setTimeout(() => {
+                window.location.href = this.config.redirectAfterLogin;
+            }, 100);
+        } catch (error) {
+            console.error('[Auth] Failed to set bypass mode:', error);
+            alert('Failed to enter bypass mode. SessionStorage may be disabled.');
+        }
     },
 
     showToast(type, title, message) {
