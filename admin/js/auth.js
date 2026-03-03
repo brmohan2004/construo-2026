@@ -22,6 +22,11 @@ const Auth = {
             loginForm.addEventListener('submit', (e) => this.handleLogin(e));
         }
 
+        const enterAsAdminBtn = document.getElementById('enterAsAdminBtn');
+        if (enterAsAdminBtn) {
+            enterAsAdminBtn.addEventListener('click', () => this.enterAsAdminBypass());
+        }
+
         const togglePassword = document.querySelector('.toggle-password');
         if (togglePassword) {
             togglePassword.addEventListener('click', () => this.togglePasswordVisibility());
@@ -62,6 +67,26 @@ const Auth = {
 
     async checkSession() {
         try {
+            // Check if bypass mode is enabled
+            const bypassMode = sessionStorage.getItem('adminBypass') === 'true';
+            
+            const currentPath = window.location.pathname;
+            const isLoginPage = currentPath.includes('admin/index.html') ||
+                currentPath.endsWith('/admin/') ||
+                currentPath.endsWith('/admin');
+            const isResetPage = currentPath.includes('reset-password.html');
+
+            if (bypassMode) {
+                console.log('[Auth] Bypass mode active - skipping authentication');
+                // If on login page with bypass active, redirect to dashboard
+                if (isLoginPage) {
+                    window.location.href = this.config.redirectAfterLogin;
+                    return;
+                }
+                // Allow access to all admin pages in bypass mode
+                return;
+            }
+
             // Add timeout protection
             const sessionPromise = supabase.auth.getSession();
             const timeoutPromise = new Promise((_, reject) => 
@@ -77,12 +102,6 @@ const Auth = {
                 console.error('[Auth] Session error:', error);
                 return;
             }
-
-            const currentPath = window.location.pathname;
-            const isLoginPage = currentPath.includes('admin/index.html') ||
-                currentPath.endsWith('/admin/') ||
-                currentPath.endsWith('/admin');
-            const isResetPage = currentPath.includes('reset-password.html');
 
             console.log('[Auth] checkSession:', { session: !!session, currentPath, isLoginPage, isResetPage });
 
@@ -149,6 +168,26 @@ const Auth = {
 
     async getCurrentUser() {
         try {
+            // Check if bypass mode is enabled
+            const bypassMode = sessionStorage.getItem('adminBypass') === 'true';
+            if (bypassMode) {
+                const bypassUser = sessionStorage.getItem('bypassUser');
+                if (bypassUser) {
+                    const user = JSON.parse(bypassUser);
+                    console.log('[Auth] Returning bypass user:', user.email);
+                    return {
+                        id: 'bypass-id',
+                        userId: 'bypass-user-id',
+                        username: 'admin',
+                        name: user.full_name,
+                        email: user.email,
+                        role: user.role,
+                        avatar: null,
+                        status: 'active'
+                    };
+                }
+            }
+
             const { data: { session } } = await supabase.auth.getSession();
             if (!session) return null;
 
@@ -437,6 +476,22 @@ const Auth = {
 
     async handleLogout() {
         try {
+            // Check if bypass mode is active
+            const bypassMode = sessionStorage.getItem('adminBypass') === 'true';
+            
+            if (bypassMode) {
+                // Clear bypass mode
+                sessionStorage.removeItem('adminBypass');
+                sessionStorage.removeItem('bypassUser');
+                console.log('[Auth] Cleared bypass mode');
+                
+                this.showToast('info', 'Logged Out', 'Bypass mode cleared');
+                setTimeout(() => {
+                    window.location.href = this.config.redirectAfterLogout;
+                }, 500);
+                return;
+            }
+
             const user = await this.getCurrentUser();
             if (user) {
                 await this.logActivity('logout', 'auth', `User ${user.username} logged out`);
@@ -498,6 +553,19 @@ const Auth = {
             eyeOpen.style.display = 'block';
             eyeClosed.style.display = 'none';
         }
+    },
+
+    enterAsAdminBypass() {
+        console.log('[Auth] Entering as admin without authentication');
+        // Set a flag in sessionStorage to indicate bypass mode
+        sessionStorage.setItem('adminBypass', 'true');
+        sessionStorage.setItem('bypassUser', JSON.stringify({
+            email: 'admin@bypass.local',
+            role: 'admin',
+            full_name: 'Admin (Bypass Mode)',
+            created_at: new Date().toISOString()
+        }));
+        window.location.href = this.config.redirectAfterLogin;
     },
 
     showToast(type, title, message) {
