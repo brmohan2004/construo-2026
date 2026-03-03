@@ -3,11 +3,23 @@
  * Initializes and exports Supabase client for admin panel
  */
 
-// Admin panel uses direct Supabase URL
-// For local development: Add http://localhost:8000 to Supabase CORS settings
-// For production: Add https://construo-2026.pages.dev to Supabase CORS settings
-const SUPABASE_URL = 'https://cknbkgeurnwdqexgqezz.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNrbmJrZ2V1cm53ZHFleGdxZXp6Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MDM1NTEyNSwiZXhwIjoyMDg1OTMxMTI1fQ.Be6HGgj4ApSNjJLc1vkChAzDhjoszbCYCCt2Ojf0k_s';
+// Detect environment and use proxy on production to bypass CORS
+const isLocalhost = window.location.hostname === 'localhost' || 
+                    window.location.hostname === '127.0.0.1';
+const isProduction = window.location.hostname.includes('pages.dev') || 
+                     window.location.hostname.includes('construo-2026');
+
+// Use proxy on production to bypass CORS issues, direct URL on localhost
+const SUPABASE_URL = (isProduction && !isLocalhost) 
+    ? `${window.location.origin}/api/supabase`
+    : 'https://cknbkgeurnwdqexgqezz.supabase.co';
+
+// Use anon key for client-side auth (service_role should only be server-side)
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNrbmJrZ2V1cm53ZHFleGdxZXp6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzNTUxMjUsImV4cCI6MjA4NTkzMTEyNX0.J_xNdmoZFBsNNp9drYN5BHzg42kK0UE8Rhx9OSM9G7w';
+
+console.log(`[Supabase Config] Environment: ${isProduction ? 'PRODUCTION' : 'LOCALHOST'}`);
+console.log(`[Supabase Config] Using URL: ${SUPABASE_URL}`);
+console.log(`[Supabase Config] Using ${isProduction ? 'PROXY' : 'DIRECT'} connection`);
 
 // Check if browser is blocking storage (tracking prevention)
 let storageAvailable = true;
