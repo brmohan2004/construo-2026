@@ -296,7 +296,8 @@
             border: 1px solid #444;
         }
     </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script></head>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
 
 <body oncontextmenu="return true;" onmousedown="if(event.button===1)return false;">
     <div id="toastContainer"
@@ -315,7 +316,7 @@
             </div>
             <div style="display: flex; gap: 0.5rem; align-items: center;">
                 <span class="zoom-indicator" id="zoomLevel">100%</span>
-                
+
                 <!-- Paper Size Selector -->
                 <select id="paperSizeSelect" class="btn btn-ghost" title="Select Paper Size">
                     <option value="A4-landscape">📄 A4 Landscape</option>
@@ -323,8 +324,9 @@
                     <option value="Letter-landscape">📄 Letter Landscape</option>
                     <option value="Letter-portrait">📄 Letter Portrait</option>
                     <option value="A3-landscape">📄 A3 Landscape</option>
+                    <option value="custom">📐 Custom Size</option>
                 </select>
-                
+
                 <button class="btn btn-ghost" onclick="CertBuilder.centerPage()" title="Fit to Page">
                     <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path>
@@ -433,6 +435,25 @@
                         <input type="color" id="bgColorPicker" class="prop-input" value="#ffffff"
                             style="height: 36px; padding: 2px; cursor: pointer;"
                             onchange="CertBuilder.setBackgroundColor(this.value)">
+                    </div>
+                    <div class="prop-group" id="customSizeGroup">
+                        <div class="prop-label">Certificate Size (px)</div>
+                        <div class="prop-row">
+                            <div style="flex: 1;">
+                                <label style="font-size: 0.65rem; color: #555;">Width</label>
+                                <input type="number" id="customWidth" class="prop-input" value="1123" min="200"
+                                    max="4000" step="1">
+                            </div>
+                            <div style="flex: 1;">
+                                <label style="font-size: 0.65rem; color: #555;">Height</label>
+                                <input type="number" id="customHeight" class="prop-input" value="794" min="200"
+                                    max="4000" step="1">
+                            </div>
+                        </div>
+                        <button class="tool-btn" onclick="CertBuilder.applyCustomSize()"
+                            style="margin-top: 0.35rem; justify-content: center;">
+                            <span class="tool-icon">↔️</span> Apply Size
+                        </button>
                     </div>
                 </div>
 

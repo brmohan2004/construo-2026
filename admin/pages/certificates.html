@@ -13,120 +13,9 @@
     <link rel="stylesheet" href="../css/admin.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
-    <style>
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .table-container {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-
-        .admin-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .admin-table th {
-            text-align: left;
-            padding: 1rem 1.5rem;
-            background: var(--bg-secondary);
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .admin-table td {
-            padding: 1rem 1.5rem;
-            border-top: 1px solid var(--border-color);
-            font-size: 0.9375rem;
-        }
-
-        .admin-table tr:hover {
-            background: rgba(var(--primary-rgb), 0.02);
-        }
-
-        .btn-generate {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 0.875rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn-generate:hover {
-            filter: brightness(1.1);
-            transform: translateY(-1px);
-        }
-
-        .btn-bulk {
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
-        }
-
-        .btn-customize {
-            background: var(--admin-info);
-            color: white;
-            border: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.6rem 1.2rem;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn-customize:hover {
-            filter: brightness(1.1);
-            transform: scale(1.02);
-        }
-
-
-
-        /* Modal Base Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-    </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script></head>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="../css/certificates.css">
+</head>
 
 <body>
     <div class="admin-layout">
@@ -148,117 +37,91 @@
                     </svg>
                 </button>
             </div>
-
             <div class="sidebar-content">
                 <div class="nav-group">
                     <div class="nav-label">Overview</div>
                     <a href="../dashboard.html" class="nav-item">
-                        <span class="icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                                 <rect x="3" y="3" width="7" height="9" />
                                 <rect x="14" y="3" width="7" height="5" />
                                 <rect x="14" y="12" width="7" height="9" />
                                 <rect x="3" y="16" width="7" height="5" />
-                            </svg>
-                        </span>
+                            </svg></span>
                         <span>Dashboard</span>
                     </a>
                 </div>
-
                 <div class="nav-group">
                     <div class="nav-label">Content Management</div>
-                    <a href="hero.html" class="nav-item">
-                        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <a href="hero.html" class="nav-item"><span class="icon"><svg viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor">
                                 <polygon points="12 2 2 7 12 12 22 7 12 2" />
                                 <polyline points="2 17 12 22 22 17" />
                                 <polyline points="2 12 12 17 22 12" />
-                            </svg></span>
-                        <span>Hero Section</span>
-                    </a>
-                    <a href="about.html" class="nav-item">
-                        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            </svg></span><span>Hero Section</span></a>
+                    <a href="about.html" class="nav-item"><span class="icon"><svg viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor">
                                 <circle cx="12" cy="12" r="10" />
                                 <line x1="12" y1="16" x2="12" y2="12" />
                                 <line x1="12" y1="8" x2="12.01" y2="8" />
-                            </svg></span>
-                        <span>About</span>
-                    </a>
-                    <a href="events.html" class="nav-item">
-                        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            </svg></span><span>About</span></a>
+                    <a href="events.html" class="nav-item"><span class="icon"><svg viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor">
                                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
                                 <line x1="16" y1="2" x2="16" y2="6" />
                                 <line x1="8" y1="2" x2="8" y2="6" />
                                 <line x1="3" y1="10" x2="21" y2="10" />
-                            </svg></span>
-                        <span>Events</span>
-                    </a>
-                    <a href="timeline.html" class="nav-item">
-                        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            </svg></span><span>Events</span></a>
+                    <a href="timeline.html" class="nav-item"><span class="icon"><svg viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor">
                                 <circle cx="12" cy="12" r="10" />
                                 <polyline points="12 6 12 12 16 14" />
-                            </svg></span>
-                        <span>Timeline</span>
-                    </a>
-                    <a href="speakers.html" class="nav-item">
-                        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            </svg></span><span>Timeline</span></a>
+                    <a href="speakers.html" class="nav-item"><span class="icon"><svg viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor">
                                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                                 <circle cx="9" cy="7" r="4" />
                                 <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
                                 <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                            </svg></span>
-                        <span>Speakers</span>
-                    </a>
-                    <a href="sponsors.html" class="nav-item">
-                        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            </svg></span><span>Speakers</span></a>
+                    <a href="sponsors.html" class="nav-item"><span class="icon"><svg viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor">
                                 <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
                                 <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
-                            </svg></span>
-                        <span>Sponsors</span>
-                    </a>
+                            </svg></span><span>Sponsors</span></a>
                 </div>
-
                 <div class="nav-group">
                     <div class="nav-label">System</div>
-                    <a href="registration-submissions.html" class="nav-item">
-                        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <a href="registration-submissions.html" class="nav-item"><span class="icon"><svg viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor">
                                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                                 <polyline points="14 2 14 8 20 8" />
                                 <line x1="16" y1="13" x2="8" y2="13" />
                                 <line x1="16" y1="17" x2="8" y2="17" />
-                            </svg></span>
-                        <span>Submissions</span>
-                    </a>
-                    <a href="certificates.html" class="nav-item active">
-                        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            </svg></span><span>Submissions</span></a>
+                    <a href="certificates.html" class="nav-item active"><span class="icon"><svg viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor">
                                 <path d="M12 15l-2 5L9 9l11 4-5 2zm0 0l4 4" />
                                 <path d="M4 18l-1 4 4-1M20 18l1 4-4-1" />
                                 <path d="M12 2v3" />
                                 <path d="M12 18v3" />
-                            </svg></span>
-                        <span>Certificates</span>
-                    </a>
-                    <a href="users.html" class="nav-item">
-                        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            </svg></span><span>Certificates</span></a>
+                    <a href="users.html" class="nav-item"><span class="icon"><svg viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor">
                                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                                 <circle cx="12" cy="7" r="4" />
-                            </svg></span>
-                        <span>Users</span>
-                    </a>
-                    <a href="settings.html" class="nav-item">
-                        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            </svg></span><span>Users</span></a>
+                    <a href="settings.html" class="nav-item"><span class="icon"><svg viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor">
                                 <circle cx="12" cy="12" r="3" />
                                 <path
                                     d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
-                            </svg></span>
-                        <span>Settings</span>
-                    </a>
+                            </svg></span><span>Settings</span></a>
                 </div>
             </div>
         </aside>
 
         <!-- Main Content -->
         <main class="admin-main">
-            <!-- Header -->
             <header class="admin-header">
                 <div class="header-left">
                     <div>
@@ -289,107 +152,168 @@
                 </div>
             </header>
 
-            <!-- Page Content -->
             <div class="admin-content">
-                <div class="page-header">
+                <div class="cert-page-header">
                     <div>
-                        <h2 class="page-title">Generate Participation Certificates</h2>
-                        <p class="page-subtitle">Only confirmed participants are shown here</p>
+                        <h2 class="page-title">Confirmed Participants</h2>
+                        <p class="page-subtitle">Manage and generate certificates for confirmed participants</p>
                     </div>
-                    <div class="page-actions" style="display: flex; gap: 0.75rem;">
-                        <a href="certificate-builder.html" class="btn-customize" id="customizeTemplateBtn"
-                            style="text-decoration: none;">
+                    <div class="cert-page-actions">
+                        <a href="certificate-builder.html" class="cert-btn cert-btn-builder" id="openBuilderBtn">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                style="width: 18px;">
+                                style="width:18px;height:18px;">
                                 <path d="M12 20h9"></path>
                                 <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
                             </svg>
-                            Open Certificate Builder
+                            Certificate Builder
                         </a>
-                        <button class="btn btn-bulk" id="bulkGenerateBtn">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                style="width: 18px;">
+                        <button class="cert-btn cert-btn-bulk" id="bulkActionBtn" disabled>
+                            <svg id="bulkIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                style="width:18px;height:18px;">
                                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                                 <polyline points="14 2 14 8 20 8"></polyline>
                                 <line x1="16" y1="13" x2="8" y2="13"></line>
                                 <line x1="16" y1="17" x2="8" y2="17"></line>
-                                <polyline points="10 9 9 9 8 9"></polyline>
                             </svg>
-                            Bulk Generate (PDF)
+                            <span id="bulkBtnText">Bulk Generation</span>
                         </button>
                     </div>
                 </div>
 
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-value" id="confirmedCount">0</div>
-                        <div class="stat-label">Confirmed Participants</div>
+                <!-- Stats -->
+                <div class="cert-stats-row">
+                    <div class="cert-stat-card">
+                        <div class="cert-stat-icon" style="background: rgba(16,185,129,0.15); color:#10b981;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                style="width:22px;height:22px;">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                <circle cx="9" cy="7" r="4" />
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="cert-stat-value" id="confirmedCount">0</div>
+                            <div class="cert-stat-label">Confirmed Participants</div>
+                        </div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="generatedCount">0</div>
-                        <div class="stat-label">Total Row Count</div>
+                    <div class="cert-stat-card">
+                        <div class="cert-stat-icon" style="background: rgba(59,130,246,0.15); color:#3b82f6;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                style="width:22px;height:22px;">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                <polyline points="14 2 14 8 20 8" />
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="cert-stat-value" id="totalRowCount">0</div>
+                            <div class="cert-stat-label">Total Certificates</div>
+                        </div>
+                    </div>
+                    <div class="cert-stat-card">
+                        <div class="cert-stat-icon" style="background: rgba(249,115,22,0.15); color:#f97316;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                style="width:22px;height:22px;">
+                                <polyline points="9 11 12 14 22 4" />
+                                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="cert-stat-value" id="selectedCount">0</div>
+                            <div class="cert-stat-label">Selected</div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="card">
-                    <div class="table-container">
-                        <table class="admin-table" id="participantsTable">
-                            <thead>
-                                <tr>
-                                    <th width="50"><input type="checkbox" id="selectAll"></th>
-                                    <th>Reg. Number</th>
-                                    <th>Full Name</th>
-                                    <th>Email</th>
-                                    <th>College</th>
-                                    <th>Confirmed Event</th>
-                                    <th style="text-align: right;">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tableBody">
-                                <!-- Loaded dynamically -->
-                                <tr>
-                                    <td colspan="7" style="text-align: center; padding: 3rem;">
-                                        <div class="spinner"></div>
-                                        <p style="margin-top: 1rem; color: var(--text-secondary);">Fetching confirmed
-                                            participants...</p>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                <!-- Search Bar -->
+                <div class="cert-search-bar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        style="width:18px;height:18px;flex-shrink:0;">
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    </svg>
+                    <input type="text" id="searchInput"
+                        placeholder="Search by name, email, reg number, college or event...">
+                </div>
+
+                <!-- Table -->
+                <div class="cert-table-wrap">
+                    <table class="cert-table" id="participantsTable">
+                        <thead>
+                            <tr>
+                                <th class="cert-th-check"><input type="checkbox" id="selectAll"></th>
+                                <th>Construo Reg. Number</th>
+                                <th>Full Name</th>
+                                <th>Email</th>
+                                <th>College</th>
+                                <th>Confirmed Event</th>
+                                <th style="text-align:right;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <tr>
+                                <td colspan="7" style="text-align:center;padding:3rem;">
+                                    <div class="spinner"></div>
+                                    <p style="margin-top:1rem;color:var(--admin-text-muted);">Fetching confirmed
+                                        participants...</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- Hidden Template for PDF Generation -->
-    <div id="certificate-template" style="display: none;">
+    <!-- Preview Modal -->
+    <div class="cert-modal-overlay" id="previewModal">
+        <div class="cert-modal">
+            <div class="cert-modal-header">
+                <h3>Certificate Preview</h3>
+                <button class="cert-modal-close" id="closePreview">&times;</button>
+            </div>
+            <div class="cert-modal-body" id="previewBody">
+                <div class="cert-preview-canvas-wrap">
+                    <canvas id="previewCanvas"></canvas>
+                </div>
+            </div>
+            <div class="cert-modal-footer">
+                <button class="cert-btn cert-btn-secondary" id="closePreviewBtn">Close</button>
+                <button class="cert-btn cert-btn-primary" id="downloadFromPreview">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        style="width:16px;height:16px;">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="7 10 12 15 17 10" />
+                        <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                    Download Certificate
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden fallback template for PDF -->
+    <div id="certificate-template" style="display:none;">
         <div class="cert-container" id="cert-content">
             <div id="cert-dynamic-bg" class="cert-bg-pattern"></div>
             <div class="cert-inner-border"></div>
             <div class="cert-watermark" id="cert-dynamic-watermark">🏗️</div>
-
             <div class="cert-header">
                 <div class="cert-logo" id="cert-dynamic-logo">🏗️</div>
                 <h1 class="cert-title">Certificate</h1>
                 <div class="cert-subtitle">OF PARTICIPATION</div>
             </div>
-
             <div class="cert-body">
                 <p class="cert-text">This is to certify that</p>
                 <div class="cert-name" id="cert-user-name">PARTICIPANT NAME</div>
                 <p class="cert-text">
                     has successfully participated in the national level technical symposium
-                    <br>
-                    <span class="cert-event" id="cert-event-display">CONSTRUO 2026</span>
-                    <br>
-                    held at <span id="cert-college-display">Government College of Technology, Coimbatore</span>.
-                    <br>
-                    <span style="font-size: 1.1rem; color: var(--cert-accent);" id="cert-participation-event">Event
+                    <br><span class="cert-event" id="cert-event-display">CONSTRUO 2026</span>
+                    <br>held at <span id="cert-college-display">Government College of Technology, Coimbatore</span>.
+                    <br><span style="font-size:1.1rem;color:var(--cert-accent);" id="cert-participation-event">Event
                         Category</span>
                 </p>
             </div>
-
             <div class="cert-footer">
                 <div class="cert-sig-box">
                     <div class="cert-sig-name" id="cert-sig1-name">Dr. A. Ramesh</div>
@@ -403,302 +327,7 @@
         </div>
     </div>
 
-    <!-- Certificate Builder Overlay -->
-
-
-    <!-- Inline fallback for certificates logic since certificates.js does not exist in repo -->
-    <script type="module">
-        import Admin from '../js/admin.js';
-
-        const CertApp = {
-            participants: [],
-            tableData: [], // Stores flat rows (one per participant-event combo)
-            templateConfig: {
-                eventName: 'CONSTRUO 2026',
-                college: 'Government College of Technology, Coimbatore',
-                sig1Name: 'Dr. A. Ramesh',
-                sig1Title: 'Event Coordinator',
-                sig2Name: 'Prof. S. Kumar',
-                sig2Title: 'Head of Department',
-                themeColor: '#c5a059',
-                bgUrl: ''
-            },
-
-            async init() {
-                Admin.init();
-                await this.loadConfig();
-                await this.loadParticipants();
-                this.bindEvents();
-                console.log('CertApp Initialized');
-            },
-
-            async loadConfig() {
-                try {
-                    const config = await Admin.getSiteConfig();
-                    // Load old config if exist
-                    if (config?.certificates) {
-                        this.templateConfig = { ...this.templateConfig, ...config.certificates };
-                    }
-                    // Load fabric json if exist
-                    let data = config?.settings?.certificate_template || config?.certificate_template;
-                    if (data) {
-                        if (typeof data === 'string') data = JSON.parse(data);
-                        this.canvasJson = data;
-                    }
-                    this.applyTemplateConfig();
-                } catch (error) {
-                    console.error('Failed to load certificate config:', error);
-                }
-            },
-
-            applyTemplateConfig() {
-                const conf = this.templateConfig;
-
-                // Apply UI text (with null checks)
-                const els1 = [
-                    { id: 'cert-event-display', val: conf.eventName },
-                    { id: 'cert-college-display', val: conf.college },
-                    { id: 'cert-sig1-name', val: conf.sig1Name },
-                    { id: 'cert-sig1-title', val: conf.sig1Title },
-                    { id: 'cert-sig2-name', val: conf.sig2Name },
-                    { id: 'cert-sig2-title', val: conf.sig2Title },
-                    { id: 'prevEvent', val: conf.eventName }
-                ];
-                els1.forEach(i => { const e = document.getElementById(i.id); if (e) e.textContent = i.val; });
-
-                document.documentElement.style.setProperty('--cert-accent', conf.themeColor);
-
-                const certContainer = document.querySelector('.cert-container');
-                const certBg = document.getElementById('cert-dynamic-bg');
-
-                if (certContainer) {
-                    if (conf.bgUrl) {
-                        certContainer.style.backgroundImage = `url('${conf.bgUrl}')`;
-                        if (certBg) certBg.style.display = 'none';
-                        const wm = document.getElementById('cert-dynamic-watermark'); if (wm) wm.style.display = 'none';
-                        const dl = document.getElementById('cert-dynamic-logo'); if (dl) dl.style.display = 'none';
-                    } else {
-                        certContainer.style.backgroundImage = 'none';
-                        if (certBg) certBg.style.display = 'block';
-                        const wm = document.getElementById('cert-dynamic-watermark'); if (wm) wm.style.display = 'block';
-                        const dl = document.getElementById('cert-dynamic-logo'); if (dl) dl.style.display = 'block';
-                    }
-                }
-
-                const els2 = [
-                    { id: 'inputEventName', val: conf.eventName },
-                    { id: 'inputCollege', val: conf.college },
-                    { id: 'inputSig1Name', val: conf.sig1Name },
-                    { id: 'inputSig1Title', val: conf.sig1Title },
-                    { id: 'inputSig2Name', val: conf.sig2Name },
-                    { id: 'inputSig2Title', val: conf.sig2Title },
-                    { id: 'inputThemeColor', val: conf.themeColor },
-                    { id: 'hexThemeColor', val: conf.themeColor },
-                    { id: 'inputBgUrl', val: conf.bgUrl }
-                ];
-                els2.forEach(i => { const e = document.getElementById(i.id); if (e) e.value = i.val; });
-            },
-
-            async loadParticipants() {
-                try {
-                    const { registrations } = await Admin.getRegistrations();
-                    this.participants = registrations.filter(r => r.status === 'confirmed');
-
-                    // Create flat table data (one row per event)
-                    this.tableData = [];
-                    this.participants.forEach(p => {
-                        const events = (p.events && p.events.length > 0) ? p.events : ['General Participation'];
-                        events.forEach(eventName => {
-                            this.tableData.push({
-                                ...p,
-                                uniqueId: `${p.id}_${eventName.replace(/\s+/g, '_')}`,
-                                targetEvent: eventName
-                            });
-                        });
-                    });
-
-                    this.renderTable();
-                    this.updateStats();
-                } catch (error) {
-                    console.error('Failed to load participants:', error);
-                    document.getElementById('tableBody').innerHTML = '<tr><td colspan="7" style="text-align:center; color:red; padding: 2rem;">Error loading data.</td></tr>';
-                }
-            },
-
-            updateStats() {
-                document.getElementById('confirmedCount').textContent = this.participants.length;
-                document.getElementById('generatedCount').textContent = this.tableData.length;
-            },
-
-            renderTable() {
-                const tbody = document.getElementById('tableBody');
-                if (this.tableData.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 3rem; color: var(--text-secondary);">No confirmed participants found.</td></tr>';
-                    return;
-                }
-
-                tbody.innerHTML = this.tableData.map(row => `
-                    <tr>
-                        <td><input type="checkbox" class="participant-checkbox" value="${row.uniqueId}"></td>
-                        <td><code>${row.registrationNumber || 'N/A'}</code></td>
-                        <td style="font-weight: 600;">${row.participant?.name || 'N/A'}</td>
-                        <td style="color: var(--text-secondary);">${row.participant?.email || 'N/A'}</td>
-                        <td>${row.participant?.college || 'N/A'}</td>
-                        <td><span style="background: rgba(var(--admin-primary-rgb), 0.1); color: var(--admin-primary); padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">${row.targetEvent}</span></td>
-                        <td style="text-align: right;">
-                            <button class="btn-generate" onclick="window.CertApp.generateSingle('${row.uniqueId}')">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px;">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                    <polyline points="7 10 12 15 17 10"></polyline>
-                                    <line x1="12" y1="15" x2="12" y2="3"></line>
-                                </svg>
-                                Download
-                            </button>
-                        </td>
-                    </tr>
-                `).join('');
-            },
-
-            bindEvents() {
-                // Table events
-                document.getElementById('selectAll').addEventListener('change', (e) => {
-                    document.querySelectorAll('.participant-checkbox').forEach(cb => cb.checked = e.target.checked);
-                });
-                document.getElementById('bulkGenerateBtn').addEventListener('click', () => this.generateBulk());
-
-                // Modal events
-                const modal = document.getElementById('customizeModal');
-                const openBtn = document.getElementById('customizeTemplateBtn');
-
-                if (openBtn) {
-                    openBtn.addEventListener('click', () => {
-                        console.log('Customize button clicked');
-                        modal.classList.add('active');
-                    });
-                }
-
-                const closeAction = () => modal.classList.remove('active');
-
-                const closeElements = ['closeCustomize', 'closeCustomizeBtn', 'cancelCustomize'];
-                closeElements.forEach(id => {
-                    const el = document.getElementById(id);
-                    if (el) el.addEventListener('click', closeAction);
-                });
-
-                // Live Preview logic
-                document.getElementById('inputEventName').addEventListener('input', (e) => {
-                    document.getElementById('prevEvent').textContent = e.target.value;
-                });
-                document.getElementById('inputThemeColor').addEventListener('input', (e) => {
-                    document.getElementById('hexThemeColor').value = e.target.value;
-                });
-
-                document.getElementById('saveCustomize').addEventListener('click', () => this.saveTemplateConfig());
-            },
-
-            async saveTemplateConfig() {
-                const newConfig = {
-                    eventName: document.getElementById('inputEventName').value,
-                    college: document.getElementById('inputCollege').value,
-                    sig1Name: document.getElementById('inputSig1Name').value,
-                    sig1Title: document.getElementById('inputSig1Title').value,
-                    sig2Name: document.getElementById('inputSig2Name').value,
-                    sig2Title: document.getElementById('inputSig2Title').value,
-                    themeColor: document.getElementById('hexThemeColor').value,
-                    bgUrl: document.getElementById('inputBgUrl').value
-                };
-
-                try {
-                    await Admin.updateSiteConfig('certificates', newConfig);
-                    this.templateConfig = newConfig;
-                    this.applyTemplateConfig();
-                    document.getElementById('customizeModal').classList.remove('active');
-                    Admin.showToast('success', 'Saved', 'Certificate template updated successfully!');
-                } catch (error) {
-                    console.error('Save error:', error);
-                    Admin.showToast('error', 'Error', 'Failed to save settings.');
-                }
-            },
-
-            async generateSingle(uniqueId) {
-                const row = this.tableData.find(r => r.uniqueId === uniqueId);
-                if (row) await this.downloadPDF(row);
-            },
-
-            async generateBulk() {
-                const selected = document.querySelectorAll('.participant-checkbox:checked');
-                if (selected.length === 0) {
-                    Admin.showToast('warning', 'Selection Required', 'Please select rows.');
-                    return;
-                }
-                Admin.showToast('info', 'Processing', `Generating ${selected.length} certificates...`);
-                for (const cb of selected) {
-                    const row = this.tableData.find(r => r.uniqueId === cb.value);
-                    if (row) await this.downloadPDF(row);
-                }
-            },
-
-            async downloadPDF(row) {
-                if (this.canvasJson) {
-                    Admin.showToast('info', 'Generating', 'Rendering design...');
-                    const canvasEl = document.createElement('canvas');
-                    canvasEl.id = 'temp-canvas';
-                    canvasEl.style.display = 'none';
-                    document.body.appendChild(canvasEl);
-
-                    const staticCanvas = new fabric.StaticCanvas('temp-canvas', {
-                        width: 1123,
-                        height: 794
-                    });
-
-                    staticCanvas.loadFromJSON(this.canvasJson, () => {
-                        // Find and replace text
-                        staticCanvas.getObjects().forEach(obj => {
-                            if (obj.data_type && (obj.type === 'textbox' || obj.type === 'i-text')) {
-                                if (obj.data_type === 'name') obj.set('text', (row.participant?.name || 'PARTICIPANT').toUpperCase());
-                                if (obj.data_type === 'event') obj.set('text', row.targetEvent || '{Event Name}');
-                                if (obj.data_type === 'college') obj.set('text', row.participant?.college || '{College Name}');
-                            }
-                        });
-                        staticCanvas.renderAll();
-
-                        const dataUrl = staticCanvas.toDataURL({ format: 'jpeg', quality: 1 });
-                        const link = document.createElement('a');
-                        link.href = dataUrl;
-                        link.download = `Certificate_${row.registrationNumber || row.participant?.name}_${row.targetEvent}.jpg`;
-                        link.click();
-
-                        document.body.removeChild(canvasEl);
-                    });
-                    return;
-                }
-
-                // Fallback to old template
-                document.getElementById('cert-user-name').textContent = (row.participant?.name || 'PARTICIPANT').toUpperCase();
-                document.getElementById('cert-participation-event').textContent = `for ${row.targetEvent}`;
-
-                const element = document.getElementById('cert-content');
-                const opt = {
-                    margin: 0,
-                    filename: `Certificate_${row.registrationNumber || row.participant?.name}_${row.targetEvent}.pdf`,
-                    image: { type: 'jpeg', quality: 1.0 },
-                    html2canvas: { scale: 3, useCORS: true, logging: false },
-                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
-                };
-
-                try {
-                    await html2pdf().set(opt).from(element).save();
-                } catch (error) {
-                    console.error('PDF error:', error);
-                    Admin.showToast('error', 'Generation Error', 'Failed to generate PDF');
-                }
-            }
-        };
-
-        window.CertApp = CertApp;
-        window.refreshData = () => CertApp.loadParticipants();
-        document.addEventListener('DOMContentLoaded', () => CertApp.init());
-    </script>
+    <script type="module" src="../js/certificates.js"></script>
 </body>
 
 </html>

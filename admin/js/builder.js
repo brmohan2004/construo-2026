@@ -184,7 +184,7 @@ window.CertBuilder = {
         const size = this.paperSizes[this.paperSize];
         const W = size.width;
         const H = size.height;
-        
+
         const container = document.querySelector('.builder-canvas-container');
         if (!container) return;
 
@@ -223,6 +223,17 @@ window.CertBuilder = {
         } else {
             console.warn('Paper size selector not found in HTML');
         }
+        // Sync custom size inputs with current size
+        this.syncSizeInputs();
+    },
+
+    syncSizeInputs() {
+        const size = this.paperSizes[this.paperSize];
+        if (!size) return;
+        const wInput = document.getElementById('customWidth');
+        const hInput = document.getElementById('customHeight');
+        if (wInput) wInput.value = size.width;
+        if (hInput) hInput.value = size.height;
     },
 
     changePaperSize(newSize) {
@@ -231,9 +242,37 @@ window.CertBuilder = {
             return;
         }
         this.paperSize = newSize;
-        this.createPageBackground(); // Recreate the page with new dimensions
-        Admin.showToast('info', 'Paper Size Changed', `Changed to ${this.paperSizes[newSize].label}`);
+        this.syncSizeInputs();
+        this.createPageBackground();
+        Admin.showToast('info', 'Paper Size Changed', `Changed to ${this.paperSizes[newSize].label} (${this.paperSizes[newSize].width}×${this.paperSizes[newSize].height}px)`);
         console.log('Paper size changed to:', newSize);
+    },
+
+    applyCustomSize() {
+        const wInput = document.getElementById('customWidth');
+        const hInput = document.getElementById('customHeight');
+        if (!wInput || !hInput) return;
+
+        let w = parseInt(wInput.value) || 1123;
+        let h = parseInt(hInput.value) || 794;
+
+        // Clamp values
+        w = Math.max(200, Math.min(4000, w));
+        h = Math.max(200, Math.min(4000, h));
+        wInput.value = w;
+        hInput.value = h;
+
+        // Update the custom paper size entry
+        this.paperSizes['custom'] = { width: w, height: h, label: 'Custom Size' };
+        this.paperSize = 'custom';
+
+        // Update dropdown
+        const selector = document.getElementById('paperSizeSelect');
+        if (selector) selector.value = 'custom';
+
+        this.createPageBackground();
+        Admin.showToast('info', 'Custom Size Applied', `Certificate resized to ${w}×${h}px`);
+        console.log('Custom size applied:', w, 'x', h);
     },
 
     // --- Keyboard ---
@@ -265,7 +304,7 @@ window.CertBuilder = {
             console.log('Loading certificate template config...');
             const config = await Admin.getSiteConfig();
             console.log('Site config loaded:', config);
-            
+
             // Check settings.certificate_template first (our new storage), then fall back to top-level if it existed
             let data = config?.settings?.certificate_template || config?.certificate_template;
 
@@ -273,12 +312,22 @@ window.CertBuilder = {
                 if (typeof data === 'string') data = JSON.parse(data);
 
                 // Load paper size if saved
-                if (data.paperSize && this.paperSizes[data.paperSize]) {
-                    this.paperSize = data.paperSize;
-                    console.log('Loaded paper size:', this.paperSize);
-                    // Update selector
-                    const selector = document.getElementById('paperSizeSelect');
-                    if (selector) selector.value = this.paperSize;
+                if (data.paperSize) {
+                    // If custom, restore the custom dimensions
+                    if (data.paperSize === 'custom' && data.customWidth && data.customHeight) {
+                        this.paperSizes['custom'] = {
+                            width: data.customWidth,
+                            height: data.customHeight,
+                            label: 'Custom Size'
+                        };
+                    }
+                    if (this.paperSizes[data.paperSize]) {
+                        this.paperSize = data.paperSize;
+                        console.log('Loaded paper size:', this.paperSize);
+                        const selector = document.getElementById('paperSizeSelect');
+                        if (selector) selector.value = this.paperSize;
+                    }
+                    this.syncSizeInputs();
                 }
 
                 if (data && data.objects) {
@@ -304,7 +353,7 @@ window.CertBuilder = {
 
     async saveTemplate() {
         console.log('=== Starting saveTemplate ==>');
-        
+
         // Show loading indicator
         const saveBtn = document.getElementById('saveBuilderBtn');
         const originalText = saveBtn ? saveBtn.innerHTML : '';
@@ -312,22 +361,28 @@ window.CertBuilder = {
             saveBtn.disabled = true;
             saveBtn.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> Saving...';
         }
-        
+
         try {
             // Serialize, excluding system helper objects
             const json = this.canvas.toJSON(['data_type', 'id']);
             json.objects = json.objects.filter(o => o.id !== 'page-bg' && o.id !== 'page-shadow');
-            
+
             // Save paper size with template
             json.paperSize = this.paperSize;
-            
+            // Save custom dimensions so they can be restored
+            const currentSize = this.paperSizes[this.paperSize];
+            if (currentSize) {
+                json.customWidth = currentSize.width;
+                json.customHeight = currentSize.height;
+            }
+
             console.log('Template JSON created with', json.objects.length, 'objects');
             console.log('Paper size:', this.paperSize);
 
             // Try to fetch current config with retry logic
             console.log('Fetching current config...');
             let currentSettings = {};
-            
+
             try {
                 const currentConfig = await Admin.getSiteConfig();
                 console.log('Current config retrieved:', currentConfig);
@@ -343,7 +398,7 @@ window.CertBuilder = {
                         .select('settings')
                         .eq('config_key', 'main')
                         .single();
-                    
+
                     if (!error && data) {
                         currentSettings = data.settings || {};
                         console.log('Direct fetch successful, got settings');
@@ -364,7 +419,7 @@ window.CertBuilder = {
 
             const result = await Admin.updateSiteConfig('settings', newSettings);
             console.log('Update result:', result);
-            
+
             Admin.showToast('success', 'Saved Successfully', `Certificate template saved with ${json.objects.length} objects!`);
             console.log('=== saveTemplate completed successfully ==>');
             return result;
@@ -372,11 +427,11 @@ window.CertBuilder = {
             console.error('=== Failed to save template ===>');
             console.error('Error details:', error);
             console.error('Error stack:', error.stack);
-            
+
             // Check if it's a timeout/CORS error
             let errorMessage = error.message;
             let detailedHelp = '';
-            
+
             if (error.message.includes('timed out') || error.message.includes('CORS')) {
                 errorMessage = 'Database connection timeout';
                 detailedHelp = 'Please run fix_certificate_builder_timeout.sql in your Supabase SQL editor, then refresh this page.';
@@ -387,7 +442,7 @@ window.CertBuilder = {
                 errorMessage = 'Permission denied';
                 detailedHelp = 'Run fix_certificate_builder_timeout.sql to update database policies.';
             }
-            
+
             Admin.showToast('error', 'Save Failed', `${errorMessage}. ${detailedHelp}`);
             throw error;
         } finally {
