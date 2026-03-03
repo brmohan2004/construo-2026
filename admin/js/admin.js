@@ -328,7 +328,17 @@ const Admin = {
 
     async updateSiteConfig(section, sectionData) {
         try {
-            const user = await Auth.getCurrentUser();
+            // Try to get user but don't fail if auth is broken
+            let user = null;
+            try {
+                user = await Promise.race([
+                    Auth.getCurrentUser(),
+                    new Promise((_, reject) => setTimeout(() => reject(new Error('Auth timeout')), 3000))
+                ]);
+            } catch (authError) {
+                console.warn('[updateSiteConfig] Could not get user (auth may be failing), proceeding anyway:', authError.message);
+            }
+            
             const timestamp = new Date().toISOString();
 
             // Add metadata to the section data

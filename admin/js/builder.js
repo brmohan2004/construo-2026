@@ -350,11 +350,16 @@ window.CertBuilder = {
             console.error('Error stack:', error.stack);
             
             // Check if it's a timeout/CORS error
-            let errorMessage = error.message;
-            if (error.message.includes('timed out') || error.message.includes('CORS')) {
-                errorMessage = 'Connection timeout. Please add http://localhost:8000 to Supabase CORS settings in your dashboard.';
-            } else if (error.message.includes('Failed to fetch')) {
-                errorMessage = 'Network error. Check your internet connection and Supabase CORS settings.';
+            let errorMessage = error.message || 'Unknown error';
+            
+            if (errorMessage.includes('timed out') || errorMessage.includes('CORS')) {
+                errorMessage = 'Connection timeout. Please configure CORS settings in Supabase dashboard.';
+            } else if (errorMessage.includes('Failed to fetch')) {
+                errorMessage = 'Network error. Check internet connection and CORS settings.';
+            } else if (errorMessage.includes('Lock broken') || errorMessage.includes('AbortError')) {
+                errorMessage = 'Session error. Please refresh the page and try again.';
+            } else if (errorMessage.includes('No \'Access-Control-Allow-Origin\' header')) {
+                errorMessage = 'CORS error. Add ' + window.location.origin + ' to Supabase CORS settings.';
             }
             
             Admin.showToast('error', 'Save Failed', errorMessage);
