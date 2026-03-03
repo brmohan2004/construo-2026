@@ -3,6 +3,10 @@
 ## ⚠️ Current Issue
 The certificate builder save is failing because Supabase is blocking requests from your domain due to CORS policy.
 
+## ⚠️ IMPORTANT: CORS Cannot Be Configured via SQL
+**CORS settings are configured in the Supabase Dashboard, NOT through SQL queries.**
+See `supabase-cors-config.sql` for related database configuration.
+
 ## ✅ Solution: Add Your Domains to Supabase CORS Settings
 
 ### Step 1: Go to Supabase Dashboard
@@ -49,3 +53,12 @@ The code has been updated to:
 - Continue save operation even if user auth fails
 
 But you still need to configure CORS in Supabase for proper functionality!
+
+## 📄 Additional SQL Configuration
+See `supabase-cors-config.sql` for:
+- Auth redirect URL configuration
+- Site config table permissions
+- RLS policy checks
+- Service role access verification
+
+**Note:** These SQL commands help with related configuration, but CORS itself must be configured in the Dashboard!

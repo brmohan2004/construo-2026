@@ -34,15 +34,54 @@ const Admin = {
     },
 
     async checkAuth() {
-        const { data: { session } } = await supabase.auth.getSession();
+        try {
+            // Add timeout to prevent hanging
+            const sessionPromise = supabase.auth.getSession();
+            const timeoutPromise = new Promise((_, reject) => 
+                setTimeout(() => reject(new Error('Session check timeout')), 5000)
+            );
+            
+            const { data: { session }, error } = await Promise.race([
+                sessionPromise,
+                timeoutPromise
+            ]);
 
-        if (!session) {
-            console.warn('Authentication check failed: no session found');
-            await Auth.handleLogout();
+            if (error) {
+                console.error('[Admin] Session check error:', error);
+                if (error.message && (error.message.includes('CORS') || error.message.includes('Failed to fetch'))) {
+                    this.showCorsError();
+                }
+                return false;
+            }
+
+            if (!session) {
+                console.warn('Authentication check failed: no session found');
+                await Auth.handleLogout();
+                return false;
+            }
+
+            return true;
+        } catch (error) {
+            console.error('[Admin] Check auth failed:', error);
+            if (error.message === 'Session check timeout') {
+                this.showCorsError();
+            }
             return false;
         }
+    },
 
-        return true;
+    showCorsError() {
+        const banner = document.createElement('div');
+        banner.id = 'corsErrorBanner';
+        banner.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#dc2626;color:white;padding:12px 20px;text-align:center;z-index:10000;font-size:14px;box-shadow:0 2px 8px rgba(0,0,0,0.2);';
+        banner.innerHTML = `
+            <strong>⚠️ Connection Error:</strong> 
+            Configure CORS in Supabase Dashboard to allow <code style="background:rgba(255,255,255,0.2);padding:2px 6px;border-radius:3px;">${window.location.origin}</code>
+            <button onclick="document.getElementById('corsErrorBanner').remove()" style="margin-left:15px;background:white;color:#dc2626;border:none;padding:6px 12px;cursor:pointer;border-radius:4px;font-weight:600;">Dismiss</button>
+        `;
+        if (!document.getElementById('corsErrorBanner')) {
+            document.body.insertBefore(banner, document.body.firstChild);
+        }
     },
 
     initSidebar() {

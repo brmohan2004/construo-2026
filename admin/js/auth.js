@@ -61,23 +61,39 @@ const Auth = {
     },
 
     async checkSession() {
-        const { data: { session } } = await supabase.auth.getSession();
-        const currentPath = window.location.pathname;
-        const isLoginPage = currentPath.includes('admin/index.html') ||
-            currentPath.endsWith('/admin/') ||
-            currentPath.endsWith('/admin');
-        const isResetPage = currentPath.includes('reset-password.html');
+        try {
+            // Add timeout protection
+            const sessionPromise = supabase.auth.getSession();
+            const timeoutPromise = new Promise((_, reject) => 
+                setTimeout(() => reject(new Error('Session check timeout')), 8000)
+            );
+            
+            const { data: { session }, error } = await Promise.race([
+                sessionPromise,
+                timeoutPromise
+            ]);
 
-        console.log('[Auth] checkSession:', { session: !!session, currentPath, isLoginPage, isResetPage });
+            if (error) {
+                console.error('[Auth] Session error:', error);
+                return;
+            }
 
-        if (session) {
-            const profile = await this.getProfile(session.user.id);
-            if (profile && isLoginPage) {
-                console.log('[Auth] Redirecting based on role');
-                if (profile.role === 'viewer') {
-                    window.location.href = 'pages/registration-view-only.html';
-                    return;
-                } else {
+            const currentPath = window.location.pathname;
+            const isLoginPage = currentPath.includes('admin/index.html') ||
+                currentPath.endsWith('/admin/') ||
+                currentPath.endsWith('/admin');
+            const isResetPage = currentPath.includes('reset-password.html');
+
+            console.log('[Auth] checkSession:', { session: !!session, currentPath, isLoginPage, isResetPage });
+
+            if (session) {
+                const profile = await this.getProfile(session.user.id);
+                if (profile && isLoginPage) {
+                    console.log('[Auth] Redirecting based on role');
+                    if (profile.role === 'viewer') {
+                        window.location.href = 'pages/registration-view-only.html';
+                        return;
+                    } else {
                     window.location.href = this.config.redirectAfterLogin;
                     return;
                 }
@@ -97,6 +113,13 @@ const Auth = {
             if (!isLoginPage && currentPath.includes('/admin/')) {
                 console.warn('[Auth] No valid session found, redirecting to login');
                 window.location.href = this.config.redirectAfterLogout;
+            }
+        }
+        } catch (error) {
+            console.error('[Auth] checkSession error:', error);
+            // Don't redirect on error, let user try to login
+            if (error.message === 'Session check timeout') {
+                console.warn('[Auth] Session check timed out - possible CORS or network issue');
             }
         }
     },
