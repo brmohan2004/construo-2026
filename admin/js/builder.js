@@ -429,6 +429,7 @@ window.CertBuilder = {
             console.error('Error stack:', error.stack);
 
             // Check if it's a timeout/CORS error
+<<<<<<< HEAD
             let errorMessage = error.message;
             let detailedHelp = '';
 
@@ -441,6 +442,18 @@ window.CertBuilder = {
             } else if (error.message.includes('permission denied') || error.message.includes('policy')) {
                 errorMessage = 'Permission denied';
                 detailedHelp = 'Run fix_certificate_builder_timeout.sql to update database policies.';
+=======
+            let errorMessage = error.message || 'Unknown error';
+            
+            if (errorMessage.includes('timed out') || errorMessage.includes('CORS')) {
+                errorMessage = 'Connection timeout. Please configure CORS settings in Supabase dashboard.';
+            } else if (errorMessage.includes('Failed to fetch')) {
+                errorMessage = 'Network error. Check internet connection and CORS settings.';
+            } else if (errorMessage.includes('Lock broken') || errorMessage.includes('AbortError')) {
+                errorMessage = 'Session error. Please refresh the page and try again.';
+            } else if (errorMessage.includes('No \'Access-Control-Allow-Origin\' header')) {
+                errorMessage = 'CORS error. Add ' + window.location.origin + ' to Supabase CORS settings.';
+>>>>>>> 68ec41b5b29bf5d0171d67c896e74d02a1a75e5a
             }
 
             Admin.showToast('error', 'Save Failed', `${errorMessage}. ${detailedHelp}`);
