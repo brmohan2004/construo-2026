@@ -295,6 +295,248 @@
             font-family: 'JetBrains Mono', monospace;
             border: 1px solid #444;
         }
+
+        /* --- Text Enhancer Panel --- */
+        .enhancer-section {
+            border-top: 1px solid #ea580c33;
+            margin-top: 0.5rem;
+            padding-top: 0.75rem;
+        }
+
+        .enhancer-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .enhancer-header .enhancer-icon {
+            width: 22px;
+            height: 22px;
+            background: linear-gradient(135deg, #ea580c, #f59e0b);
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+        }
+
+        .enhancer-header .enhancer-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            background: linear-gradient(90deg, #ea580c, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .enhancer-header .enhancer-arrow {
+            margin-left: auto;
+            font-size: 0.6rem;
+            color: #666;
+            transition: transform 0.2s;
+        }
+
+        .enhancer-header.collapsed .enhancer-arrow {
+            transform: rotate(-90deg);
+        }
+
+        .enhancer-body {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .enhancer-body.collapsed {
+            display: none;
+        }
+
+        .enh-group {
+            background: #1a1a1a;
+            border: 1px solid #2e2e2e;
+            border-radius: 6px;
+            padding: 0.6rem;
+        }
+
+        .enh-group-title {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .enh-group-title .enh-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #ea580c;
+        }
+
+        .enh-row {
+            display: flex;
+            gap: 0.35rem;
+            align-items: center;
+        }
+
+        .enh-label {
+            font-size: 0.6rem;
+            color: #666;
+            min-width: 40px;
+        }
+
+        .enh-input {
+            width: 100%;
+            background: #222;
+            border: 1px solid #333;
+            color: white;
+            padding: 0.3rem 0.4rem;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 0.8rem;
+            box-sizing: border-box;
+        }
+
+        .enh-input:focus {
+            border-color: #ea580c;
+            outline: none;
+        }
+
+        .enh-color-input {
+            width: 32px;
+            height: 28px;
+            padding: 1px;
+            cursor: pointer;
+            border: 1px solid #444;
+            border-radius: 4px;
+            background: transparent;
+            flex-shrink: 0;
+        }
+
+        .enh-range {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 4px;
+            background: #333;
+            border-radius: 2px;
+            outline: none;
+        }
+
+        .enh-range::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #ea580c;
+            cursor: pointer;
+            border: 2px solid #222;
+        }
+
+        .enh-range::-moz-range-thumb {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #ea580c;
+            cursor: pointer;
+            border: 2px solid #222;
+        }
+
+        .enh-range-val {
+            font-size: 0.7rem;
+            color: #aaa;
+            font-family: 'JetBrains Mono', monospace;
+            min-width: 30px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .enh-preset-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.3rem;
+        }
+
+        .enh-preset-btn {
+            padding: 0.35rem 0.5rem;
+            background: #2a2a2a;
+            border: 1px solid #3a3a3a;
+            color: #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            font-family: inherit;
+            transition: all 0.15s;
+            text-align: center;
+        }
+
+        .enh-preset-btn:hover {
+            background: #3a3a3a;
+            border-color: #ea580c;
+            color: #fff;
+        }
+
+        .enh-preset-btn:active {
+            transform: scale(0.96);
+        }
+
+        .enh-toggle-row {
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        .enh-toggle-btn {
+            flex: 1;
+            padding: 0.35rem;
+            background: #2a2a2a;
+            border: 1px solid #3a3a3a;
+            color: #999;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: all 0.15s;
+            text-align: center;
+        }
+
+        .enh-toggle-btn:hover {
+            background: #3a3a3a;
+            color: #fff;
+        }
+
+        .enh-toggle-btn.active {
+            background: #ea580c;
+            border-color: #ea580c;
+            color: white;
+        }
+
+        .enh-reset-btn {
+            width: 100%;
+            padding: 0.4rem;
+            background: transparent;
+            border: 1px dashed #3a3a3a;
+            color: #666;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            font-family: inherit;
+            transition: all 0.15s;
+        }
+
+        .enh-reset-btn:hover {
+            border-color: #ef4444;
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.05);
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -561,6 +803,122 @@
                                 <button onclick="CertBuilder.setTextAlign('right')" class="tool-btn"
                                     style="justify-content: center; padding: 0.35rem; font-size: 0.75rem;">⫸</button>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Text Enhancer Panel -->
+                    <div class="prop-group enhancer-section" id="textEnhancerPanel" style="display: none;">
+                        <div class="enhancer-header" id="enhancerToggle">
+                            <div class="enhancer-icon">✦</div>
+                            <span class="enhancer-title">Text Enhancer</span>
+                            <span class="enhancer-arrow">▼</span>
+                        </div>
+                        <div class="enhancer-body" id="enhancerBody">
+
+                            <!-- Shadow -->
+                            <div class="enh-group">
+                                <div class="enh-group-title"><span class="enh-dot"></span> Shadow</div>
+                                <div class="enh-row" style="margin-bottom:0.3rem;">
+                                    <input type="color" id="enhShadowColor" class="enh-color-input" value="#000000">
+                                    <div style="flex:1;">
+                                        <div class="enh-row">
+                                            <span class="enh-label">Blur</span>
+                                            <input type="range" id="enhShadowBlur" class="enh-range" min="0" max="30"
+                                                value="0">
+                                            <span class="enh-range-val" id="enhShadowBlurVal">0</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="enh-row">
+                                    <span class="enh-label">X</span>
+                                    <input type="range" id="enhShadowX" class="enh-range" min="-20" max="20" value="0">
+                                    <span class="enh-range-val" id="enhShadowXVal">0</span>
+                                    <span class="enh-label" style="margin-left:0.3rem;">Y</span>
+                                    <input type="range" id="enhShadowY" class="enh-range" min="-20" max="20" value="0">
+                                    <span class="enh-range-val" id="enhShadowYVal">0</span>
+                                </div>
+                            </div>
+
+                            <!-- Stroke / Outline -->
+                            <div class="enh-group">
+                                <div class="enh-group-title"><span class="enh-dot"></span> Outline</div>
+                                <div class="enh-row">
+                                    <input type="color" id="enhStrokeColor" class="enh-color-input" value="#000000">
+                                    <span class="enh-label">Width</span>
+                                    <input type="range" id="enhStrokeWidth" class="enh-range" min="0" max="10"
+                                        step="0.5" value="0">
+                                    <span class="enh-range-val" id="enhStrokeWidthVal">0</span>
+                                </div>
+                            </div>
+
+                            <!-- Spacing -->
+                            <div class="enh-group">
+                                <div class="enh-group-title"><span class="enh-dot"></span> Spacing</div>
+                                <div class="enh-row" style="margin-bottom:0.3rem;">
+                                    <span class="enh-label">Letter</span>
+                                    <input type="range" id="enhLetterSpacing" class="enh-range" min="-200" max="1000"
+                                        value="0">
+                                    <span class="enh-range-val" id="enhLetterSpacingVal">0</span>
+                                </div>
+                                <div class="enh-row">
+                                    <span class="enh-label">Line H</span>
+                                    <input type="range" id="enhLineHeight" class="enh-range" min="0.5" max="3"
+                                        step="0.05" value="1.16">
+                                    <span class="enh-range-val" id="enhLineHeightVal">1.16</span>
+                                </div>
+                            </div>
+
+                            <!-- Opacity & Background -->
+                            <div class="enh-group">
+                                <div class="enh-group-title"><span class="enh-dot"></span> Appearance</div>
+                                <div class="enh-row" style="margin-bottom:0.3rem;">
+                                    <span class="enh-label">Opacity</span>
+                                    <input type="range" id="enhTextOpacity" class="enh-range" min="0" max="100"
+                                        value="100">
+                                    <span class="enh-range-val" id="enhTextOpacityVal">100%</span>
+                                </div>
+                                <div class="enh-row">
+                                    <span class="enh-label">BG</span>
+                                    <input type="color" id="enhBgColor" class="enh-color-input" value="#ffffff">
+                                    <button id="enhBgToggle" class="enh-toggle-btn" style="flex:1;">Off</button>
+                                </div>
+                            </div>
+
+                            <!-- Text Transforms -->
+                            <div class="enh-group">
+                                <div class="enh-group-title"><span class="enh-dot"></span> Transform</div>
+                                <div class="enh-toggle-row">
+                                    <button class="enh-toggle-btn" id="enhUppercase" title="UPPERCASE">AA</button>
+                                    <button class="enh-toggle-btn" id="enhCapitalize" title="Capitalize">Aa</button>
+                                    <button class="enh-toggle-btn" id="enhUnderline" title="Underline"
+                                        style="text-decoration:underline;">U</button>
+                                    <button class="enh-toggle-btn" id="enhLinethrough" title="Strikethrough"
+                                        style="text-decoration:line-through;">S</button>
+                                </div>
+                            </div>
+
+                            <!-- Quick Presets -->
+                            <div class="enh-group">
+                                <div class="enh-group-title"><span class="enh-dot"></span> Quick Presets</div>
+                                <div class="enh-preset-grid">
+                                    <button class="enh-preset-btn" onclick="CertBuilder.applyTextPreset('glow')">✨
+                                        Glow</button>
+                                    <button class="enh-preset-btn" onclick="CertBuilder.applyTextPreset('emboss')">🔲
+                                        Emboss</button>
+                                    <button class="enh-preset-btn" onclick="CertBuilder.applyTextPreset('neon')">💡
+                                        Neon</button>
+                                    <button class="enh-preset-btn" onclick="CertBuilder.applyTextPreset('vintage')">📜
+                                        Vintage</button>
+                                    <button class="enh-preset-btn" onclick="CertBuilder.applyTextPreset('outline')">🔤
+                                        Outline</button>
+                                    <button class="enh-preset-btn" onclick="CertBuilder.applyTextPreset('elegant')">👑
+                                        Elegant</button>
+                                </div>
+                            </div>
+
+                            <!-- Reset -->
+                            <button class="enh-reset-btn" onclick="CertBuilder.resetTextEnhancements()">↻ Reset All
+                                Enhancements</button>
                         </div>
                     </div>
 

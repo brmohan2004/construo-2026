@@ -371,13 +371,25 @@ const CertApp = {
                     });
                     staticCanvas.renderAll();
 
-                    const dataUrl = staticCanvas.toDataURL({ format: 'jpeg', quality: 1 });
-                    const link = document.createElement('a');
-                    link.href = dataUrl;
+                    const dataUrl = staticCanvas.toDataURL({ format: 'png', quality: 1, multiplier: 2 });
+
+                    const pxToMm = (px) => (px * 25.4) / 96;
+                    const pdfWidth = pxToMm(dims.width);
+                    const pdfHeight = pxToMm(dims.height);
+                    const orientation = dims.width >= dims.height ? 'landscape' : 'portrait';
+
+                    const { jsPDF } = window.jspdf;
+                    const pdf = new jsPDF({
+                        orientation: orientation,
+                        unit: 'mm',
+                        format: [pdfWidth, pdfHeight]
+                    });
+
+                    pdf.addImage(dataUrl, 'PNG', 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');
+
                     const safeName = (row.participant?.name || 'Participant').replace(/\s+/g, '_');
                     const safeEvent = (row.targetEvent || 'Event').replace(/\s+/g, '_');
-                    link.download = `${safeName}_${safeEvent}.jpg`;
-                    link.click();
+                    pdf.save(`${safeName}_${safeEvent}.pdf`);
 
                     document.body.removeChild(canvasEl);
                     resolve();
