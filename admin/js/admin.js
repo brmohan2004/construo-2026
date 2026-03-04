@@ -35,19 +35,12 @@ const Admin = {
 
     async checkAuth() {
         try {
-            // Check if bypass mode is enabled
-            const bypassMode = sessionStorage.getItem('adminBypass') === 'true';
-            if (bypassMode) {
-                console.log('[Admin] Bypass mode active - skipping auth check');
-                return true;
-            }
-
             // Add timeout to prevent hanging
             const sessionPromise = supabase.auth.getSession();
-            const timeoutPromise = new Promise((_, reject) => 
+            const timeoutPromise = new Promise((_, reject) =>
                 setTimeout(() => reject(new Error('Session check timeout')), 5000)
             );
-            
+
             const { data: { session }, error } = await Promise.race([
                 sessionPromise,
                 timeoutPromise
@@ -344,7 +337,7 @@ const Admin = {
     withTimeout(promise, timeoutMs = 10000) {
         return Promise.race([
             promise,
-            new Promise((_, reject) => 
+            new Promise((_, reject) =>
                 setTimeout(() => reject(new Error(`Operation timed out after ${timeoutMs}ms. Database query took too long - check RLS policies and indexes.`)), timeoutMs)
             )
         ]);
@@ -353,11 +346,11 @@ const Admin = {
     async getSiteConfig(retryCount = 0) {
         try {
             console.log(`[getSiteConfig] Fetching config... (attempt ${retryCount + 1})`);
-            
+
             // First attempt: Try with 5 second timeout
             // Subsequent attempts: Use 8 second timeout
             const timeout = retryCount === 0 ? 5000 : 8000;
-            
+
             const { data, error } = await this.withTimeout(
                 supabase
                     .from('site_config')
@@ -371,27 +364,27 @@ const Admin = {
                 console.error('[getSiteConfig] Query error:', error);
                 throw error;
             }
-            
+
             this.cache.siteConfig = data;
             console.log('[getSiteConfig] Config fetched successfully');
             return data;
         } catch (error) {
             console.error('[getSiteConfig] Error:', error.message);
-            
+
             // Retry once if timeout on first attempt
             if (retryCount === 0 && error.message.includes('timed out')) {
                 console.log('[getSiteConfig] Retrying...');
                 await new Promise(resolve => setTimeout(resolve, 500)); // Wait 500ms
                 return this.getSiteConfig(1);
             }
-            
+
             // Add helpful context to the error
             if (error.message.includes('timed out')) {
                 error.helpText = 'Run fix_certificate_builder_timeout.sql in Supabase SQL Editor';
             } else if (error.message.includes('permission') || error.code === 'PGRST301') {
                 error.helpText = 'Database permissions issue - check RLS policies';
             }
-            
+
             throw error;
         }
     },
@@ -408,7 +401,7 @@ const Admin = {
             } catch (authError) {
                 console.warn('[updateSiteConfig] Could not get user (auth may be failing), proceeding anyway:', authError.message);
             }
-            
+
             const timestamp = new Date().toISOString();
 
             // Add metadata to the section data

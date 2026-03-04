@@ -22,11 +22,6 @@ const Auth = {
             loginForm.addEventListener('submit', (e) => this.handleLogin(e));
         }
 
-        const enterAsAdminBtn = document.getElementById('enterAsAdminBtn');
-        if (enterAsAdminBtn) {
-            enterAsAdminBtn.addEventListener('click', () => this.enterAsAdminBypass());
-        }
-
         const togglePassword = document.querySelector('.toggle-password');
         if (togglePassword) {
             togglePassword.addEventListener('click', () => this.togglePasswordVisibility());
@@ -73,31 +68,12 @@ const Auth = {
                 currentPath.endsWith('/admin');
             const isResetPage = currentPath.includes('reset-password.html');
 
-            // Check if bypass mode is enabled
-            const bypassMode = sessionStorage.getItem('adminBypass');
-            console.log('[Auth] checkSession - Path:', currentPath, 'isLoginPage:', isLoginPage, 'bypassMode:', bypassMode);
-            
-            if (bypassMode === 'true') {
-                console.log('[Auth] ✓ Bypass mode active - skipping authentication');
-                // If on login page with bypass active, redirect to dashboard
-                if (isLoginPage) {
-                    console.log('[Auth] On login page with bypass, redirecting to dashboard');
-                    window.location.href = this.config.redirectAfterLogin;
-                    return;
-                }
-                // Allow access to all admin pages in bypass mode
-                console.log('[Auth] Allowing access in bypass mode');
-                return;
-            }
-            
-            console.log('[Auth] No bypass mode, checking Supabase session...');
-
             // Add timeout protection
             const sessionPromise = supabase.auth.getSession();
-            const timeoutPromise = new Promise((_, reject) => 
+            const timeoutPromise = new Promise((_, reject) =>
                 setTimeout(() => reject(new Error('Session check timeout')), 8000)
             );
-            
+
             const { data: { session }, error } = await Promise.race([
                 sessionPromise,
                 timeoutPromise
@@ -118,27 +94,27 @@ const Auth = {
                         window.location.href = 'pages/registration-view-only.html';
                         return;
                     } else {
-                    window.location.href = this.config.redirectAfterLogin;
+                        window.location.href = this.config.redirectAfterLogin;
+                        return;
+                    }
+                }
+
+                // Viewer Jail: Redirect back to view-only page if trying to access other pages
+                if (profile && profile.role === 'viewer' && !currentPath.includes('registration-view-only')) {
+                    console.warn('[Auth] Access restricted for viewer');
+                    if (currentPath.includes('/pages/')) {
+                        window.location.href = 'registration-view-only.html';
+                    } else {
+                        window.location.href = 'pages/registration-view-only.html';
+                    }
                     return;
                 }
-            }
-
-            // Viewer Jail: Redirect back to view-only page if trying to access other pages
-            if (profile && profile.role === 'viewer' && !currentPath.includes('registration-view-only')) {
-                console.warn('[Auth] Access restricted for viewer');
-                if (currentPath.includes('/pages/')) {
-                    window.location.href = 'registration-view-only.html';
-                } else {
-                    window.location.href = 'pages/registration-view-only.html';
+            } else {
+                if (!isLoginPage && currentPath.includes('/admin/')) {
+                    console.warn('[Auth] No valid session found, redirecting to login');
+                    window.location.href = this.config.redirectAfterLogout;
                 }
-                return;
             }
-        } else {
-            if (!isLoginPage && currentPath.includes('/admin/')) {
-                console.warn('[Auth] No valid session found, redirecting to login');
-                window.location.href = this.config.redirectAfterLogout;
-            }
-        }
         } catch (error) {
             console.error('[Auth] checkSession error:', error);
             // Don't redirect on error, let user try to login
@@ -156,11 +132,11 @@ const Auth = {
                 .select('*')
                 .eq('user_id', userId)
                 .single();
-            
-            const timeout = new Promise((_, reject) => 
+
+            const timeout = new Promise((_, reject) =>
                 setTimeout(() => reject(new Error('Profile fetch timeout')), 5000)
             );
-            
+
             const { data, error } = await Promise.race([promise, timeout]);
 
             if (error) throw error;
@@ -173,26 +149,6 @@ const Auth = {
 
     async getCurrentUser() {
         try {
-            // Check if bypass mode is enabled
-            const bypassMode = sessionStorage.getItem('adminBypass') === 'true';
-            if (bypassMode) {
-                const bypassUser = sessionStorage.getItem('bypassUser');
-                if (bypassUser) {
-                    const user = JSON.parse(bypassUser);
-                    console.log('[Auth] Returning bypass user:', user.email);
-                    return {
-                        id: 'bypass-id',
-                        userId: 'bypass-user-id',
-                        username: 'admin',
-                        name: user.full_name,
-                        email: user.email,
-                        role: user.role,
-                        avatar: null,
-                        status: 'active'
-                    };
-                }
-            }
-
             const { data: { session } } = await supabase.auth.getSession();
             if (!session) return null;
 
@@ -251,11 +207,11 @@ const Auth = {
                     .select('*')
                     .eq('email', username)
                     .single();
-                
-                const timeout = new Promise((_, reject) => 
+
+                const timeout = new Promise((_, reject) =>
                     setTimeout(() => reject(new Error('Profile lookup timeout')), 8000)
                 );
-                
+
                 try {
                     const { data, error } = await Promise.race([profilePromise, timeout]);
                     if (!error && data) {
@@ -270,7 +226,7 @@ const Auth = {
             if (!profile) {
                 try {
                     const profilePromise = this.getProfileByUsername(username);
-                    const timeout = new Promise((_, reject) => 
+                    const timeout = new Promise((_, reject) =>
                         setTimeout(() => reject(new Error('Username lookup timeout')), 8000)
                     );
                     profile = await Promise.race([profilePromise, timeout]);
@@ -287,14 +243,14 @@ const Auth = {
                         email: username,
                         password: password
                     });
-                    const timeout = new Promise((_, reject) => 
+                    const timeout = new Promise((_, reject) =>
                         setTimeout(() => reject(new Error('Auth timeout')), 10000)
                     );
-                    
+
                     const { data, error } = await Promise.race([authPromise, timeout]);
-                    
+
                     if (error) throw error;
-                    
+
                     if (data.session) {
                         // Try to fetch profile
                         profile = await this.getProfile(data.user.id);
@@ -312,22 +268,22 @@ const Auth = {
             }
 
             console.log('[Auth] Profile found, attempting sign in...');
-            
+
             const signInPromise = supabase.auth.signInWithPassword({
                 email: profile.email,
                 password: password
             });
-            const timeout = new Promise((_, reject) => 
+            const timeout = new Promise((_, reject) =>
                 setTimeout(() => reject(new Error('Sign in timeout')), 10000)
             );
-            
+
             const { data, error } = await Promise.race([signInPromise, timeout]);
 
             if (error) throw error;
 
             if (data.session) {
                 console.log('[Auth] Login successful, redirecting...');
-                
+
                 // Log activity but don't wait for it
                 this.logActivity('login', 'auth', `User ${profile.username || username} logged in`)
                     .catch(err => console.warn('[Auth] Failed to log activity:', err));
@@ -350,11 +306,11 @@ const Auth = {
         } catch (error) {
             // Clear timeout on error
             clearTimeout(loginTimeout);
-            
+
             console.error('Login error:', error);
-            
+
             let errorMessage = 'Login failed. Please try again.';
-            
+
             // Check for specific error types
             if (error.message.includes('timeout') || error.message.includes('Timeout')) {
                 errorMessage = 'Connection timeout. Please check your internet and try again.';
@@ -365,7 +321,7 @@ const Auth = {
             } else if (error.message) {
                 errorMessage = error.message;
             }
-            
+
             this.showLoginError(errorMessage);
         } finally {
             submitBtn.classList.remove('loading');
@@ -464,11 +420,11 @@ const Auth = {
                 .select('*')
                 .eq('username', username)
                 .single();
-            
-            const timeout = new Promise((_, reject) => 
+
+            const timeout = new Promise((_, reject) =>
                 setTimeout(() => reject(new Error('Username lookup timeout')), 5000)
             );
-            
+
             const { data, error } = await Promise.race([promise, timeout]);
 
             if (error) throw error;
@@ -481,22 +437,6 @@ const Auth = {
 
     async handleLogout() {
         try {
-            // Check if bypass mode is active
-            const bypassMode = sessionStorage.getItem('adminBypass') === 'true';
-            
-            if (bypassMode) {
-                // Clear bypass mode
-                sessionStorage.removeItem('adminBypass');
-                sessionStorage.removeItem('bypassUser');
-                console.log('[Auth] Cleared bypass mode');
-                
-                this.showToast('info', 'Logged Out', 'Bypass mode cleared');
-                setTimeout(() => {
-                    window.location.href = this.config.redirectAfterLogout;
-                }, 500);
-                return;
-            }
-
             const user = await this.getCurrentUser();
             if (user) {
                 await this.logActivity('logout', 'auth', `User ${user.username} logged out`);
@@ -557,30 +497,6 @@ const Auth = {
             passwordInput.type = 'password';
             eyeOpen.style.display = 'block';
             eyeClosed.style.display = 'none';
-        }
-    },
-
-    enterAsAdminBypass() {
-        console.log('[Auth] Entering as admin without authentication');
-        // Set a flag in sessionStorage to indicate bypass mode
-        try {
-            sessionStorage.setItem('adminBypass', 'true');
-            sessionStorage.setItem('bypassUser', JSON.stringify({
-                email: 'admin@bypass.local',
-                role: 'admin',
-                full_name: 'Admin (Bypass Mode)',
-                created_at: new Date().toISOString()
-            }));
-            console.log('[Auth] Bypass mode set:', sessionStorage.getItem('adminBypass'));
-            console.log('[Auth] Redirecting to:', this.config.redirectAfterLogin);
-            
-            // Use setTimeout to ensure sessionStorage is written before redirect
-            setTimeout(() => {
-                window.location.href = this.config.redirectAfterLogin;
-            }, 100);
-        } catch (error) {
-            console.error('[Auth] Failed to set bypass mode:', error);
-            alert('Failed to enter bypass mode. SessionStorage may be disabled.');
         }
     },
 
