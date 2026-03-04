@@ -364,7 +364,7 @@ window.CertBuilder = {
 
         try {
             // Serialize, excluding system helper objects
-            const json = this.canvas.toJSON(['data_type', 'id']);
+            const json = this.canvas.toJSON(['data_type', 'id', 'shadow', 'strokeWidth', 'stroke', 'charSpacing', 'lineHeight', 'opacity', 'textBackgroundColor', 'underline', 'linethrough', 'paintFirst']);
             json.objects = json.objects.filter(o => o.id !== 'page-bg' && o.id !== 'page-shadow');
 
             // Save paper size with template
@@ -634,11 +634,13 @@ window.CertBuilder = {
         // Show/Hide type-specific props
         const textProps = document.getElementById('textProps');
         const rectProps = document.getElementById('rectProps'); // We reuse this for all shapes
+        const enhancerPanel = document.getElementById('textEnhancerPanel');
 
         const isText = obj && (obj.type === 'textbox' || obj.type === 'text' || obj.type === 'i-text');
         const isShape = obj && (obj.type === 'rect' || obj.type === 'circle' || obj.type === 'triangle' || obj.type === 'line');
 
         if (textProps) textProps.style.display = isText ? 'block' : 'none';
+        if (enhancerPanel) enhancerPanel.style.display = isText ? 'block' : 'none';
 
         // Update label for line vs shape
         if (rectProps) {
@@ -654,8 +656,10 @@ window.CertBuilder = {
         this.activeObject = null;
         const noSelMsg = document.getElementById('noSelectionMsg');
         const objProps = document.getElementById('objectProps');
+        const enhancerPanel = document.getElementById('textEnhancerPanel');
         if (noSelMsg) noSelMsg.style.display = 'block';
         if (objProps) objProps.style.display = 'none';
+        if (enhancerPanel) enhancerPanel.style.display = 'none';
     },
 
     updatePropsFromObject() {
@@ -693,6 +697,7 @@ window.CertBuilder = {
             setVal('propFontFamily', obj.fontFamily);
             setVal('propFontSize', obj.fontSize);
             setVal('propColor', obj.fill);
+            this.updateEnhancerFromObject(obj);
         }
 
         if (obj.type === 'rect' || obj.type === 'circle' || obj.type === 'triangle') {
@@ -704,7 +709,366 @@ window.CertBuilder = {
         }
     },
 
+    // --- Text Enhancer Methods ---
+
+    updateEnhancerFromObject(obj) {
+        if (!obj) return;
+        const setRange = (id, val, displayId, displaySuffix) => {
+            const el = document.getElementById(id);
+            const display = document.getElementById(displayId);
+            if (el) el.value = val;
+            if (display) display.textContent = (displaySuffix !== undefined) ? val + displaySuffix : val;
+        };
+
+        // Shadow
+        const shadow = obj.shadow;
+        if (shadow) {
+            const s = typeof shadow === 'string' ? new fabric.Shadow(shadow) : shadow;
+            const colorEl = document.getElementById('enhShadowColor');
+            if (colorEl) colorEl.value = this._toHex(s.color || '#000000');
+            setRange('enhShadowBlur', s.blur || 0, 'enhShadowBlurVal', '');
+            setRange('enhShadowX', s.offsetX || 0, 'enhShadowXVal', '');
+            setRange('enhShadowY', s.offsetY || 0, 'enhShadowYVal', '');
+        } else {
+            const colorEl = document.getElementById('enhShadowColor');
+            if (colorEl) colorEl.value = '#000000';
+            setRange('enhShadowBlur', 0, 'enhShadowBlurVal', '');
+            setRange('enhShadowX', 0, 'enhShadowXVal', '');
+            setRange('enhShadowY', 0, 'enhShadowYVal', '');
+        }
+
+        // Stroke
+        const strokeColorEl = document.getElementById('enhStrokeColor');
+        if (strokeColorEl) strokeColorEl.value = this._toHex(obj.stroke || '#000000');
+        setRange('enhStrokeWidth', obj.strokeWidth || 0, 'enhStrokeWidthVal', '');
+
+        // Spacing
+        setRange('enhLetterSpacing', obj.charSpacing || 0, 'enhLetterSpacingVal', '');
+        setRange('enhLineHeight', obj.lineHeight || 1.16, 'enhLineHeightVal', '');
+
+        // Opacity
+        setRange('enhTextOpacity', Math.round((obj.opacity || 1) * 100), 'enhTextOpacityVal', '%');
+
+        // Background
+        const bgToggle = document.getElementById('enhBgToggle');
+        const bgColor = document.getElementById('enhBgColor');
+        if (obj.textBackgroundColor && obj.textBackgroundColor !== '') {
+            if (bgToggle) { bgToggle.textContent = 'On'; bgToggle.classList.add('active'); }
+            if (bgColor) bgColor.value = this._toHex(obj.textBackgroundColor);
+        } else {
+            if (bgToggle) { bgToggle.textContent = 'Off'; bgToggle.classList.remove('active'); }
+        }
+
+        // Transforms
+        const upperBtn = document.getElementById('enhUppercase');
+        const capBtn = document.getElementById('enhCapitalize');
+        const underBtn = document.getElementById('enhUnderline');
+        const lineBtn = document.getElementById('enhLinethrough');
+
+        if (upperBtn) upperBtn.classList.toggle('active', obj._enhUppercase || false);
+        if (capBtn) capBtn.classList.toggle('active', obj._enhCapitalize || false);
+        if (underBtn) underBtn.classList.toggle('active', obj.underline || false);
+        if (lineBtn) lineBtn.classList.toggle('active', obj.linethrough || false);
+    },
+
+    _toHex(c) {
+        if (!c) return '#000000';
+        if (c.startsWith('#')) return c.slice(0, 7);
+        const ctx = document.createElement('canvas').getContext('2d');
+        ctx.fillStyle = c;
+        return ctx.fillStyle;
+    },
+
+    _applyShadow() {
+        if (!this.activeObject) return;
+        const color = document.getElementById('enhShadowColor')?.value || '#000000';
+        const blur = parseFloat(document.getElementById('enhShadowBlur')?.value) || 0;
+        const offsetX = parseFloat(document.getElementById('enhShadowX')?.value) || 0;
+        const offsetY = parseFloat(document.getElementById('enhShadowY')?.value) || 0;
+
+        if (blur === 0 && offsetX === 0 && offsetY === 0) {
+            this.activeObject.set('shadow', null);
+        } else {
+            this.activeObject.set('shadow', new fabric.Shadow({
+                color: color,
+                blur: blur,
+                offsetX: offsetX,
+                offsetY: offsetY
+            }));
+        }
+        this.canvas.renderAll();
+    },
+
+    applyTextPreset(preset) {
+        if (!this.activeObject) return;
+        const obj = this.activeObject;
+        const isText = obj.type === 'textbox' || obj.type === 'i-text';
+        if (!isText) return;
+
+        // Reset first
+        obj.set({
+            shadow: null,
+            stroke: null,
+            strokeWidth: 0,
+            paintFirst: 'fill'
+        });
+
+        switch (preset) {
+            case 'glow':
+                obj.set({
+                    shadow: new fabric.Shadow({ color: '#f59e0b', blur: 15, offsetX: 0, offsetY: 0 }),
+                    fill: '#fbbf24'
+                });
+                break;
+            case 'emboss':
+                obj.set({
+                    shadow: new fabric.Shadow({ color: 'rgba(255,255,255,0.6)', blur: 1, offsetX: -1, offsetY: -1 }),
+                    fill: '#555555'
+                });
+                break;
+            case 'neon':
+                obj.set({
+                    shadow: new fabric.Shadow({ color: '#00ff88', blur: 20, offsetX: 0, offsetY: 0 }),
+                    fill: '#00ff88',
+                    stroke: '#00ff88',
+                    strokeWidth: 0.5
+                });
+                break;
+            case 'vintage':
+                obj.set({
+                    fill: '#8B4513',
+                    shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.3)', blur: 3, offsetX: 2, offsetY: 2 }),
+                    charSpacing: 200,
+                    fontFamily: 'Cinzel'
+                });
+                break;
+            case 'outline':
+                obj.set({
+                    fill: 'transparent',
+                    stroke: '#333333',
+                    strokeWidth: 2,
+                    paintFirst: 'stroke'
+                });
+                break;
+            case 'elegant':
+                obj.set({
+                    fill: '#c5a059',
+                    shadow: new fabric.Shadow({ color: 'rgba(197,160,89,0.4)', blur: 8, offsetX: 0, offsetY: 2 }),
+                    charSpacing: 300,
+                    fontFamily: 'Great Vibes'
+                });
+                break;
+        }
+
+        this.canvas.renderAll();
+        this.updatePropsFromObject();
+        Admin.showToast('info', 'Preset Applied', `"${preset.charAt(0).toUpperCase() + preset.slice(1)}" style applied to text.`);
+    },
+
+    resetTextEnhancements() {
+        if (!this.activeObject) return;
+        const obj = this.activeObject;
+        const isText = obj.type === 'textbox' || obj.type === 'i-text';
+        if (!isText) return;
+
+        obj.set({
+            shadow: null,
+            stroke: null,
+            strokeWidth: 0,
+            charSpacing: 0,
+            lineHeight: 1.16,
+            opacity: 1,
+            textBackgroundColor: '',
+            underline: false,
+            linethrough: false,
+            paintFirst: 'fill'
+        });
+        obj._enhUppercase = false;
+        obj._enhCapitalize = false;
+
+        this.canvas.renderAll();
+        this.updatePropsFromObject();
+        Admin.showToast('info', 'Reset', 'All text enhancements cleared.');
+    },
+
+    bindEnhancerInputs() {
+        const self = this;
+        const bind = (id, event, callback) => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener(event, callback);
+        };
+
+        // Enhancer collapse/expand toggle
+        const toggle = document.getElementById('enhancerToggle');
+        const body = document.getElementById('enhancerBody');
+        if (toggle && body) {
+            toggle.addEventListener('click', () => {
+                const collapsed = body.classList.toggle('collapsed');
+                toggle.classList.toggle('collapsed', collapsed);
+            });
+        }
+
+        // Shadow
+        const shadowInputs = ['enhShadowColor', 'enhShadowBlur', 'enhShadowX', 'enhShadowY'];
+        shadowInputs.forEach(id => {
+            bind(id, 'input', () => {
+                // Update display values
+                const blurVal = document.getElementById('enhShadowBlur')?.value || 0;
+                const xVal = document.getElementById('enhShadowX')?.value || 0;
+                const yVal = document.getElementById('enhShadowY')?.value || 0;
+                const blurDisplay = document.getElementById('enhShadowBlurVal');
+                const xDisplay = document.getElementById('enhShadowXVal');
+                const yDisplay = document.getElementById('enhShadowYVal');
+                if (blurDisplay) blurDisplay.textContent = blurVal;
+                if (xDisplay) xDisplay.textContent = xVal;
+                if (yDisplay) yDisplay.textContent = yVal;
+                self._applyShadow();
+            });
+        });
+
+        // Stroke
+        bind('enhStrokeColor', 'input', () => {
+            if (!self.activeObject) return;
+            self.activeObject.set('stroke', document.getElementById('enhStrokeColor').value);
+            self.canvas.renderAll();
+        });
+        bind('enhStrokeWidth', 'input', (e) => {
+            if (!self.activeObject) return;
+            const val = parseFloat(e.target.value);
+            document.getElementById('enhStrokeWidthVal').textContent = val;
+            self.activeObject.set('strokeWidth', val);
+            if (val > 0) {
+                self.activeObject.set('paintFirst', 'stroke');
+                if (!self.activeObject.stroke) {
+                    self.activeObject.set('stroke', document.getElementById('enhStrokeColor')?.value || '#000000');
+                }
+            } else {
+                self.activeObject.set('stroke', null);
+                self.activeObject.set('strokeWidth', 0);
+            }
+            self.canvas.renderAll();
+        });
+
+        // Letter Spacing
+        bind('enhLetterSpacing', 'input', (e) => {
+            if (!self.activeObject) return;
+            const val = parseInt(e.target.value);
+            document.getElementById('enhLetterSpacingVal').textContent = val;
+            self.activeObject.set('charSpacing', val);
+            self.canvas.renderAll();
+        });
+
+        // Line Height
+        bind('enhLineHeight', 'input', (e) => {
+            if (!self.activeObject) return;
+            const val = parseFloat(e.target.value);
+            document.getElementById('enhLineHeightVal').textContent = val.toFixed(2);
+            self.activeObject.set('lineHeight', val);
+            self.canvas.renderAll();
+        });
+
+        // Opacity
+        bind('enhTextOpacity', 'input', (e) => {
+            if (!self.activeObject) return;
+            const val = parseInt(e.target.value);
+            document.getElementById('enhTextOpacityVal').textContent = val + '%';
+            self.activeObject.set('opacity', val / 100);
+            self.canvas.renderAll();
+        });
+
+        // Background toggle
+        const bgToggle = document.getElementById('enhBgToggle');
+        if (bgToggle) {
+            bgToggle.addEventListener('click', () => {
+                if (!self.activeObject) return;
+                const isOn = bgToggle.classList.toggle('active');
+                if (isOn) {
+                    bgToggle.textContent = 'On';
+                    const color = document.getElementById('enhBgColor')?.value || '#ffffff';
+                    self.activeObject.set('textBackgroundColor', color);
+                } else {
+                    bgToggle.textContent = 'Off';
+                    self.activeObject.set('textBackgroundColor', '');
+                }
+                self.canvas.renderAll();
+            });
+        }
+
+        bind('enhBgColor', 'input', () => {
+            if (!self.activeObject) return;
+            const bgToggleEl = document.getElementById('enhBgToggle');
+            if (bgToggleEl && bgToggleEl.classList.contains('active')) {
+                self.activeObject.set('textBackgroundColor', document.getElementById('enhBgColor').value);
+                self.canvas.renderAll();
+            }
+        });
+
+        // Text Transforms
+        const uppercaseBtn = document.getElementById('enhUppercase');
+        if (uppercaseBtn) {
+            uppercaseBtn.addEventListener('click', () => {
+                if (!self.activeObject) return;
+                const obj = self.activeObject;
+                const active = !obj._enhUppercase;
+                obj._enhUppercase = active;
+                if (active) {
+                    obj._enhCapitalize = false;
+                    obj.set('text', obj.text.toUpperCase());
+                    document.getElementById('enhCapitalize')?.classList.remove('active');
+                }
+                uppercaseBtn.classList.toggle('active', active);
+                self.canvas.renderAll();
+                self.updatePropsFromObject();
+            });
+        }
+
+        const capitalizeBtn = document.getElementById('enhCapitalize');
+        if (capitalizeBtn) {
+            capitalizeBtn.addEventListener('click', () => {
+                if (!self.activeObject) return;
+                const obj = self.activeObject;
+                const active = !obj._enhCapitalize;
+                obj._enhCapitalize = active;
+                if (active) {
+                    obj._enhUppercase = false;
+                    obj.set('text', obj.text.replace(/\b\w/g, c => c.toUpperCase()));
+                    document.getElementById('enhUppercase')?.classList.remove('active');
+                }
+                capitalizeBtn.classList.toggle('active', active);
+                self.canvas.renderAll();
+                self.updatePropsFromObject();
+            });
+        }
+
+        const underlineBtn = document.getElementById('enhUnderline');
+        if (underlineBtn) {
+            underlineBtn.addEventListener('click', () => {
+                if (!self.activeObject) return;
+                const obj = self.activeObject;
+                const isOn = !obj.underline;
+                obj.set('underline', isOn);
+                underlineBtn.classList.toggle('active', isOn);
+                self.canvas.renderAll();
+            });
+        }
+
+        const linethroughBtn = document.getElementById('enhLinethrough');
+        if (linethroughBtn) {
+            linethroughBtn.addEventListener('click', () => {
+                if (!self.activeObject) return;
+                const obj = self.activeObject;
+                const isOn = !obj.linethrough;
+                obj.set('linethrough', isOn);
+                linethroughBtn.classList.toggle('active', isOn);
+                self.canvas.renderAll();
+            });
+        }
+    },
+
     bindPropertyInputs() {
+        // Bind text enhancer inputs
+        this.bindEnhancerInputs();
+
         const bind = (id, event, callback) => {
             const el = document.getElementById(id);
             if (el) el.addEventListener(event, callback);
